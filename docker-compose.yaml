@@ -10,7 +10,7 @@ services:
       - type: bind
         source: ./app
         target: /usr/src/app
-      - type: volumes
+      - type: volume
         target: /usr/src/app/node_modules
     networks:
       - frontend
@@ -26,7 +26,7 @@ services:
       - type: bind
         source: ./api
         target: /usr/src/app
-      - type: volumes
+      - type: volume
         target: /usr/src/app/node_modules
     networks:
       - frontend
