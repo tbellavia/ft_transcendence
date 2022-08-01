@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  app:
+    container_name: vuejs
+    image: transcendance/vuejs
+    build:
+      context: ./app
+    volumes:
+      - type: bind
+        source: ./app
+        target: /usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - frontend
+    ports:
+      - "5173:5173"
+
+  api:
+    container_name: nestjs
+    image: transcendance/nestjs
+    build:
+      context: ./api
+    volumes:
+      - type: bind
+        source: ./api
+        target: /usr/src/app
+      - /usr/src/app
+    networks:
+      - frontend
+      - backend
+
+networks:
+  frontend:
+  backend:
