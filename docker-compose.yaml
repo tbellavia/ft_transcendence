@@ -10,7 +10,8 @@ services:
       - type: bind
         source: ./app
         target: /usr/src/app
-      - /usr/src/app/node_modules
+      - type: volumes
+        target: /usr/src/app/node_modules
     networks:
       - frontend
     ports:
@@ -25,7 +26,8 @@ services:
       - type: bind
         source: ./api
         target: /usr/src/app
-      - /usr/src/app/node_modules
+      - type: volumes
+        target: /usr/src/app/node_modules
     networks:
       - frontend
       - backend
