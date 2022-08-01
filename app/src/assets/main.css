@@ -9,18 +9,21 @@
 body {
   background-color: var(--background-color);
   font-family:'Fira Mono', monospace;
-  animation:colorPulse 5s infinite ease-in-out;
+  animation:colorPulse 6s infinite ease-in-out;
+
   margin: 0;
   padding: 0;
+  height: 100vh;
+  overflow:hidden;
+
   background-image: radial-gradient(#444, #111);
   box-shadow: 0 0 2vmin 2vmin var(--background-color) inset;
   box-sizing: border-box;
-  height: 100vh;
 }
 
 body:after {
-	background-image:linear-gradient(transparent, transparent 3px, #222);
-	background-size:4px 4px;
+	background-image:linear-gradient(transparent, transparent 5px, rgba(34, 34, 34, 0.6));
+	background-size:6px 6px;
   
 	content:"";
 	pointer-events:none;
