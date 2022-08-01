@@ -1,35 +1,55 @@
-@import "./base.css";
+/* @import "./base.css"; */
+/* "largely inspired" by Chris Smith:  https://codepen.io/chris22smith/pen/YZPrjr */
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-
-  font-weight: normal;
+:root {
+  --main-color: #0c0;
+  --background-color: #000;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
+body {
+  background-color: var(--background-color);
+  font-family:'Fira Mono', monospace;
+  animation:colorPulse 5s infinite ease-in-out;
+  margin: 0;
+  padding: 0;
+  background-image: radial-gradient(#444, #111);
+  box-shadow: 0 0 2vmin 2vmin var(--background-color) inset;
+  box-sizing: border-box;
+  height: 100vh;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+body:after {
+	background-image:linear-gradient(transparent, transparent 3px, #222);
+	background-size:4px 4px;
+  
+	content:"";
+	pointer-events:none;
+
+	position:absolute;
+	left:0;
+	right:0;
+	bottom:0;
+	top:0;
+	z-index:2;
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+a { 
+  color: var(--main-color);
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+a:hover {
+  background-color: var(--main-color);
+  color: var(--background-color);
+}
+
+@keyframes colorPulse {
+	0%, 100% {
+	  color: var(--main-color);
+	}
+	48%, 52% {
+	  color:#090;
+	}
+	50% {
+	  color:#060;
+	}
 }
