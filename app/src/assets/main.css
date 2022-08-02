@@ -9,28 +9,6 @@
 	--background-color: #000;
 }
 
-/* color Theme */
-:root, 
-	:root.green {
-		--main-color: #0c0;
-		--main-color-dark: #090;
-		--main-color-darker: #060;
-		--background-line-color:  rgba(34, 34, 34, 0.6)
-	}
-
-	:root.blue {
-		--main-color: #00c8ff;
-		--main-color-dark: #0292b9;
-		--main-color-darker: #036b88c4;
-		--background-line-color: #01546b8f;
-	}
-
-	:root.yellow {
-		--main-color: #f0f000;
-		--main-color-dark: #cfcf03;
-		--main-color-darker: #8f8f00;
-		--background-line-color: #b3b30027;
-	}
 
 /* mouse selector text */
 ::selection {
