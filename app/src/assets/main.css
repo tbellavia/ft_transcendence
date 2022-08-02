@@ -19,10 +19,17 @@
 	}
 
 	:root.blue {
-		--main-color: rgb(0, 150, 204);
-		--main-color-dark: rgb(0, 64, 153);
-		--main-color-darker: rgb(0, 22, 102);
-		--background-line-color: rgba(4, 8, 55, 0.6);
+		--main-color: #00c8ff;
+		--main-color-dark: #0292b9;
+		--main-color-darker: #036b88c4;
+		--background-line-color: #01546b8f;
+	}
+
+	:root.yellow {
+		--main-color: #f0f000;
+		--main-color-dark: #cfcf03;
+		--main-color-darker: #8f8f00;
+		--background-line-color: #b3b30027;
 	}
 
 /* mouse selector text */
@@ -83,3 +90,27 @@ a:hover {
 	  color:var(--main-color-darker);
 	}
 }
+
+/* wave for effects */
+body:before {
+	animation:wave 20s ease-in-out infinite;
+	content:"";
+	height:100vh;
+	left:0;
+	opacity:.3;
+	position:absolute;
+	right:0;
+	z-index:1;
+  }
+
+@keyframes wave {
+	0% {
+		box-shadow:0 -10vh 200vh var(--main-color-darker);
+		top:-10vh;
+	}
+
+	100% {
+	  box-shadow:0 -10vh 200vh var(--main-color-darker);
+	  top:200vh;
+	}
+  }
