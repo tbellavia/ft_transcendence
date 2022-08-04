@@ -10,7 +10,9 @@ export class UsersService {
   }
 
   createUser(user: User) {
+    console.log('Add: ', user);
     this.users.push(user);
+    console.log('Users:', this.users);
     return user;
   }
 }
