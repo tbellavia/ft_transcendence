@@ -1,5 +1,5 @@
 @import "@/assets/theme.css";/* "largely inspired" by Chris Smith:  https://codepen.io/chris22smith/pen/YZPrjr */
-
+@import "@/assets/imagesSVG.css";
 /* color for background */
 :root {
 	--grey_color-dark:#111;
@@ -19,8 +19,7 @@
 body {
   background-color: var(--background-color);
   font-family:'Fira Mono', monospace;
-  color: var(--main-color);
-  /* animation:colorPulse 6s infinite ease-in-out; */
+  animation:colorPulse 6s infinite ease-in-out;
 
   margin: 0;
   padding: 0;
@@ -48,13 +47,14 @@ body:after {
 }
 
 /* color links invert the main color when hover */
-/* a { 
-  color: var(--main-color);
-} */
 
-a:hover {
+a:hover, a:visited:hover {
   background-color: var(--main-color);
   color: var(--background-color);
+}
+
+a:visited {
+	color: var(--main-color);
 }
 
 

@@ -1,8 +1,8 @@
+<!-- First svg: only edge, Second svg: inside of design-->
 
 <template>
 
-<div id="svgLink" class="svgNormal">
-<svg  version="1.0" xmlns="http://www.w3.org/2000/svg"
+<svg class="svgEdge" version="1.0" xmlns="http://www.w3.org/2000/svg"
  width="190.000000pt" height="190.000000pt" viewBox="0 0 190.000000 190.000000"
  preserveAspectRatio="xMidYMid meet">
 
@@ -98,11 +98,8 @@ l37 10 -43 1 c-30 1 -44 -4 -49 -15z"/>
 <path d="M962 940 c0 -14 2 -19 5 -12 2 6 2 18 0 25 -3 6 -5 1 -5 -13z"/>
 </g>
 </svg>
-</div>
 
-
-<div id="svgLink" class="svgReverse">
-<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+<svg class=svgInsider version="1.0" xmlns="http://www.w3.org/2000/svg"
  width="190.000000pt" height="190.000000pt" viewBox="0 0 190.000000 190.000000"
  preserveAspectRatio="xMidYMid meet">
 
@@ -186,5 +183,6 @@ c24 56 43 67 65 40 13 -15 13 -14 -36 -82 -18 -25 -7 -55 27 -73 17 -10 27 -6
 -160 -1z"/>
 </g>
 </svg>
-</div>
+
+LOGIN
 </template>

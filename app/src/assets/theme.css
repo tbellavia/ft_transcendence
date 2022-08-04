@@ -26,55 +26,7 @@
 	}
 
 
-/* svg {
-	fill: currentColor;
-} */
 
-svg {
-	color: var(--main-color);
-	height: 100px;
-	width: 100px;
-}
-/* 
-div #svg {
-	height: 100px;
-	width: 100px;
-	background-color: blue;
-}
-
-div.svgReverse {
-	display: none;
-}
-
-div:hover .svgNormal {
-	display: none;
-}
-
-
-div:hover div.svgReverse {
-	display: block;
-} 
- */
-
-/*  */
-
-a svg {
-	height: 200px;
-	width: 200px;
-}
-
-a svg.svgReverse {
-	display: none;
-}
- 
-a:hover svg.svgNormal {
-	display: none;
-}
-
-a:hover svg.svgReverse {
-	background-color: var(	);
-	display: inline;
-} 
 /*  */
 
 
