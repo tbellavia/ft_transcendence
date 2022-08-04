@@ -6,6 +6,7 @@ import { UsersModule } from 'src/users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { Api42Strategy } from './strategies/api42.strategy';
+import { JWTStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { Api42Strategy } from './strategies/api42.strategy';
       }),
     }),
   ],
-  providers: [AuthService, Api42Strategy],
+  providers: [AuthService, Api42Strategy, JWTStrategy],
   controllers: [AuthController],
   exports: [],
 })

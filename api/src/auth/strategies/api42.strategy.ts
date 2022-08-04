@@ -30,8 +30,6 @@ export class Api42Strategy extends PassportStrategy(Strategy, 'api42') {
         },
       }),
     );
-    console.log("Fetch user's data: ", data);
-
     return await this.authService.findOrCreateUser(data);
   }
 }
