@@ -1,7 +1,9 @@
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-oauth2';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../auth.service';
 
 @Injectable()
@@ -9,6 +11,7 @@ export class Api42Strategy extends PassportStrategy(Strategy, 'api42') {
   constructor(
     private readonly authService: AuthService,
     private readonly config: ConfigService,
+    private readonly http: HttpService,
   ) {
     super({
       authorizationURL: 'https://api.intra.42.fr/oauth/authorize',
@@ -20,6 +23,14 @@ export class Api42Strategy extends PassportStrategy(Strategy, 'api42') {
   }
 
   async validate(accessToken: string) {
-    return await this.authService.validate(accessToken);
+    const { data } = await firstValueFrom(
+      this.http.get('http://api.intra.42.fr/v2/me', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }),
+    );
+
+    return await this.authService.findOrCreateUser(data);
   }
 }
