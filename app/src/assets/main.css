@@ -19,7 +19,8 @@
 body {
   background-color: var(--background-color);
   font-family:'Fira Mono', monospace;
-  animation:colorPulse 6s infinite ease-in-out;
+  color: var(--main-color);
+  /* animation:colorPulse 6s infinite ease-in-out; */
 
   margin: 0;
   padding: 0;
@@ -47,14 +48,15 @@ body:after {
 }
 
 /* color links invert the main color when hover */
-a { 
+/* a { 
   color: var(--main-color);
-}
+} */
 
 a:hover {
   background-color: var(--main-color);
   color: var(--background-color);
 }
+
 
 /* pulse color on font: old screen effect */
 @keyframes colorPulse {
@@ -70,7 +72,7 @@ a:hover {
 }
 
 /* wave for effects */
-body:before {
+/* body:before {
 	animation:wave 20s ease-in-out infinite;
 	content:"";
 	height:100vh;
@@ -91,4 +93,4 @@ body:before {
 	  box-shadow:0 -10vh 200vh var(--main-color-darker);
 	  top:200vh;
 	}
-  }
+  } */

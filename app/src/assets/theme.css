@@ -25,6 +25,166 @@
 		/* for image: f0f000 */
 	}
 
+
+/* svg {
+	fill: currentColor;
+} */
+
+svg {
+	color: var(--main-color);
+	height: 100px;
+	width: 100px;
+}
+/* 
+div #svg {
+	height: 100px;
+	width: 100px;
+	background-color: blue;
+}
+
+div.svgReverse {
+	display: none;
+}
+
+div:hover .svgNormal {
+	display: none;
+}
+
+
+div:hover div.svgReverse {
+	display: block;
+} 
+ */
+
+/*  */
+
+a svg {
+	height: 200px;
+	width: 200px;
+}
+
+a svg.svgReverse {
+	display: none;
+}
+ 
+a:hover svg.svgNormal {
+	display: none;
+}
+
+a:hover svg.svgReverse {
+	background-color: var(	);
+	display: inline;
+} 
+/*  */
+
+
+/* 
+
+svg {
+	color: var(--main-color);
+	height: 100px;
+	width: 100px;
+}
+
+svg#svgLink {
+	height: 100px;
+	width: 100px;
+}
+
+a svg.svgReverse {
+	display: none;
+}
+
+a svg.svgNormal {
+	display: block;
+}
+
+a svg.svgNormal:hover ~a svg.svgReverse {
+	display: block;
+}
+
+a svg.svgReverse:hover ~a svg.svgNormal {
+	display: none;
+}
+
+div#svgLink {
+	height: 100px;
+	width: 100px;
+	background-color: blue;
+}
+
+div#svgLink.svgReverse {
+	display: none;
+}
+
+div #svgLink:hover div #svgLink.svgNormal {
+	display: none;
+}
+
+
+div#svgLink:hover ~div#svgLink.svgReverse {
+	display: block;
+} 
+
+div#svgLink.svgReverse {
+	display: none;
+}
+
+div #svgLink:hover div #svgLink.svgNormal {
+	display: none;
+}
+
+
+div#svgLink:hover ~div#svgLink.svgReverse {
+	display: block;
+} 
+ */
+
+
+/* 
+#svgReverse {
+	display: none;
+}
+
+#svgNormal:hover {
+	display: none;
+}
+
+
+#svgNormal:hover ~#svgReverse {
+	color: var(--main-color);
+	display: block;
+} */
+
+
+/* 
+#svgNormal:hover~#svgReverse{
+	color: var(--main-color);
+	display: block;
+} */
+
+/* 
+#svgReverse {
+	display: none;
+}
+
+#svgNormal:hover {
+	display: none;
+}
+
+
+#svgNormal:hover ~#svgReverse {
+	color: var(--main-color);
+	display: block;
+} */
+
+
+/* 
+#svgNormal:hover~#svgReverse{
+	color: var(--main-color);
+	display: block;
+} */
+
 /* 
 .yellow {
 	authentication_logo: url(@/components/icons/WhiskeyRose_yellow.xcf);

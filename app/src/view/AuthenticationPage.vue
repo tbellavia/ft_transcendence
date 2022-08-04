@@ -3,5 +3,9 @@
 
 <template>
 
-COUCOU
+<div>
+
+
+</div>
+
 </template>
