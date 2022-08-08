@@ -1,0 +1,41 @@
+.dropdown {
+	position: relative;
+}
+
+
+li.dropdown ul {
+	display: none;
+}
+
+li.dropdown:hover ul {
+	position:absolute;
+	display: flex;
+	right: 100%;
+	flex-direction: column;
+	z-index: 500;
+	overflow: visible;
+	/* animation: cssAnimation 0s ease-in 5s forwards; */
+}
+
+/* @keyframes cssAnimation {
+	padding-right: 500px;
+	transition: 100ms;
+    to {
+        width:0;
+        height:0;
+        overflow:hidden;
+    }
+} */
+
+/*
+li.dropdown li {
+	display: none;
+}
+
+li.dropdown:hover li{
+	display: block;
+} */
+
+/* li.list-dropdown {
+
+} */
