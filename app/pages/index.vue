@@ -4,7 +4,8 @@
       <NavBar />
     </header>
     <main>
-      <Authentication />
+      <!-- <Authentication /> -->
+      <Testing_css />
     </main>
   </div>
 </template>
@@ -14,10 +15,11 @@ import Vue from 'vue'
 import Authentication from '~/components/Authentication.vue'
 import NavBar from '~/components/NavBar.vue'
 import LogoParam from '~/components/Svg/logo-param.vue'
+import Testing_css from '~/components/testing_css.vue'
 
 export default Vue.extend({
     name: "IndexPage",
-    components: { Authentication, NavBar, LogoParam }
+    components: { Authentication, NavBar, LogoParam, Testing_css }
 })
 </script>
 

@@ -33,9 +33,12 @@ import LogoColorSwatch from "./Svg/logo-color-swatch.vue";
 </template>
 
 <style scoped >
-  button {
-    font-size: 10px;
-  }
+button {
+  font-size: 12px;
+  width: 130px;
+}
+/* stylelint-disable */
+
 
   button:hover {
     background-color: var(--main-color);
