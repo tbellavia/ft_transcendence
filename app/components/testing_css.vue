@@ -76,17 +76,26 @@ li#drop:hover ul {
   display:flex;
   flex-direction: column;
   position: absolute;
+  border: solid;
+  border-color: transparent;
   top: 100%;
 }
 
-li#drop button {
+li#drop li {
   border: solid;
   border-color: transparent;
+  display: flex;
+  justify-content: flex-start;
   width: 120px;
 }
 
 button {
+  border: solid;
+  border-color: transparent;
+  display: flex;
+  justify-content: flex-start;
   width: 100%;
+  padding-left: 10%;
 }
 
 /* PREMIER */
@@ -111,28 +120,51 @@ button {
 
 .drop-2, .drop-3, .drop-4 {
   border-bottom: solid;
-  z-index: 500;
 }
 
 .drop-2:hover, .drop-3:hover, .drop-4:hover{
   border-left: solid;
   border-top: solid;
   border-right: solid;
+  border-bottom: solid;
   border-bottom-color: transparent;
-}
-
-.drop-2:hover li {
-  z-index: 500;
 }
 
 .drop-2 li {
   background-color: var(--main-color-op-10);
 }
 
-.drop-2 li:hover {
+.drop-2 li:hover button {
   border-left: solid;
   border-left-color: var(--main-color-light);
   color: var(--main-color-light);
+}
+
+/* TROISIEME */
+
+
+.drop-3 li {
+  background-color: var(--main-color-op-10);
+  color: var(--main-color-light);
+}
+
+.drop-3 li:hover button {
+  color: var(--main-color-light);
+  border: solid;
+}
+
+/* QUATRIEME */
+
+
+.drop-4 li {
+  background-color: var(--main-color-op-10);
+  color: var(--main-color-light);
+}
+
+.drop-4 li:hover button {
+  background-color: var(--main-color);
+  color: var(--background-color);
+
 }
 
 
