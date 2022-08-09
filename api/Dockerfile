@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Dockerfile                                         :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lperson- <lperson-@student.42.fr>          +#+  +:+       +#+         #
+#    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/01 10:45:03 by lperson-          #+#    #+#              #
-#    Updated: 2022/08/01 14:33:22 by lperson-         ###   ########.fr        #
+#    Updated: 2022/08/01 21:15:03 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,13 @@ WORKDIR /usr/src/app
 COPY ./package*.json ./
 
 RUN npm install
+
+# RUN mkdir node_modules/.cache && chmod -R 777 node_modules/.cache
+
+RUN chown -R node /usr/src/app/node_modules
+
+USER node
+
 
 ENTRYPOINT [ "npm" ]
 
