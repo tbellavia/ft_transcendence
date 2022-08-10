@@ -4,8 +4,8 @@
       <NavBar />
     </header>
     <main>
-      <!-- <Authentication /> -->
-      <Testing_css />
+      <Authentication />
+      <!-- <Testing_css /> -->
     </main>
   </div>
 </template>

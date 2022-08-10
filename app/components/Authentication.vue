@@ -1,26 +1,25 @@
 <!-- Please remove this file from your project -->
-<template>
-  <div>
-    <main class="main">
-      <div class="authentication-link">
-        <a href="#">
-          <WhiskeyRose />
-        </a>
-      </div>
-    </main>
 
-    <!-- <links /> // authors and studioGame -->
+
+<template>
+
+
+  <div  class="authentication-link">
+    <p class="authentication-item" >Click for login with 42 </p>
+    <a class="authentication-item" href="#"><Boy style="width: 100%;"/></a>
   </div>
+
+  
+    <!-- <links /> // authors and studioGame -->
 </template>
 
 <script>
-import WhiskeyRose from './Svg/WhiskeyRose.vue';
-import NavBar from './NavBar.vue'
 import LogoParam from './Svg/logo-param.vue';
+import Boy from './Svg/Boy.vue';
 
 export default {
     name: "Authentication",
-    components: { WhiskeyRose, NavBar, LogoParam },
+    components: { LogoParam, Boy },
     methods: {
       isAuthenticate() {
         return true;
@@ -29,10 +28,53 @@ export default {
 }
 </script>
 
-<style>
-  .authentication-link {
-    display: flex;
-    align-items: center;
-  }
+<style scoped>
+/* stylelint-disable */
+
+.authentication-link {
+  position: absolute;
+  width: 280px;
+  height: 310px;
+  left: 25%;
+  top: 15%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content:flex-start;
+  overflow: hidden;
+}
+
+.authentication-link:hover {
+  border: solid;
+}
+
+.authentication-item {
+  display: flex;
+  justify-self: center;
+  flex-shrink: auto;
+  background-color: transparent;
+  width: 100%;
+
+}
+
+.authentication-item div.img-svg {
+  width: 100%;
+}
+
+.authentication-link p {
+  width: 100%;
+  border:solid;
+  padding-left: 18px;
+}
+
+.authentication-link:hover p {
+  border: none;
+}
 
 </style>
+  <!-- <div>
+    <a class="authentication-link" href="#">
+      <p class="authentication-item"> Click for login with 42 </p>
+      <Boy class="authentication-item" style="width: 80%;"/>
+    </a>
+  </div> -->
