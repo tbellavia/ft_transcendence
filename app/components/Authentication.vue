@@ -1,16 +1,9 @@
 <!-- Please remove this file from your project -->
-
-
 <template>
-
-
   <div  class="authentication-link">
     <p class="authentication-item" >Click for login with 42 </p>
     <a class="authentication-item" href="#"><Boy style="width: 100%;"/></a>
   </div>
-
-  
-    <!-- <links /> // authors and studioGame -->
 </template>
 
 <script>
@@ -35,12 +28,10 @@ export default {
   position: absolute;
   width: 280px;
   height: 310px;
-  left: 25%;
   top: 15%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content:flex-start;
   overflow: hidden;
 }
 

@@ -45,6 +45,7 @@ header {
 /* Global style for all component with animation pulse for blink letters */
 main {
 	background-image: radial-gradient(var(--grey-color-lighter), var(--grey-color-dark));
+	background-image: radial-gradient(var(--grey-color-lighter), var(--background-color));
 	box-shadow: 0 0 10vmin 2vmin var(--background-color) inset;
 	height: 90%;
 	width: 100%;
@@ -68,6 +69,19 @@ main {
 	}
 }
 
+/* @keyframes colorPulse {
+	0%, 100% {
+	  fill-opacity: 1;
+	}
+	48%, 52% {
+	  fill-opacity: 0.7;
+	}
+	50% {
+	  fill-opacity: 0.4;
+	}
+} */
+
+
 /* Visual line like old monitor */
 body:after {
 	background-image:linear-gradient(transparent, transparent 5px, var(--background-line-color));
@@ -83,8 +97,6 @@ body:after {
 	top:0;
 	z-index:2;
 }
-
-
 
 /* wave for effects */
 /* body:before {
@@ -109,8 +121,6 @@ body:after {
 	  top:200vh;
 	}
   } */
-
-
 
 /* color links invert the main color when hover */
 
