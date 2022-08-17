@@ -2,8 +2,10 @@ version: "3"
 
 services:
   app:
-    container_name: vuejs
-    image: transcendance/vuejs
+    container_name: nuxtjs
+    environment:
+      - NODE_OPTIONS=--openssl-legacy-provider
+    image: transcendance/nuxtjs
     build:
       context: ./app
     volumes:
@@ -15,7 +17,7 @@ services:
     networks:
       - frontend
     ports:
-      - "5173:5173"
+      - "8000:8000"
 
   api:
     container_name: nestjs
