@@ -207,11 +207,3 @@
     </svg>
   </div>
 </template>
-
-<script>
-/*
-export default {
-	name: "Boy",
-}
-*/
-</script>

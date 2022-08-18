@@ -2,7 +2,7 @@
 <template>
   <div class="authentication-link">
     <p class="authentication-item">Click for login with 42</p>
-    <a class="authentication-item" href="#"><Boy style="width: 100%" /></a>
+    <a class="authentication-item" href="#"><SVGBoy style="width: 100%" /></a>
   </div>
 </template>
 

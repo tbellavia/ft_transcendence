@@ -10,14 +10,6 @@
   </div>
 </template>
 
-<script>
-/*
-export default {
-  name: 'Copyright',
-}
-*/
-</script>
-
 <style scoped>
 /* stylelint-disable */
 

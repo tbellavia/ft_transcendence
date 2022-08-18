@@ -6,7 +6,7 @@
 #    By: lperson- <lperson-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/01 10:45:03 by lperson-          #+#    #+#              #
-#    Updated: 2022/08/17 13:27:35 by lperson-         ###   ########.fr        #
+#    Updated: 2022/08/18 13:38:01 by lperson-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,6 @@ RUN npm install
 
 ENTRYPOINT [ "npm" ]
 
-CMD ["run", "dev"]
+CMD ["run", "dev", "--", "-o"]
 
 EXPOSE 8000

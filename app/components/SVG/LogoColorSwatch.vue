@@ -28,11 +28,3 @@
     </svg>
   </div>
 </template>
-
-<script>
-/*
-	export default {
-		name: "logo-color-swatch",
-	}
-*/
-</script>

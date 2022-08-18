@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
+#    By: lperson- <lperson-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/01 12:47:39 by lvirgini          #+#    #+#              #
-#    Updated: 2022/08/01 22:51:05 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/08/18 14:49:04 by lperson-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,22 +41,21 @@ config:
 # ----------------- #
 
 rm:
-		docker rm -f $$(docker ps -a -q)
+		- docker rm -f $$(docker ps -a -q)
 		
 rmi:
-		docker rmi -f $$(docker images -a -q)
+		- docker rmi -f $$(docker images -a -q)
 
 rm_volume:
-		docker volume rm $$(docker volume ls -q)
+		- docker volume rm $$(docker volume ls -q)
 
 rm_network:
-		docker rm $$(docker network ls -q)
+		- docker rm $$(docker network ls -q)
 
 clean:
-	$(DOCKER_COMPOSE) down -v --rmi all --remove-orphans
+	- $(DOCKER_COMPOSE) down -v --rmi all --remove-orphans
 
-fclean: clean
-		./cleaner.sh
+fclean: clean rm rmi rm_volume rm-network
 
 
 re: 	fclean all

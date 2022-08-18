@@ -1,6 +1,6 @@
 <template>
   <li class="dropdown">
-    <LogoColorSwatch class="dropdown-menu" />
+    <SVGLogoColorSwatch class="dropdown-menu" />
     <ul>
       <li class="dropydown-item" v-for="color in colors">
         <button @click="setTheme(color)">{{ color }}</button>
@@ -8,27 +8,6 @@
     </ul>
   </li>
 </template>
-
-<script lang="ts">
-/* Nuxt 2 option API
-import LogoColorSwatch from "./Svg/logo-color-swatch.vue";
-
-export default {
-  name: "ChangeTheme",
-  methods: {
-    setTheme(theme: string) {
-      document.documentElement.className = theme.toLowerCase();
-    },
-  },
-  data() {
-    return {
-      colors: ["GREEN", "BLUE", "YELLOW"],
-    };
-  },
-  components: { LogoColorSwatch },
-};
-*/
-</script>
 
 <script setup lang="ts">
 let colors = ref(["GREEN", "BLUE", "YELLOW"]);

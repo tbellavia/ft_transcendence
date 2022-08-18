@@ -1,26 +1,12 @@
 <template>
   <nav class="navbar">
-    <Studio_Logo class="navbar-left" />
+    <SVGStudioLogo class="navbar-left" />
     <div class="navbar-right">
       <ChangeTheme class="navbar-sub" />
-      <LogoParam class="navbar-sub" />
+      <SVGLogoParam class="navbar-sub" />
     </div>
   </nav>
 </template>
-
-<script lang="ts">
-/*
-import Studio_Logo from "./Svg/Studio_Logo.vue";
-import ChangeTheme from "./ChangeTheme.vue";
-import LogoParam from "./Svg/logo-param.vue";
-
-export default {
-    name: "NavBar",
-    components: { Studio_Logo, ChangeTheme, LogoParam },
-
-}
-*/
-</script>
 
 <style scoped>
 .navbar {
