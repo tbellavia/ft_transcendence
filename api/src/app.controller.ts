@@ -8,8 +8,8 @@ export class AppController {
 
   @Public()
   @Get('')
-  getHello(): string {
-    return this.appService.getHello();
+  getIndex(): string {
+    return "";
   }
 
   @Get('profile')
