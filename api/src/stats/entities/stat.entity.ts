@@ -13,13 +13,13 @@ export class StatEntity extends BaseEntity {
     @PrimaryGeneratedColumn()
     stat_id: string;
 
-    @Column()
+    @Column({ nullable: true, default: 0 })
     game_total: number;
 
-    @Column()
+    @Column({ nullable: true, default: 0 })
     game_won: number;
 
-    @Column()
+    @Column({ nullable: true, default: 0 })
     game_abandonned: number;
 
     @Column({

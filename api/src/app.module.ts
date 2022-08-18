@@ -22,7 +22,7 @@ import { StatEntity } from './stats/entities/stat.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UserEntity, StatEntity],
+      entities: [UserEntity, StatEntity, BlockedEntity],
       // TODO: Remove for production
       synchronize: true
     })
