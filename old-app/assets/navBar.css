@@ -1,0 +1,16 @@
+.dropdown {
+	position: relative;
+}
+
+li.dropdown ul {
+	display: none;
+}
+
+li.dropdown:hover ul {
+	position: absolute;
+	display: flex;
+	right: 100%;
+	flex-direction: column;
+	z-index: 500;
+	overflow: visible;
+}
