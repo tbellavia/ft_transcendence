@@ -8,6 +8,8 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { JWTAuthGuard } from './auth/guards/jwtauth.guard';
 import { DataSource } from 'typeorm';
+import { UserEntity } from './users/entities/user.entity';
+import { StatEntity } from './stats/entities/stat.entity';
 
 @Module({
   imports: [
@@ -20,7 +22,7 @@ import { DataSource } from 'typeorm';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [],
+      entities: [UserEntity, StatEntity],
       // TODO: Remove for production
       synchronize: true
     })
