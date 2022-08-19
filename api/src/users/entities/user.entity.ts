@@ -1,8 +1,9 @@
 import { StatEntity } from "../../stats/entities/stat.entity";
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, JoinColumn, BaseEntity, OneToMany, ManyToOne } from "typeorm";
 import { BlockedEntity } from "./blocked.entity";
+import { FriendEntity } from "./friend.entity";
 
-@Entity("user")
+@Entity("users")
 export class UserEntity extends BaseEntity {
     @PrimaryGeneratedColumn()
     user_id: string;
@@ -25,4 +26,10 @@ export class UserEntity extends BaseEntity {
 
     @OneToMany(() => BlockedEntity, (blocked) => blocked.user_2)
     blocked_by_users: BlockedEntity[];
+
+    @OneToMany(() => FriendEntity, (friend) => friend.user_1)
+    friends: FriendEntity[];
+
+    @OneToMany(() => FriendEntity, (friend) => friend.user_2)
+    friend_of_other: FriendEntity[];
 }

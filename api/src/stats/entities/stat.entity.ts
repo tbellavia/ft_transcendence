@@ -8,7 +8,7 @@ export enum RankEnum {
     WOOD = "Wood"
 }
 
-@Entity("stat")
+@Entity("stats")
 export class StatEntity extends BaseEntity {
     @PrimaryGeneratedColumn()
     stat_id: string;
