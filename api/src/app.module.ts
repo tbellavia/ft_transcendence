@@ -10,6 +10,9 @@ import { JWTAuthGuard } from './auth/guards/jwtauth.guard';
 import { DataSource } from 'typeorm';
 import { UserEntity } from './users/entities/user.entity';
 import { StatEntity } from './stats/entities/stat.entity';
+import { BlockedEntity } from './blocked/entity/blocked.entity';
+import { FriendEntity } from './friends/entity/friend.entity';
+import { MatchEntity } from './match-history/entity/match-history.entity';
 
 @Module({
   imports: [
@@ -22,7 +25,13 @@ import { StatEntity } from './stats/entities/stat.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UserEntity, StatEntity, BlockedEntity],
+      entities: [
+        UserEntity, 
+        StatEntity, 
+        BlockedEntity,
+        FriendEntity,
+        MatchEntity
+      ],
       // TODO: Remove for production
       synchronize: true
     })
