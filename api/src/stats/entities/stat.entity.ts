@@ -1,4 +1,4 @@
-import { UserEntity } from "src/users/entities/user.entity";
+import { UserEntity } from "../../users/entities/user.entity";
 import { Column, PrimaryGeneratedColumn, Entity, BaseEntity, OneToOne, JoinColumn } from "typeorm";
 
 export enum RankEnum {
