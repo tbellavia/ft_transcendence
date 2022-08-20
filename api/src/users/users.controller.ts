@@ -29,4 +29,10 @@ export class UsersController {
             return await this.usersService.findAll(+query.limit);
         return await this.usersService.findAll();
     }
+
+    @Public()
+    @Get("/:user_id")
+    async findOne(@Param("user_id") user_id: string) {
+        return await this.usersService.findOne(user_id);
+    }
 }

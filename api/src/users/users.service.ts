@@ -58,6 +58,15 @@ export class UsersService {
     return await this.userRepository.find(options);
   }
 
+  async findOne(user_id: string) {
+    return await this.userRepository.findOne({
+      where: {
+        user_id
+      },
+      select: selectUserOption
+    });
+  }
+
   /* Lylian's code */
   findUser(userID: number) {
     return this.users.find((user) => user.id == userID);
