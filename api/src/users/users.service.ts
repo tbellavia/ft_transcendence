@@ -45,6 +45,16 @@ export class UsersService {
     return user;
   }
 
+  async findAll() {
+    return this.userRepository.find({
+      select: {
+        user_id: true,
+        username: true,
+        creation_date: true
+      },
+    });
+  }
+
   /* Lylian's code */
   findUser(userID: number) {
     return this.users.find((user) => user.id == userID);

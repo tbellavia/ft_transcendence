@@ -21,4 +21,10 @@ export class UsersController {
     async updateUser(@Body() updateUserDto: UpdateUserDTO, @Param('user_id') user_id: string) {
         this.usersService.update(updateUserDto, user_id);
     }
+
+    @Public()
+    @Get()
+    async findAllUsers() {
+        return await this.usersService.findAll();
+    }
 }
