@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query } from "@nestjs/common";
 import { Public } from "../common/decorators/public.decorator";
 import { CreateUserDTO } from "./dto/create-user.dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
@@ -24,7 +24,9 @@ export class UsersController {
 
     @Public()
     @Get()
-    async findAllUsers() {
+    async findAllUsers(@Query() query) {
+        if ( "limit" in query )
+            return await this.usersService.findAll(+query.limit);
         return await this.usersService.findAll();
     }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository, UsingJoinColumnIsNotAllowedError } from 'typeorm';
 import { User } from './class/user.class';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
@@ -45,21 +45,27 @@ export class UsersService {
     return user;
   }
 
-  async findAll() {
-    return this.userRepository.find({
+  async findAll(limit?: number | undefined) {
+    const options: FindManyOptions<UserEntity> = {
       select: {
         user_id: true,
         username: true,
         creation_date: true
       },
-    });
+      order: {
+        user_id: "ASC"
+      }
+    }
+    if ( limit !== undefined )
+      options["take"] = limit;
+    return await this.userRepository.find(options);
   }
 
   /* Lylian's code */
   findUser(userID: number) {
     return this.users.find((user) => user.id == userID);
   }
-
+ 
   createUser(user: User) {
     console.log('Add: ', user);
     this.users.push(user);
