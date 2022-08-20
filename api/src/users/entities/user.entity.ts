@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, Joi
 import { StatEntity } from "../../stats/entities/stat.entity";
 import { BlockedEntity } from "../../blocked/entity/blocked.entity";
 import { FriendEntity } from "../../friends/entity/friend.entity";
-import { MatchEntity } from "src/match-history/entity/match-history.entity";
+import { MatchEntity } from "src/matches/entity/match.entity";
 
 @Entity("users")
 export class UserEntity extends BaseEntity {
