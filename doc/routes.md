@@ -46,6 +46,9 @@ Stats :
 
 Matches :
     - POST      /api/v1/users/:user1_id/matches/:user2_id
+    - GET       /api/v1/users/:user_id/matches?limit=<int>&date=<date>
+    - GET       /api/v1/users/:user1_id/matches/:user2_id
+    - PUT       /api/v1/users/:user1_id/matches/:user2_id
         - Body
         {
             player_1_point: int,
@@ -55,6 +58,4 @@ Matches :
             begin_date: Date,
             end_date: Date
         }
-    - GET       /api/v1/users/:user_id/matches?limit=<int>&date=<date>
-    - GET       /api/v1/users/:user1_id/matches/:user2_id
     - DELETE    /api/v1/users/:user1_id/matches/:user2_id
