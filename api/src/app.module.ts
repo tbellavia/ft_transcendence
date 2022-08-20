@@ -36,9 +36,10 @@ import { UsersModule } from './users/users.module';
       ],
       // TODO: Remove for production
       synchronize: true
-    })
+    }),
+    UsersModule
   ],
-  controllers: [AppController],
+  controllers: [AppController, UsersController],
   providers: [
     {
       provide: APP_GUARD,
