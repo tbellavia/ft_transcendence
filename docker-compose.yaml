@@ -31,6 +31,27 @@ services:
     networks:
       - frontend
       - backend
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: postgres:12
+    restart: always
+    environment:
+      - POSTGRES_USER=<user>
+      - POSTGRES_PASSWORD=<password>
+      - POSTGRES_DB=<database>
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - backend
+
+volumes:
+  db:
+    driver: local
 
 networks:
   frontend:
