@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from "@nestjs/common";
 import { Public } from "../common/decorators/public.decorator";
 import { CreateUserDTO } from "./dto/create-user.dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
@@ -34,5 +34,11 @@ export class UsersController {
     @Get("/:user_id")
     async findOne(@Param("user_id") user_id: string) {
         return await this.usersService.findOne(user_id);
+    }
+
+    @Public()
+    @Delete("/:user_id")
+    async delete(@Param("user_id") user_id: string){
+        this.usersService.delete(user_id);
     }
 }

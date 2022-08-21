@@ -67,6 +67,10 @@ export class UsersService {
     });
   }
 
+  async delete(user_id: string){
+    await this.userRepository.delete(user_id);
+  }
+
   /* Lylian's code */
   findUser(userID: number) {
     return this.users.find((user) => user.id == userID);
