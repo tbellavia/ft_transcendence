@@ -25,4 +25,17 @@ export class StatsService {
         stat.save();
         return { msg: "Stat created successfuly!" };
     }
+
+    async findOne(user_id: string) {
+        const user = await this.userRepository.findOne({ where: { user_id } });
+
+        if ( user == null ){
+            return null;
+        }
+        return await this.statRepostiroy.findOne({ 
+            where: {
+                user: { user_id }
+            }
+        });
+    }
 }
