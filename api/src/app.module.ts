@@ -4,7 +4,6 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { JWTAuthGuard } from './auth/guards/jwtauth.guard';
 import { DataSource } from 'typeorm';
@@ -45,7 +44,6 @@ import { UsersModule } from './users/users.module';
       provide: APP_GUARD,
       useClass: JWTAuthGuard,
     },
-    AppService,
   ],
 })
 export class AppModule {
