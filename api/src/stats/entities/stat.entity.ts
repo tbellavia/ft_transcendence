@@ -2,10 +2,10 @@ import { UserEntity } from "../../users/entities/user.entity";
 import { Column, PrimaryGeneratedColumn, Entity, BaseEntity, OneToOne, JoinColumn } from "typeorm";
 
 export enum RankEnum {
-    GOLD = "Gold",
-    SILVER = "Silver",
-    BRONZE = "Bronze",
-    WOOD = "Wood"
+    GOLD    = "Gold",
+    SILVER  = "Silver",
+    BRONZE  = "Bronze",
+    WOOD    = "Wood"
 }
 
 @Entity("stats")

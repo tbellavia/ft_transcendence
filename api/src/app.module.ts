@@ -12,7 +12,9 @@ import { UserEntity } from './users/entities/user.entity';
 import { StatEntity } from './stats/entities/stat.entity';
 import { BlockedEntity } from './blocked/entity/blocked.entity';
 import { FriendEntity } from './friends/entity/friend.entity';
-import { MatchEntity } from './match-history/entity/match-history.entity';
+import { MatchEntity } from './matches/entity/match.entity';
+import { UsersController } from './users/users.controller';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -34,9 +36,10 @@ import { MatchEntity } from './match-history/entity/match-history.entity';
       ],
       // TODO: Remove for production
       synchronize: true
-    })
+    }),
+    UsersModule
   ],
-  controllers: [AppController],
+  controllers: [AppController, UsersController],
   providers: [
     {
       provide: APP_GUARD,
