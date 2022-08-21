@@ -28,6 +28,8 @@ services:
         target: /usr/src/app
       - type: volume
         target: /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
     networks:
       - frontend
       - backend
