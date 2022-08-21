@@ -14,6 +14,7 @@ import { FriendEntity } from './friends/entity/friend.entity';
 import { MatchEntity } from './matches/entity/match.entity';
 import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
   imports: [
@@ -36,7 +37,8 @@ import { UsersModule } from './users/users.module';
       // TODO: Remove for production
       synchronize: true
     }),
-    UsersModule
+    UsersModule,
+    StatsModule,
   ],
   controllers: [AppController, UsersController],
   providers: [
