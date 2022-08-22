@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/users/class/user.class';
-import { UsersService } from 'src/users/users.service';
+import { User } from 'src/resources/users/class/user.class';
+import { UsersService } from 'src/resources/users/users.service';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +14,7 @@ export class AuthService {
     let user: User | undefined = this.userService.findUser(toFind.id);
     if (!user) {
       user = new User();
+
       for (const property in user) {
         user[property] = toFind[property];
       }

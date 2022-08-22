@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from "@nestjs/common";
-import { Public } from "../common/decorators/public.decorator";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
+import { Public } from "../../common/decorators/public.decorator";
 import { CreateUserDTO } from "./dto/create-user.dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
 import { UsersService } from "./users.service";
@@ -9,7 +9,7 @@ export class UsersController {
     constructor(
         private usersService: UsersService
     ) { }
-    
+
     @Public()
     @Post()
     async createUser(@Body() createUserDto: CreateUserDTO) {
@@ -24,10 +24,8 @@ export class UsersController {
 
     @Public()
     @Get()
-    async findAllUsers(@Query() query) {
-        if ( "limit" in query )
-            return await this.usersService.findAll(+query.limit);
-        return await this.usersService.findAll();
+    async findAllUsers(@Query('limit') limit) {
+        return await this.usersService.findAll(limit);
     }
 
     @Public()

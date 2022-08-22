@@ -1,15 +1,17 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { User } from "../utils/decorators/user.decorator";
+import { Api42Guard } from "./guards/api42.guard";
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Get('api42')
-  @UseGuards(AuthGuard('api42'))
-  log42Api(@Request() req) {
-    return this.authService.login(req.user);
+  @UseGuards(Api42Guard)
+  log42Api(
+    @User() user
+  ) {
+    return this.authService.login(user);
   }
 }

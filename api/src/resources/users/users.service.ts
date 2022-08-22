@@ -31,19 +31,18 @@ export class UsersService {
     const { password } = updateUserDto;
     const user = await this.find(user_id);
 
-    if ( user == null )
+    if (!user)
       return;
     user.password = password;
     await user.save();
   }
 
   async find(user_id: string) {
-    const user = await this.userRepository.findOne({
+    return await this.userRepository.findOne({
       where: {
         user_id
       }
     });
-    return user;
   }
 
   async findAll(limit?: number | undefined) {
@@ -53,8 +52,8 @@ export class UsersService {
         user_id: "ASC"
       }
     }
-    if ( limit !== undefined )
-      options["take"] = limit;
+    if (limit)
+      options.take = limit;
     return await this.userRepository.find(options);
   }
 
@@ -75,7 +74,7 @@ export class UsersService {
   findUser(userID: number) {
     return this.users.find((user) => user.id == userID);
   }
- 
+
   createUser(user: User) {
     console.log('Add: ', user);
     this.users.push(user);
