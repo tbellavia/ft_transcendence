@@ -23,6 +23,24 @@
   height: 100%;
 }
 
+/* pulse color on font: old screen effect */
+@keyframes colorPulse {
+  0%,
+  100% {
+    color: var(--main-color);
+    /* fill-opacity: 1; */
+  }
+  48%,
+  52% {
+    color: var(--main-color-dark);
+    /* fill-opacity: 0.7; */
+  }
+  50% {
+    color: var(--main-color-darker);
+    /* fill-opacity: 0.4; */
+  }
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -54,39 +72,16 @@ main {
   height: 90%;
   width: 100%;
 
-  border-top: red;
   /* TODO check*/
   position: fixed;
-  overflow: scroll;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
 }
 
-/* pulse color on font: old screen effect */
-@keyframes colorPulse {
-  0%,
-  100% {
-    color: var(--main-color);
-  }
-  48%,
-  52% {
-    color: var(--main-color-dark);
-  }
-  50% {
-    color: var(--main-color-darker);
-  }
-}
-
-/* @keyframes colorPulse {
-	0%, 100% {
-	  fill-opacity: 1;
-	}
-	48%, 52% {
-	  fill-opacity: 0.7;
-	}
-	50% {
-	  fill-opacity: 0.4;
-	}
-} */
-
+/* --------------------------------------------------------------  */
 /* Visual line like old monitor */
 body:after {
   background-image: linear-gradient(
@@ -106,6 +101,55 @@ body:after {
   top: 0;
   z-index: 2;
 }
+
+/* --------------------------------------------------------------  */
+/* color links invert the main color when hover */
+
+/* all a for chrome */
+a:-webkit-any-link {
+  color: var(--main-color);
+}
+
+/* all a for firefox */
+a:visited, a:link {
+  color: var(--main-color);
+}
+/* mouse on link : invert color */
+a:hover,
+a:visited:hover {
+  background-color: var(--main-color);
+  color: var(--background-color);
+}
+
+/* mouse selector text */
+::selection {
+  color: var(--background-color);
+  background: var(--main-color-dark);
+}
+
+/* --------------------------------------------------------------  */
+
+
+button {
+  background-color: transparent;
+  color: var(--main-color);
+  border: transparent;
+}
+/* stylelint-disable */
+
+button:hover {
+  background-color: var(--main-color);
+  color: var(--background-color);
+}
+
+/* --------------------------------------------------------------  */
+
+li {
+  list-style: none;
+}
+
+/* --------------------------------------------------------------  */
+
 
 /* wave for effects */
 /* body:before {
@@ -130,21 +174,3 @@ body:after {
 	  top:200vh;
 	}
   } */
-
-/* color links invert the main color when hover */
-
-a:hover,
-a:visited:hover {
-  background-color: var(--main-color);
-  color: var(--background-color);
-}
-
-a:visited {
-  color: var(--main-color);
-}
-
-/* mouse selector text */
-::selection {
-  color: var(--background-color);
-  background: var(--main-color-dark);
-}

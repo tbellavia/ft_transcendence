@@ -1,30 +1,52 @@
 <template>
-  <li class="dropdown">
-    <SVGLogoColorSwatch class="dropdown-menu" />
+  <li class="dropleft">
+    <SVGLogoColorSwatch />
     <ul>
-      <li class="dropydown-item" v-for="color in colors">
-        <button @click="setTheme(color)">{{ color }}</button>
+      <li v-for="color in colors">
+        <button @click="setTheme(color)"> {{ color }}</button>
       </li>
     </ul>
   </li>
 </template>
 
+<!-- -------------------------------------------------------------- -->
+
 <script setup lang="ts">
-let colors = ref(["GREEN", "BLUE", "YELLOW"]);
-function setTheme(theme: string) {
-  document.documentElement.className = theme.toLowerCase();
-}
+  let colors = ref(["GREEN", "BLUE", "YELLOW"]);
+  function setTheme(theme: string) {
+    document.documentElement.className = theme.toLowerCase();
+  }
 </script>
+
+<!-- -------------------------------------------------------------- -->
 
 <style scoped>
 button {
-  font-size: 12px;
-  width: 130px;
+  text-align: left;
+  font-size: 14px;
+  width: 100px;
 }
-/* stylelint-disable */
 
-button:hover {
-  background-color: var(--main-color);
-  color: var(--background-color);
+li.dropleft {
+	position: relative;
 }
+
+li.dropleft ul {
+  display: none;
+}
+
+li.dropleft li {
+  border-left: solid;
+}
+
+li.dropleft:hover ul {
+  position: absolute;
+	display: flex;
+	flex-direction: column;
+  top: -50%; 
+	right: 100%;
+	z-index: 500;
+	overflow: visible;
+}
+
 </style>

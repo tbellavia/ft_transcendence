@@ -1,14 +1,16 @@
 <template>
   <div class="copyrights">
     <div>
-      ><span class="blink">&nbsp;</span> 42 Project Transcendance made by
+      > 42 Project Transcendence made by
       <a href="https://github.com/Cardiox12">bbellavi</a>,
       <a href="https://github.com/Lylian-Nail">lperson-</a>,
       <a href="https://github.com/fullife32">eassouli</a>,
-      <a href="https://github.com/lvirgini">lvirgini</a>
+      <a href="https://github.com/lvirgini">lvirgini</a>&nbsp;<span class="blink">&nbsp;</span>
     </div>
   </div>
 </template>
+
+<!-- -------------------------------------------------------------- -->
 
 <style scoped>
 /* stylelint-disable */

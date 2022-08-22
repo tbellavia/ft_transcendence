@@ -12,6 +12,8 @@ function isAuthenticate() {
 }
 </script>
 
+<!-- -------------------------------------------------------------- -->
+
 <style scoped>
 /* stylelint-disable */
 
@@ -45,7 +47,8 @@ function isAuthenticate() {
 .authentication-link p {
   width: 100%;
   border: solid;
-  padding-left: 18px;
+  padding-left: 35px;
+
 }
 
 .authentication-link:hover p {

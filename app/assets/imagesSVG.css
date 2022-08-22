@@ -1,13 +1,7 @@
 /* images SVG format */
-
 /* for images link : get reverse color when mouse on */
 
-
-
-
 /* inversion edge when hover */
-
-
 .img-svg {
 	width: inherit;
 }
@@ -52,4 +46,3 @@ div.img-svg:hover svg.svgEdge {
 div.img-svg:hover svg.svgInsider {
 	display: inline;
 } */
-
