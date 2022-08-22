@@ -38,4 +38,10 @@ export class StatsService {
             }
         });
     }
+
+    async remove(user_id: string) {
+        await this.statRepostiroy.delete({
+            user: { user_id }
+        });
+    }
 }
