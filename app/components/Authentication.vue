@@ -12,8 +12,14 @@
 </template>
 
 <script setup lang="ts">
-function isAuthenticate() {
-  return true;
+import { stringifyQuery } from "vue-router";
+const authToken = useCookie("authToken");
+const route = useRoute();
+if (route.query.code) {
+  const apiURL = `http://nestjs:3000/auth/api42?${stringifyQuery(route.query)}`;
+  const { accessToken } = await $fetch(apiURL);
+  console.log(accessToken);
+  authToken.value = accessToken || "";
 }
 </script>
 
