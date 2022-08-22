@@ -3,15 +3,21 @@
     <header>
       <NavBar />
     </header>
-    <main>
+    <main v-if="isAuthenticate() == true">
+      <home-page />
+    </main>
+    <main v-else >
       <Authentication />
-      <!-- <Testing_css /> -->
       <Copyright />
     </main>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+function isAuthenticate() {
+  return true;
+}
+</script>
 
 <!-- -------------------------------------------------------------- -->
 
@@ -22,3 +28,4 @@
 }
 
 </style>
+

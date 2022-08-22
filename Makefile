@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lperson- <lperson-@student.42.fr>          +#+  +:+       +#+         #
+#    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/01 12:47:39 by lvirgini          #+#    #+#              #
-#    Updated: 2022/08/18 14:49:04 by lperson-         ###   ########.fr        #
+#    Updated: 2022/08/22 15:50:14 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ build:
 		@echo "\n\033[36;1m\033[4;5mDOCKER BUILD : DONE\033[0m\n"
 
 up:
-	$(DOCKER_COMPOSE) up -d
+	$(DOCKER_COMPOSE) up
 
 down:	
 	$(DOCKER_COMPOSE) down
