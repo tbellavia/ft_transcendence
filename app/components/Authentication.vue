@@ -2,7 +2,12 @@
 <template>
   <div class="authentication-link">
     <p class="authentication-item">Click for login with 42</p>
-    <a class="authentication-item" href="#"><SVGBoy style="width: 100%" /></a>
+    <a
+      class="authentication-item"
+      href="https://api.intra.42.fr/oauth/authorize?client_id=4cdd93e38d50fce3af5d817a430542b75506fbacf0b777ba6dc3a2312730d18d&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F&response_type=code
+"
+      ><SVGBoy style="width: 100%"
+    /></a>
   </div>
 </template>
 
@@ -48,7 +53,6 @@ function isAuthenticate() {
   width: 100%;
   border: solid;
   padding-left: 35px;
-
 }
 
 .authentication-link:hover p {
