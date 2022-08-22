@@ -14,6 +14,6 @@ export class FriendEntity extends BaseEntity {
     @JoinColumn({ name: "user_2" })
     user_2: UserEntity;
 
-    @Column()
+    @Column({ default: true })
     pending: boolean;
 }
