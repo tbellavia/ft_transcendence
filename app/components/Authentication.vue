@@ -13,13 +13,12 @@
 
 <script setup lang="ts">
 import { stringifyQuery } from "vue-router";
-const authToken = useCookie("authToken");
+const authToken = useCookie("jwtAuth");
 const route = useRoute();
 if (route.query.code) {
   const apiURL = `http://nestjs:3000/auth/api42?${stringifyQuery(route.query)}`;
   const { accessToken } = await $fetch(apiURL);
-  console.log(accessToken);
-  authToken.value = accessToken || "";
+  authToken.value = accessToken || null;
 }
 </script>
 
