@@ -15,6 +15,7 @@ import { MatchEntity } from './matches/entity/match.entity';
 import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
 import { StatsModule } from './stats/stats.module';
+import { FriendsModule } from './friends/friends.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { StatsModule } from './stats/stats.module';
     }),
     UsersModule,
     StatsModule,
+    FriendsModule
   ],
   controllers: [AppController, UsersController],
   providers: [
