@@ -23,7 +23,8 @@ Blocked :
 
 Friends :
     - POST      /api/v1/users/:user1_id/friends/:user2_id
-    - GET       /api/v1/users/:user_id/friends?limit=<int>&pending=<bool>
+    - GET       /api/v1/users/:user_id/friends?limit=<int>&skip=<int>&pending=<bool>
+    - GET       /api/v1/users/:user1_id/friends/:user2_id
     - PUT       /api/v1/users/:user1_id/friends/:user2_id
         - Body
         {
