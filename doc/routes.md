@@ -18,7 +18,7 @@ Users :
 
 Blocked :
     - POST      /api/v1/users/:user1_id/blocked/:user2_id
-    - GET       /api/v1/users/:user_id/blocked?limit=<int>
+    - GET       /api/v1/users/:user_id/blocked?limit=<int>&skip=<int>
     - DELETE    /api/v1/users/:user1_id/blocked/:user2_id
 
 Friends :
