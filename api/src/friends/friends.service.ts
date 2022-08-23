@@ -87,4 +87,14 @@ export class FriendsService {
             msg: "Update success!"
         };
     }
+
+    async delete(user1_id: string, user2_id: string) {
+        const result = await this.friendRepository.delete({
+            user_1: { user_id: user1_id },
+            user_2: { user_id: user2_id }
+        });
+        if ( result.affected == 0 )
+            return { msg: "Relation not found!" };
+        return { msg: "Relation deleted successfuly" };
+    }
 }

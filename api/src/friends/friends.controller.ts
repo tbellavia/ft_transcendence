@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { Public } from "src/common/decorators/public.decorator";
 import { GetUsersQueryDTO } from "./dto/get-users-query.dto";
 import { UpdatePendingDto } from "./dto/update-pending.dto";
@@ -48,5 +48,15 @@ export class FriendsController {
     )
     {
         return this.friendsService.update(user1_id, user2_id, updatePendingDto);
+    }
+
+    @Public()
+    @Delete(":user1_id/friends/:user2_id")
+    async delete(
+        @Param("user1_id") user1_id: string,
+        @Param("user2_id") user2_id: string,
+    )
+    {
+        return this.friendsService.delete(user1_id, user2_id);
     }
 }
