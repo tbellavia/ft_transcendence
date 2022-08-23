@@ -30,6 +30,16 @@ export class FriendsController {
     }
 
     @Public()
+    @Get(":user1_id/friends/:user2_id")
+    async findOne(
+        @Param("user1_id") user1_id: string,
+        @Param("user2_id") user2_id: string
+    )
+    {
+        return this.friendsService.findOne(user1_id, user2_id);
+    }
+
+    @Public()
     @Put(":user1_id/friends/:user2_id")
     async update(
         @Param("user1_id") user1_id: string,

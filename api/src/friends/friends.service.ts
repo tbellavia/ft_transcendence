@@ -6,6 +6,7 @@ import { FindManyOptions, FindOptionsWhere, Repository } from "typeorm";
 import { GetUsersQueryDTO } from "./dto/get-users-query.dto";
 import { UpdatePendingDto } from "./dto/update-pending.dto";
 import { FriendEntity } from "./entity/friend.entity";
+import { selectFriendOptions } from "./options/select-friend.options";
 
 @Injectable()
 export class FriendsService {
@@ -38,7 +39,7 @@ export class FriendsService {
     async findAll(user_id: string, getUserQueryDto: GetUsersQueryDTO) {
         const user = await this.userRepository.findOneBy({ user_id });
 
-        if ( user == null ){
+        if ( !user ){
             return null;
         }
         const whereOpts: FindOptionsWhere<FriendEntity> = {
@@ -70,7 +71,8 @@ export class FriendsService {
             where: {
                 user_1: { user_id: user1_id },
                 user_2: { user_id: user2_id }
-            }
+            },
+            select: selectFriendOptions
         });
     }
 
