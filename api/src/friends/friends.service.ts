@@ -4,6 +4,7 @@ import { UserEntity } from "src/users/entities/user.entity";
 import { selectUserOption } from "src/users/options/user-select.option";
 import { FindManyOptions, FindOptionsWhere, Repository } from "typeorm";
 import { GetUsersQueryDTO } from "./dto/get-users-query.dto";
+import { UpdatePendingDto } from "./dto/update-pending.dto";
 import { FriendEntity } from "./entity/friend.entity";
 
 @Injectable()
@@ -62,5 +63,26 @@ export class FriendsService {
         }
         opts.where = whereOpts;
         return await this.friendRepository.find(opts);
+    }
+
+    async findOne(user1_id: string, user2_id: string){
+        return await this.friendRepository.findOne({
+            where: {
+                user_1: { user_id: user1_id },
+                user_2: { user_id: user2_id }
+            }
+        });
+    }
+
+    async update(user1_id: string, user2_id: string, updatePendingDto: UpdatePendingDto) {
+        const friendship = await this.findOne(user1_id, user2_id);
+
+        if ( !friendship )
+            return null;
+        friendship.pending = updatePendingDto.pending;
+        await friendship.save();
+        return {
+            msg: "Update success!"
+        };
     }
 }
