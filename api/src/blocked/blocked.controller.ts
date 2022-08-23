@@ -1,4 +1,4 @@
-import { Controller, Param, Post } from '@nestjs/common';
+import { Controller, Delete, Param, Post } from '@nestjs/common';
 import { Public } from '../common/decorators/public.decorator';
 import { BlockedService } from './blocked.service';
 
@@ -14,5 +14,15 @@ export class BlockedController {
   )
   {
     return this.blockedService.create(user1_id, user2_id);
+  }
+
+  @Public()
+  @Delete(":user1_id/blocked/:user2_id")
+  async delete(
+    @Param("user1_id") user1_id: string,
+    @Param("user2_id") user2_id: string
+  )
+  {
+    return this.blockedService.delete(user1_id, user2_id);
   }
 }

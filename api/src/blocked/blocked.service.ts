@@ -31,4 +31,15 @@ export class BlockedService {
         await blocked.save();
         return { msg: "Blocked successful" };
     }
+
+    async delete(user1_id: string, user2_id: string) {
+        const result = await this.blockedRepository.delete({
+            user_1: { user_id: user1_id },
+            user_2: { user_id: user2_id }
+        });
+        if ( result.affected == 0 ){
+            return { msg: `Blocked relationship does not exist between user id ${user1_id} and ${user2_id}` };
+        }
+        return { msg: "Delete block relationship successful" };
+    }
 }
