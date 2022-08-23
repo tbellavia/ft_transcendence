@@ -5,7 +5,7 @@ import { User } from './class/user.class';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
-import { selectUserOption } from './options/select.option';
+import { selectUserOption } from './options/user-select.option';
 
 @Injectable()
 export class UsersService {
