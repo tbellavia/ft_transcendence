@@ -22,8 +22,8 @@ export class Api42Strategy extends PassportStrategy(Strategy, 'api42') {
     });
   }
 
+  // Create or find user using data fetch from 42api with the new token
   async validate(accessToken: string) {
-    console.log('Connected');
     const { data } = await firstValueFrom(
       this.http.get('http://api.intra.42.fr/v2/me', {
         headers: {
