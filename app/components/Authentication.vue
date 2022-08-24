@@ -13,16 +13,23 @@
 
 <script setup lang="ts">
 import { stringifyQuery } from "vue-router";
-//On mounted hook not called during SSR (only in client)
+
+async function oauth42(code: string) {
+  const apiUri = `http://localhost:3000/auth/api42?code=${code}`;
+  await $fetch(apiUri, {
+    credentials: 'include'
+  })
+    .catch((error) => console.warn(error));
+}
+
+// If code in query string it may be from 42api so we try to authenticate
 onMounted(async () => {
   const route = useRoute();
   if (route.query.code) {
-    const apiURL = `http://localhost:3000/auth/api42?${stringifyQuery(
-      route.query
-    )}`;
-    await $fetch(apiURL).catch((error) => console.log(error));
+    oauth42(route.query.code)
   }
 });
+
 </script>
 
 <!-- -------------------------------------------------------------- -->
