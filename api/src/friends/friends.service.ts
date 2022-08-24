@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "src/users/entities/user.entity";
 import { selectUserOption } from "src/users/options/user-select.option";
 import { FindManyOptions, FindOptionsWhere, Repository } from "typeorm";
-import { GetUsersQueryDTO } from "./dto/get-users-query.dto";
+import { GetUsersQueryDTO } from "./dto/get-friends.query.dto";
 import { UpdatePendingDto } from "./dto/update-pending.dto";
 import { FriendEntity } from "./entity/friend.entity";
 import { selectFriendOptions } from "./options/select-friend.options";
