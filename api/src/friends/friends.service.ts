@@ -23,17 +23,18 @@ export class FriendsService {
 
         if ( user1_id == user2_id ){
             console.log("User cannot add himself");
-            return null;
+            return { msg: "User cannot add himself" };
         }
         if ( user1 == null || user2 == null ){
             console.log("One or more user does not exist!");
-            return null;
+            return { msg: "One or more user does not exist" };
         }
         const friend = FriendEntity.create();
 
         friend.user_1 = user1;
         friend.user_2 = user2;
-        return await friend.save()
+        await friend.save()
+        return { msg: "Friend successfuly added" };
     }
 
     async findAll(user_id: string, getFriendsQueryDto: GetFriendsQueryDTO) {
