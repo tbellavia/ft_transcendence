@@ -1,4 +1,5 @@
-import { Controller, Delete, Param, Post } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { PaginationQueryDto } from '../common/dto/pagination.query-dto';
 import { Public } from '../common/decorators/public.decorator';
 import { BlockedService } from './blocked.service';
 
@@ -14,6 +15,16 @@ export class BlockedController {
   )
   {
     return this.blockedService.create(user1_id, user2_id);
+  }
+
+  @Public()
+  @Get(":user_id/blocked")
+  async findAll(
+    @Param("user_id") user_id: string,
+    @Query() paginationQueryDto: PaginationQueryDto
+  ) 
+  {
+    return this.blockedService.findAll(user_id, paginationQueryDto);
   }
 
   @Public()

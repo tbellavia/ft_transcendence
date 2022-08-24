@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { PaginationQueryDto } from 'src/common/dto/pagination.query-dto';
+import { selectUserOption } from 'src/users/options/user-select.option';
+import { FindManyOptions, Repository } from 'typeorm';
 import { UserEntity } from '../users/entities/user.entity';
 import { BlockedEntity } from './entity/blocked.entity';
 
@@ -30,6 +32,20 @@ export class BlockedService {
         blocked.user_2 = user2;
         await blocked.save();
         return { msg: "Blocked successful" };
+    }
+
+    async findAll(user_id: string, paginationQueryDto: PaginationQueryDto){
+        const user = await this.userRepository.findOneBy({ user_id });
+
+        if ( !user ){
+            return { msg: "User not found!" };
+        }
+        const opts: FindManyOptions<BlockedEntity> = paginationQueryDto.getConfig<BlockedEntity>();
+
+        opts.where = { user_1: { user_id } };
+        opts.relations = { user_2: true };
+        opts.select = { user_2: selectUserOption };
+        return await this.blockedRepository.find(opts);
     }
 
     async delete(user1_id: string, user2_id: string) {
