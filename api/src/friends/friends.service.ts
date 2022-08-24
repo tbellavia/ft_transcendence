@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { UserEntity } from "src/users/entities/user.entity";
 import { selectUserOption } from "src/users/options/user-select.option";
 import { FindManyOptions, FindOptionsWhere, Repository } from "typeorm";
-import { GetUsersQueryDTO } from "./dto/get-users-query.dto";
+import { GetFriendsQueryDTO } from "./dto/get-friends.query.dto";
 import { UpdatePendingDto } from "./dto/update-pending.dto";
 import { FriendEntity } from "./entity/friend.entity";
 import { selectFriendOptions } from "./options/select-friend.options";
@@ -36,7 +36,7 @@ export class FriendsService {
         return await friend.save()
     }
 
-    async findAll(user_id: string, getUserQueryDto: GetUsersQueryDTO) {
+    async findAll(user_id: string, getFriendsQueryDto: GetFriendsQueryDTO) {
         const user = await this.userRepository.findOneBy({ user_id });
 
         if ( !user ){
@@ -55,12 +55,12 @@ export class FriendsService {
                 user_2: true
             }
         }
-        if ( getUserQueryDto.limit )
-            opts.take = getUserQueryDto.limit;
-        if ( getUserQueryDto.skip )
-            opts.skip = getUserQueryDto.skip;
-        if ( getUserQueryDto.pending ){
-            whereOpts.pending = getUserQueryDto.pending;
+        if ( getFriendsQueryDto.limit )
+            opts.take = getFriendsQueryDto.limit;
+        if ( getFriendsQueryDto.skip )
+            opts.skip = getFriendsQueryDto.skip;
+        if ( getFriendsQueryDto.pending ){
+            whereOpts.pending = getFriendsQueryDto.pending;
         }
         opts.where = whereOpts;
         return await this.friendRepository.find(opts);

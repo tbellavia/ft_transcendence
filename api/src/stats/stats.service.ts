@@ -10,7 +10,7 @@ export class StatsService {
         @InjectRepository(UserEntity)
         private userRepository: Repository<UserEntity>,
         @InjectRepository(StatEntity)
-        private statRepostiroy: Repository<StatEntity>
+        private statRepository: Repository<StatEntity>
     ) { }
 
     async create(user_id: string) {
@@ -32,7 +32,7 @@ export class StatsService {
         if ( user == null ){
             return null;
         }
-        return await this.statRepostiroy.findOne({ 
+        return await this.statRepository.findOne({ 
             where: {
                 user: { user_id }
             }
@@ -40,7 +40,7 @@ export class StatsService {
     }
 
     async remove(user_id: string) {
-        await this.statRepostiroy.delete({
+        await this.statRepository.delete({
             user: { user_id }
         });
     }
