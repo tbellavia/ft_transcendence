@@ -1,6 +1,6 @@
 <template>
 	<div class="home-page">
-		<div style="width: 15%; border:solid; border-color:red">
+		<div style="width: 15%; border:solid;">
       <homePageUserList />
     </div>
     <div style="width: 60%; border:solid; border-color:blue">

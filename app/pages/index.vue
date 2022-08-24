@@ -1,16 +1,12 @@
 <template>
-  <div class="real-body">
-    <header>
-      <NavBar />
-    </header>
+  <NuxtLayout>
     <main v-if="isAuthenticate() == true">
       <home-page />
     </main>
     <main v-else >
       <Authentication />
-      <Copyright />
     </main>
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
@@ -21,11 +17,4 @@ function isAuthenticate() {
 
 <!-- -------------------------------------------------------------- -->
 
-<style scoped>
-.real-body {
-  width: 100%;
-  height: 100%;
-}
-
-</style>
 
