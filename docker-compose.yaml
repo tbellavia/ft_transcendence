@@ -11,9 +11,9 @@ services:
     volumes:
       - type: bind
         source: ./app
-        target: /usr/src/app
+        target: /home/node/app
       - type: volume
-        target: /usr/src/app/node_modules
+        target: /home/node/app/node_modules
     ports:
       - 8000:8000
 
@@ -25,9 +25,11 @@ services:
     volumes:
       - type: bind
         source: ./api
-        target: /usr/src/app
+        target: /home/node/app
       - type: volume
-        target: /usr/src/app/node_modules
+        target: /home/node/app/node_modules
+    # Expose API for clients using or SPA app
+    # Api Gateway or reverse proxy may be overkill for this type of project
     ports:
       - 3000:3000
     networks:
