@@ -15,10 +15,8 @@
 import { stringifyQuery } from "vue-router";
 
 async function oauth42(code: string) {
-  const apiUri = `http://localhost:3000/auth/api42?code=${code}`;
-  await $fetch(apiUri, {
-    credentials: 'include'
-  })
+  const { $apiFetch } = useNuxtApp();
+  await $apiFetch(`/auth/api42?code=${code}`)
     .catch((error) => console.warn(error));
 }
 
@@ -26,7 +24,7 @@ async function oauth42(code: string) {
 onMounted(async () => {
   const route = useRoute();
   if (route.query.code) {
-    oauth42(route.query.code)
+    await oauth42(route.query.code)
   }
 });
 
