@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { Public } from "src/common/decorators/public.decorator";
-import { GetUsersQueryDTO } from "./dto/get-friends.query.dto";
+import { GetFriendsQueryDTO } from "./dto/get-friends.query.dto";
 import { UpdatePendingDto } from "./dto/update-pending.dto";
 import { FriendsService } from "./friends.service";
 
@@ -24,9 +24,9 @@ export class FriendsController {
     @Get(":user_id/friends")
     async findAll(
         @Param("user_id") user_id: string,
-        @Query() getUserQueryDto: GetUsersQueryDTO) 
+        @Query() getFriendsQueryDto: GetFriendsQueryDTO) 
     {
-        return this.friendsService.findAll(user_id, getUserQueryDto);
+        return this.friendsService.findAll(user_id, getFriendsQueryDto);
     }
 
     @Public()
