@@ -13,13 +13,16 @@
 
 <script setup lang="ts">
 import { stringifyQuery } from "vue-router";
-const authToken = useCookie("jwtAuth");
-const route = useRoute();
-if (route.query.code) {
-  const apiURL = `http://nestjs:3000/auth/api42?${stringifyQuery(route.query)}`;
-  const { accessToken } = await $fetch(apiURL);
-  authToken.value = accessToken || null;
-}
+//On mounted hook not called during SSR (only in client)
+onMounted(async () => {
+  const route = useRoute();
+  if (route.query.code) {
+    const apiURL = `http://localhost:3000/auth/api42?${stringifyQuery(
+      route.query
+    )}`;
+    await $fetch(apiURL).catch((error) => console.log(error));
+  }
+});
 </script>
 
 <!-- -------------------------------------------------------------- -->
@@ -64,9 +67,3 @@ if (route.query.code) {
   border: none;
 }
 </style>
-<!-- <div>
-    <a class="authentication-link" href="#">
-      <p class="authentication-item"> Click for login with 42 </p>
-      <Boy class="authentication-item" style="width: 80%;"/>
-    </a>
-  </div> -->

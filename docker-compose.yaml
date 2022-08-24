@@ -14,10 +14,8 @@ services:
         target: /usr/src/app
       - type: volume
         target: /usr/src/app/node_modules
-    networks:
-      - frontend
     ports:
-      - "8000:8000"
+      - 8000:8000
 
   api:
     container_name: nestjs
@@ -30,10 +28,10 @@ services:
         target: /usr/src/app
       - type: volume
         target: /usr/src/app/node_modules
+    ports:
+      - 3000:3000
     networks:
-      - frontend
       - backend
 
 networks:
-  frontend:
   backend:

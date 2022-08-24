@@ -18,10 +18,9 @@ export class AuthController {
   @Public()
   @Get('api42')
   @UseGuards(AuthGuard('api42'))
-  log42Api(@Request() req) {
-    // res.cookie('jwtAuth', this.authService.login(req.user), {
-    //   httpOnly: true,
-    // });
-    return req.user;
+  log42Api(@Request() req, @Res({ passthrough: true }) res) {
+    res.cookie('jwtAuth', this.authService.login(req.user), {
+      httpOnly: true,
+    });
   }
 }
