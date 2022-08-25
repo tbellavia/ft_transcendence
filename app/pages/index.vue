@@ -14,9 +14,16 @@
 </template>
 
 <script setup lang="ts">
+onMounted(async () => {
+  const { $apiFetch } = useNuxtApp();
+  await $apiFetch("/auth/isConnected")
+    .then(() => console.log("is connected"))
+    .catch(() => console.log("is disconnected"));
+});
+
 async function disconnect() {
   const { $apiFetch } = useNuxtApp();
-  $apiFetch("/auth/disconnect");
+  await $apiFetch("/auth/disconnect");
 }
 </script>
 

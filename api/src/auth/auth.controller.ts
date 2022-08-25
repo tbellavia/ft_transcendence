@@ -32,4 +32,12 @@ export class AuthController {
   disconnectCookie(@Res({ passthrough: true }) res) {
     res.clearCookie('jwtAuth')
   }
+
+  /**
+   * Just an auth endpoint to check if client is connected or not
+   * return status code 200 if true, 401 unauthorize if not
+   */
+  @Get('isConnected')
+  isConnected() {
+  }
 }
