@@ -33,13 +33,13 @@ export class MatchesController {
 
     @Public()
     @Get("/:user1_id/matches/:user2_id")
-    async findAllByUser(
+    async findAllByUsers(
         @Param("user1_id") user1_id: string,
         @Param("user2_id") user2_id: string,
         @Query() paginationQueryDto: PaginationQueryDto
     )
     {
-        return this.matchesService.findAllByUser(user1_id, user2_id, paginationQueryDto);
+        return this.matchesService.findAllByUsers(user1_id, user2_id, paginationQueryDto);
     }
 
     @Public()
