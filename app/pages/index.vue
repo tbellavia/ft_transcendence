@@ -6,12 +6,19 @@
     <main>
       <Authentication />
       <!-- <Testing_css /> -->
-      <Copyright />
+      <a style="top: 70%" href="#" @click="disconnect">disconnect</a>
+
+      <!-- <Copyright /> -->
     </main>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+async function disconnect() {
+  const { $apiFetch } = useNuxtApp();
+  $apiFetch("/auth/disconnect");
+}
+</script>
 
 <style scoped>
 .real-body {
@@ -22,7 +29,7 @@
 main {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
   flex-direction: column;
 }
 </style>

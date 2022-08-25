@@ -18,9 +18,18 @@ export class AuthController {
   @Public()
   @Get('api42')
   @UseGuards(AuthGuard('api42'))
-  log42Api(@Request() req, @Res({ passthrough: true }) res) {
-    res.cookie('jwtAuth', this.authService.login(req.user), {
+  async log42Api(@Request() req, @Res({ passthrough: true }) res) {
+    res.cookie('jwtAuth', await this.authService.login(req.user), {
       httpOnly: true,
     });
+  }
+
+  /**
+   * Clear the session cookie from server
+   * @param res the response object for clearing the cookie
+   */
+  @Get('disconnect')
+  disconnectCookie(@Res({ passthrough: true }) res) {
+    res.clearCookie('jwtAuth')
   }
 }
