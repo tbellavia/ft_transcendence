@@ -40,11 +40,11 @@ export class BlockedService {
         if ( !user ){
             return { msg: "User not found!" };
         }
-        const opts: FindManyOptions<BlockedEntity> = paginationQueryDto.getConfig<BlockedEntity>();
-
-        opts.where = { user_1: { user_id } };
-        opts.relations = { user_2: true };
-        opts.select = { user_2: selectUserOption };
+        const opts: FindManyOptions<BlockedEntity> = paginationQueryDto.getConfig<BlockedEntity>(
+            { user_1: { user_id } },
+            { user_2: true },
+            { user_2: selectUserOption }
+        );
         return await this.blockedRepository.find(opts);
     }
 
