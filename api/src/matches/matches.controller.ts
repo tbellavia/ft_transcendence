@@ -11,7 +11,7 @@ export class MatchesController {
     ) { }
 
     @Public()
-    @Post(":user1_id/matches/:user2_id")
+    @Post("/:user1_id/matches/:user2_id")
     async create(
         @Param("user1_id") user1_id: string,
         @Param("user2_id") user2_id: string,
@@ -22,7 +22,7 @@ export class MatchesController {
     }
 
     @Public()
-    @Get(":user1_id/matches/:user2_id")
+    @Get("/:user1_id/matches/:user2_id")
     async findOne(
         @Param("user1_id") user1_id: string,
         @Param("user2_id") user2_id: string,
@@ -30,5 +30,15 @@ export class MatchesController {
     )
     {
         return this.matchesService.findOne(user1_id, user2_id, paginationQueryDto);
+    }
+
+    @Public()
+    @Get("/:user_id/matches")
+    async findAll(
+        @Param("user_id") user_id: string,
+        @Query() paginationQueryDto: PaginationQueryDto
+    )
+    {
+        return this.matchesService.findAll(user_id, paginationQueryDto);
     }
 }

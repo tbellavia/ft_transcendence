@@ -62,4 +62,27 @@ export class MatchesService {
         );
         return await this.matchRepositoy.find(opts);
     }
+
+    async findAll(user_id: string, paginationQueryDto: PaginationQueryDto) {
+        const user = await this.userRepository.findOneBy({ user_id });
+
+        if ( !user ){
+            return { msg: "User not found!" };
+        }
+        const opts = paginationQueryDto.getConfig<MatchEntity>(
+            [
+                { user_1: { user_id } },
+                { user_2: { user_id } }
+            ],
+            {
+                user_1: true,
+                user_2: true
+            },
+            {
+                user_1: selectUserOption,
+                user_2: selectUserOption
+            }
+        );
+        return await this.matchRepositoy.find(opts);
+    }
 }
