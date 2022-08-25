@@ -1,23 +1,17 @@
 <template>
-  <div class="real-body">
-    <header>
-      <NavBar />
-    </header>
+  <NuxtLayout>
     <main>
       <Authentication />
-      <!-- <Testing_css /> -->
       <a style="top: 70%" href="#" @click="disconnect">disconnect</a>
-
-      <!-- <Copyright /> -->
     </main>
-  </div>
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
 onMounted(async () => {
   const { $apiFetch } = useNuxtApp();
   await $apiFetch("/auth/isConnected")
-    .then(() => console.log("is connected"))
+    .then(async () => await navigateTo("/homePage"))
     .catch(() => console.log("is disconnected"));
 });
 
