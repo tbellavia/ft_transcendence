@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { Public } from "src/common/decorators/public.decorator";
 import { PaginationQueryDto } from "src/common/dto/pagination.query-dto";
 import { MatchCreationDto } from "./dto/match-creation.dto";
+import { UpdateMatchDto } from "./dto/match-update.dto";
 import { MatchesService } from "./matches.service";
 
 @Controller("users")
@@ -40,5 +41,15 @@ export class MatchesController {
     )
     {
         return this.matchesService.findAll(user_id, paginationQueryDto);
+    }
+
+    @Public()
+    @Put("/matches/:match_id")
+    async update(
+        @Param("match_id") match_id: string,
+        @Body() updateMatchDto: UpdateMatchDto
+    )
+    {
+        return this.matchesService.update(match_id, updateMatchDto);
     }
 }

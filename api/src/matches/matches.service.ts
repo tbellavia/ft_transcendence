@@ -5,6 +5,7 @@ import { UserEntity } from "src/users/entities/user.entity";
 import { selectUserOption } from "src/users/options/user-select.option";
 import { Repository } from "typeorm";
 import { MatchCreationDto } from "./dto/match-creation.dto";
+import { UpdateMatchDto } from "./dto/match-update.dto";
 import { MatchEntity } from "./entity/match.entity";
 
 @Injectable()
@@ -84,5 +85,20 @@ export class MatchesService {
             }
         );
         return await this.matchRepositoy.find(opts);
+    }
+
+    async update(match_id: string, updateMatchDto: UpdateMatchDto) {
+        const match = await this.matchRepositoy.findOneBy({ match_id });
+
+        if ( !match ){
+            return { msg: "Match not found!" };
+        }
+        match.player_1_point = updateMatchDto.player_1_point;
+        match.player_2_point = updateMatchDto.player_2_point;
+        match.player_1_outcome = updateMatchDto.player_1_outcome;
+        match.player_2_outcome = updateMatchDto.player_2_outcome;
+        match.end_date = updateMatchDto.end_date;
+        await match.save();
+        return { msg: "Match updated successfuly!" };
     }
 }
