@@ -1,10 +1,14 @@
 <template>
+<<<<<<< Updated upstream
   <NuxtLayout>
     <main>
       <Authentication />
+=======
+    <div>
+      <Authentication @connect="redirectIfConnected('/homePage')" />
+>>>>>>> Stashed changes
       <a style="top: 70%" href="#" @click="disconnect">disconnect</a>
-    </main>
-  </NuxtLayout>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -22,15 +26,6 @@ async function disconnect() {
 </script>
 
 <style scoped>
-.real-body {
-  width: 100%;
-  height: 100%;
-}
 
-main {
-  display: flex;
-  align-items: center;
-  /* justify-content: flex-end; */
-  flex-direction: column;
-}
+
 </style>

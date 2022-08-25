@@ -1,7 +1,11 @@
 <template>
  <div class="real-body">
-    <NavBar/>
-    <slot />
+    <header>
+      <NavBar/>
+    </header>
+    <main>
+      <slot />
+    </main>
     <Copyright style="top: 99%;"/>
 </div>
 
