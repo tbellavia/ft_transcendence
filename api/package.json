@@ -28,6 +28,8 @@
     "@nestjs/jwt": "^9.0.0",
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@types/cookie-parser": "^1.4.3",
+    "cookie-parser": "^1.4.6",
     "passport-jwt": "^4.0.0",
     "passport-oauth2": "^1.6.1",
     "reflect-metadata": "^0.1.13",

@@ -7,12 +7,18 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 export class JWTStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private readonly config: ConfigService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      // Get JWT from cookie inside request
+      jwtFromRequest: (request) => {
+        let token = null;
+        if (request && request.cookies) token = request.cookies['jwtAuth'];
+        return token;
+      },
       ignoreExpiration: false,
       secretOrKey: config.get<string>('JWT_SECRET'),
     });
   }
 
+  // Populate req.user with valid decoded payload
   async validate(payload: any) {
     return { id: payload.id, login: payload.login };
   }

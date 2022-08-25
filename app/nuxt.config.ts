@@ -17,4 +17,7 @@ export default defineNuxtConfig({
       port: 8000,
     },
   },
+  // Targeting an SPA application so no server-side rendering and static website
+  ssr: false,
+  target: 'static'
 });

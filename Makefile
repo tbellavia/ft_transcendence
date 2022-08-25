@@ -32,6 +32,9 @@ up:
 down:	
 	$(DOCKER_COMPOSE) down
 
+restart:
+	$(DOCKER_COMPOSE) restart
+
 config:
 	$(DOCKER_COMPOSE) config
 
