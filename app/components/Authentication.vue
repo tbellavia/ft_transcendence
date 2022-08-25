@@ -14,11 +14,17 @@
 <script setup lang="ts">
 import { stringifyQuery } from "vue-router";
 
+const emit = defineEmits({
+  // Define connect event for notify the page
+  // No validation checking for emit
+  connect: null,
+});
+
 async function oauth42(code: string) {
   const { $apiFetch } = useNuxtApp();
-  await $apiFetch(`/auth/api42?code=${code}`).catch((error) =>
-    console.warn(error)
-  );
+  await $apiFetch(`/auth/api42?code=${code}`)
+    .then(() => emit("connect")) //Emit connection event when success)
+    .catch((error) => console.warn(error));
 }
 
 // If code in query string it may be from 42api so we try to authenticate
