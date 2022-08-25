@@ -20,30 +20,30 @@ export class MatchEntity extends BaseEntity {
     @JoinColumn({ name: "user_2" })
     user_2: UserEntity;
 
-    @Column()
+    @Column({ nullable: true })
     player_1_point: number;
 
-    @Column()
+    @Column({ nullable: true })
     player_2_point: number;
 
     @Column({
         type: "enum",
         enum: MatchOutcomeEnum,
-        nullable: false
+        nullable: true
     })
     player_1_outcome: MatchOutcomeEnum;
 
     @Column({
         type: "enum",
         enum: MatchOutcomeEnum,
-        nullable: false
+        nullable: true
     })
     player_2_outcome: MatchOutcomeEnum;
 
     @Column()
     begin_date: Date;
 
-    @Column()
+    @Column({ nullable: true })
     end_date: Date;
 
     @CreateDateColumn()
