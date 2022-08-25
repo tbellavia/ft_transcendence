@@ -46,17 +46,18 @@ Stats :
     - DELETE    /api/v1/users/:user_id/stats
 
 Matches :
-    - POST      /api/v1/users/:user1_id/matches/:user2_id
-    - GET       /api/v1/users/:user_id/matches?limit=<int>&date=<date>
-    - GET       /api/v1/users/:user1_id/matches/:user2_id
-    - PUT       /api/v1/users/:user1_id/matches/:user2_id
+    - POST      /api/v1/users/:user1_id/matches/:user2_id                           [x]
+    - GET       /api/v1/users/matches?limit=<int>&skip=<int>                        []
+    - GET       /api/v1/users/matches/:match_id                                     []
+    - GET       /api/v1/users/:user_id/matches?limit=<int>&skip=<int>&date=<date>   [x]
+    - GET       /api/v1/users/:user1_id/matches/:user2_id?limit=<int>&skip=<int>    [x]
+    - PUT       /api/v1/users/matches/:match_id                                     []
         - Body
         {
             player_1_point: int,
             player_2_point: int,
             player_1_outcome: MatchOutcomeEnum(WON, LOST, ABANDONNED),
             player_2_outcome: MatchOutcomeEnum(WON, LOST, ABANDONNED),
-            begin_date: Date,
             end_date: Date
         }
-    - DELETE    /api/v1/users/:user1_id/matches/:user2_id
+    - DELETE    /api/v1/users/matches/:match_id []
