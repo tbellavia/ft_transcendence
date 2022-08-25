@@ -37,7 +37,7 @@ export class MatchesService {
         return { msg: "Match successfuly created!" };
     }
 
-    async findOne(user1_id: string, user2_id: string, paginationQueryDto: PaginationQueryDto) {
+    async findAllByUser(user1_id: string, user2_id: string, paginationQueryDto: PaginationQueryDto) {
         const user1 = await this.userRepository.findOneBy({ user_id: user1_id });
         const user2 = await this.userRepository.findOneBy({ user_id: user2_id });
 
