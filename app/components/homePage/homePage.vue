@@ -1,6 +1,6 @@
 <template>
 	<div class="home-page">
-		<div style="width: 15%; border:solid;">
+		<div style="width: 15%;">
       <homePageUserList />
     </div>
     <div style="width: 60%; border:solid; border-color:blue">
@@ -26,6 +26,7 @@
   position: absolute;
   display: flex;
   justify-content: space-around;
+  top: 1%;
 }
 
 .all-users {
