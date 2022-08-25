@@ -1,6 +1,6 @@
 import { Transform } from "class-transformer";
 import { IsNumber, IsOptional, IsPositive } from "class-validator";
-import { FindManyOptions } from "typeorm";
+import { FindManyOptions, FindOptionsRelations, FindOptionsSelect, FindOptionsWhere } from "typeorm";
 import { toNumber } from "../helper/cast.helper";
 
 export class PaginationQueryDto {
@@ -16,8 +16,17 @@ export class PaginationQueryDto {
     @IsPositive()
     skip: number;
 
-    getConfig<T>() : FindManyOptions<T> {
-        const opts: FindManyOptions<T> = {};
+    getConfig<T>(
+        where: FindOptionsWhere<T> = {},
+        relations: FindOptionsRelations<T> = {},
+        select: FindOptionsSelect<T> = {}
+    ) : FindManyOptions<T> 
+    {
+        const opts: FindManyOptions<T> = {
+            where,
+            relations,
+            select
+        };
 
         if ( this.limit )
             opts.take = this.limit;
