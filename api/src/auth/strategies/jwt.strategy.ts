@@ -10,9 +10,7 @@ export class JWTStrategy extends PassportStrategy(Strategy, 'jwt') {
       // Get JWT from cookie inside request
       jwtFromRequest: (request) => {
         let token = null;
-        console.log(request.cookies)
         if (request && request.cookies) token = request.cookies['jwtAuth'];
-        console.log('TOKEN: ', token);
         return token;
       },
       ignoreExpiration: false,
