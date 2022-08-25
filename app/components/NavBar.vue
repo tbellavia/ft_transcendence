@@ -3,7 +3,7 @@
     <SVGStudioLogo class="navbar-left" />
     <div class="navbar-right">
       <ChangeTheme class="navbar-sub" />
-      <SVGLogoParam class="navbar-sub" />
+      <ParameterList class="navbar-sub" />
     </div>
   </nav>
 </template>
