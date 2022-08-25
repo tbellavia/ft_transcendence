@@ -16,8 +16,11 @@ export class MatchesService {
 
     async create(user1_id: string, user2_id: string, matchCreationDto: MatchCreationDto) {
         const user1 = await this.userRepository.findOneBy({ user_id: user1_id });
-        const user2 = await this.userRepository.findOneBy({ user_id: user1_id });
+        const user2 = await this.userRepository.findOneBy({ user_id: user2_id });
 
+        if ( user1_id == user2_id ){
+            return { msg: "User cannot play with himself" };
+        }
         if ( !user1 || !user2 ){
             return { msg: "One or more user does not exists!" };
         }

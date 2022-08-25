@@ -17,7 +17,6 @@ export class MatchesController {
         @Body() matchCreationDto: MatchCreationDto
     )
     {
-        console.log({ matchCreationDto });
-        // return this.matchesService.create(user1_id, user2_id, matchCreationDto);
+        return this.matchesService.create(user1_id, user2_id, matchCreationDto);
     }
 }
