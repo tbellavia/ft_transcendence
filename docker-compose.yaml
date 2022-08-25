@@ -38,7 +38,7 @@ services:
 
   db:
     container_name: db
-    image: postgres:12
+    image: postgres
     restart: always
     environment:
       POSTGRES_USER: <user>
@@ -50,6 +50,18 @@ services:
       - db:/var/lib/postgresql/data
     networks:
       - backend
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - backend
+      - frontend
+    
+
 
 volumes:
   db:
