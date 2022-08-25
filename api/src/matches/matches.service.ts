@@ -37,6 +37,25 @@ export class MatchesService {
         return { msg: "Match successfuly created!" };
     }
 
+    async findOne(match_id: string) {
+        const match = await this.matchRepositoy.findOne({
+            where: { match_id },
+            relations: {
+                user_1: true,
+                user_2: true
+            },
+            select: {
+                user_1: selectUserOption,
+                user_2: selectUserOption
+            }
+        });
+
+        if ( !match ){
+            return { msg: "Match does not exist" };
+        }
+        return match;
+    }
+
     async findAllByUser(user1_id: string, user2_id: string, paginationQueryDto: PaginationQueryDto) {
         const user1 = await this.userRepository.findOneBy({ user_id: user1_id });
         const user2 = await this.userRepository.findOneBy({ user_id: user2_id });

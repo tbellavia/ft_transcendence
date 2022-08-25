@@ -23,6 +23,15 @@ export class MatchesController {
     }
 
     @Public()
+    @Get("/matches/:match_id")
+    async findOne(
+        @Param("match_id") match_id: string
+    ) 
+    {
+        return this.matchesService.findOne(match_id);
+    }
+
+    @Public()
     @Get("/:user1_id/matches/:user2_id")
     async findAllByUser(
         @Param("user1_id") user1_id: string,
