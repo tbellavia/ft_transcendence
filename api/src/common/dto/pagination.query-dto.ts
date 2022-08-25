@@ -17,7 +17,7 @@ export class PaginationQueryDto {
     skip: number;
 
     getConfig<T>(
-        where: FindOptionsWhere<T> = {},
+        where: FindOptionsWhere<T> | FindOptionsWhere<T>[] = {},
         relations: FindOptionsRelations<T> = {},
         select: FindOptionsSelect<T> = {}
     ) : FindManyOptions<T> 
