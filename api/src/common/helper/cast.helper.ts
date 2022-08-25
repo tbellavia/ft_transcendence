@@ -8,6 +8,10 @@ export function toBoolean(value: string) : boolean {
     return value === "true" || value === "1"
 }
 
+export function toDate(value: string) : Date {
+    return new Date(value);
+}
+
 export function toNumber(value: string, opts: ToNumberOptions = {}) : number {
     let n = Number.parseInt(value, 10);
 
