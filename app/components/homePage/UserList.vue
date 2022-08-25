@@ -54,6 +54,9 @@ function getUser() {
 			<div class="userName"> {{ user.first_name }}</div>
 			<div class="rank">{{ user.rank }}</div>
 		</div>
+		<v-list>
+			Coucou
+		</v-list>
 	</div>
 </template>
 

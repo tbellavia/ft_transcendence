@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/01 12:47:39 by lvirgini          #+#    #+#              #
-#    Updated: 2022/08/22 15:50:14 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/08/25 14:26:41 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,11 +55,8 @@ rm_network:
 clean:
 	- $(DOCKER_COMPOSE) down -v --rmi all --remove-orphans
 
-fclean: clean rm rmi rm_volume rm-network
-
+fclean: clean rm rmi rm_volume rm_network
 
 re: 	fclean all
-
-
 
 .PHONY: all setup build up down rm rmi rm_volume clean fclean re
