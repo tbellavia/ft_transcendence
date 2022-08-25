@@ -17,6 +17,7 @@ import { UsersModule } from './users/users.module';
 import { StatsModule } from './stats/stats.module';
 import { FriendsModule } from './friends/friends.module';
 import { BlockedModule } from './blocked/blocked.module';
+import { MatchesModule } from './matches/matches.module';
 
 @Module({
   imports: [
@@ -42,7 +43,8 @@ import { BlockedModule } from './blocked/blocked.module';
     UsersModule,
     StatsModule,
     FriendsModule,
-    BlockedModule
+    BlockedModule,
+    MatchesModule
   ],
   controllers: [AppController, UsersController],
   providers: [
