@@ -21,6 +21,13 @@ export class MatchesController {
     {
         return this.matchesService.create(user1_id, user2_id, matchCreationDto);
     }
+    
+
+    @Public()
+    @Get("/matches/all")
+    async findAll(@Query() paginationQueryDto: PaginationQueryDto) {
+        return this.matchesService.findAll(paginationQueryDto);
+    }
 
     @Public()
     @Get("/matches/:match_id")
@@ -30,6 +37,7 @@ export class MatchesController {
     {
         return this.matchesService.findOne(match_id);
     }
+
 
     @Public()
     @Get("/:user1_id/matches/:user2_id")
@@ -44,12 +52,12 @@ export class MatchesController {
 
     @Public()
     @Get("/:user_id/matches")
-    async findAll(
+    async findAllByUser(
         @Param("user_id") user_id: string,
         @Query() paginationQueryDto: PaginationQueryDto
     )
     {
-        return this.matchesService.findAll(user_id, paginationQueryDto);
+        return this.matchesService.findAllByUser(user_id, paginationQueryDto);
     }
 
     @Public()

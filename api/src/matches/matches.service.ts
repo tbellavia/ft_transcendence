@@ -56,6 +56,21 @@ export class MatchesService {
         return match;
     }
 
+    async findAll(paginationQueryDto: PaginationQueryDto){
+        const opts = paginationQueryDto.getConfig<MatchEntity>(
+            {},
+            {
+                user_1: true,
+                user_2: true
+            },
+            {
+                user_1: selectUserOption,
+                user_2: selectUserOption
+            }
+        );
+        return await this.matchRepositoy.find(opts);
+    }
+
     async findAllByUsers(user1_id: string, user2_id: string, paginationQueryDto: PaginationQueryDto) {
         const user1 = await this.userRepository.findOneBy({ user_id: user1_id });
         const user2 = await this.userRepository.findOneBy({ user_id: user2_id });
@@ -83,7 +98,7 @@ export class MatchesService {
         return await this.matchRepositoy.find(opts);
     }
 
-    async findAll(user_id: string, paginationQueryDto: PaginationQueryDto) {
+    async findAllByUser(user_id: string, paginationQueryDto: PaginationQueryDto) {
         const user = await this.userRepository.findOneBy({ user_id });
 
         if ( !user ){
