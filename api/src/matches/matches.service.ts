@@ -135,4 +135,14 @@ export class MatchesService {
         await match.save();
         return { msg: "Match updated successfuly!" };
     }
+
+    async remove(match_id: string) {
+        const match = await this.matchRepositoy.findOneBy({ match_id });
+
+        if ( !match ){
+            return { msg: "Match does not exist" };
+        }
+        await match.remove();
+        return { msg: "Match successfuly deleted" };
+    }
 }
