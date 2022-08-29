@@ -12,6 +12,9 @@ export class UserEntity extends BaseEntity {
     @Column({ nullable: false, unique: true })
     username: string;
 
+    @Column({ default: false })
+    double_auth: boolean;
+
     @CreateDateColumn()
     creation_date: Date;
 

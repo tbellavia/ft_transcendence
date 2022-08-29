@@ -26,11 +26,16 @@ export class UsersService {
   }
 
   async update(updateUserDto: UpdateUserDTO, user_id: string) {
+    const { double_auth } = updateUserDto;
     const user = await this.find(user_id);
 
+    console.log(double_auth)
     if ( user == null )
       return;
+    if ( double_auth !== undefined )
+      user.double_auth = double_auth;
     await user.save();
+    return this.findOne(user_id);
   }
 
   async find(user_id: string) {
