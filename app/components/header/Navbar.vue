@@ -11,6 +11,7 @@
 
 <style scoped>
 .navbar {
+  position: static;
   background-image: radial-gradient(
     var(--main-color-darker),
     var(--grey-color-dark)

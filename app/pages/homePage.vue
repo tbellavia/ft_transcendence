@@ -8,8 +8,6 @@
   </div>
 </template>
 
-<script></script>
-
 <style>
 .home-page {
   width: 100%;

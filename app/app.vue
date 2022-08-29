@@ -8,9 +8,15 @@
 <!-- -------------------------------------------------------------- -->
 
 <template>
+<<<<<<< HEAD
   <div>
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
   </div>
+=======
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
+>>>>>>> Save from school
 </template>
