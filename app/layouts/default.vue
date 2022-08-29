@@ -7,7 +7,7 @@
       <slot />
     </main>
     <footer>
-    <footerCopyright style="top: 99%;"/>
+      <footerCopyright style="top: 99%;"/>
     </footer>
 </div>
 
