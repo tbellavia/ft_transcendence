@@ -1,7 +1,5 @@
 <template>
-    <main>
       <Authentication @connect="redirectIfConnected('/homePage')" />
-    </main>
 </template>
 
 <script setup lang="ts">
