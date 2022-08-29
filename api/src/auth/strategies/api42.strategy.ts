@@ -31,6 +31,6 @@ export class Api42Strategy extends PassportStrategy(Strategy, 'api42') {
         },
       }),
     );
-    return await this.authService.findOrCreateUser(data);
+    return await this.authService.findOrCreateUser(data.login);
   }
 }
