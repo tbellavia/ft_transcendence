@@ -1,8 +1,14 @@
 <template>
  <div class="real-body">
-    <headerNavbar/>
+    <header>
+      <headerNavbar/>
+    </header>
+    <main>
     <slot />
+    </main>
+    <footer>
     <footerCopyright style="top: 99%;"/>
+    </footer>
 </div>
 
 </template>

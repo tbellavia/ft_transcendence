@@ -3,7 +3,7 @@
   <svgLogoParam />
   <ul>
     <li>
-      <button @click=""> DISCONNECT </button>
+      <button @click="disconnect"> DISCONNECT </button>
     </li>
   </ul>
 </li>
@@ -12,6 +12,13 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
+async function disconnect() {
+  const { $apiFetch } = useNuxtApp();
+  await $apiFetch("/auth/disconnect")
+    .then(async () => await navigateTo("/"))
+    .catch((error) => console.warn(error));
+    
+}
 </script>
 
 <!-- -------------------------------------------------------------- -->
