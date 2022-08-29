@@ -34,6 +34,34 @@ services:
       - 3000:3000
     networks:
       - backend
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - backend
+
+volumes:
+  db:
+    driver: local
 
 networks:
   backend:
