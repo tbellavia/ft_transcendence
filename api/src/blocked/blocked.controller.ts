@@ -7,7 +7,7 @@ import { BlockedService } from './blocked.service';
 export class BlockedController {
   constructor(private readonly blockedService: BlockedService) {}
 
-  @Public()
+  
   @Post(":user1_id/blocked/:user2_id")
   async create(
     @Param("user1_id") user1_id: string,
@@ -17,7 +17,7 @@ export class BlockedController {
     return this.blockedService.create(user1_id, user2_id);
   }
 
-  @Public()
+  
   @Get(":user_id/blocked")
   async findAll(
     @Param("user_id") user_id: string,
@@ -27,7 +27,7 @@ export class BlockedController {
     return this.blockedService.findAll(user_id, paginationQueryDto);
   }
 
-  @Public()
+  
   @Delete(":user1_id/blocked/:user2_id")
   async delete(
     @Param("user1_id") user1_id: string,

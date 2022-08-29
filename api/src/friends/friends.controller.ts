@@ -10,7 +10,7 @@ export class FriendsController {
         private friendsService: FriendsService
     ) {}
 
-    @Public()
+    
     @Post(":user1_id/friends/:user2_id")
     async create(
         @Param("user1_id") user1_id: string,
@@ -20,7 +20,7 @@ export class FriendsController {
         return this.friendsService.create(user1_id, user2_id);
     }
 
-    @Public()
+    
     @Get(":user_id/friends")
     async findAll(
         @Param("user_id") user_id: string,
@@ -29,7 +29,7 @@ export class FriendsController {
         return this.friendsService.findAll(user_id, getFriendsQueryDto);
     }
 
-    @Public()
+    
     @Get(":user1_id/friends/:user2_id")
     async findOne(
         @Param("user1_id") user1_id: string,
@@ -39,7 +39,7 @@ export class FriendsController {
         return this.friendsService.findOne(user1_id, user2_id);
     }
 
-    @Public()
+    
     @Put(":user1_id/friends/:user2_id")
     async update(
         @Param("user1_id") user1_id: string,
@@ -50,7 +50,7 @@ export class FriendsController {
         return this.friendsService.update(user1_id, user2_id, updatePendingDto);
     }
 
-    @Public()
+    
     @Delete(":user1_id/friends/:user2_id")
     async delete(
         @Param("user1_id") user1_id: string,
