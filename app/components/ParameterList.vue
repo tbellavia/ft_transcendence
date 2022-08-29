@@ -1,6 +1,6 @@
 <template>
   <li class="dropleft">
-    <SVGLogoParam />
+    <svgLogoParam />
     <ul>
       <li><a href="#" @click="disconnect">disconnect</a></li>
     </ul>

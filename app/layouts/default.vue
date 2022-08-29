@@ -1,22 +1,17 @@
 <template>
-  <div class="real-body">
-    <NavBar />
-    <slot />
-    <Copyright style="top: 99%" />
-  </div>
-</template>
+ <div class="real-body">
+    <header>
+      <headerNavbar/>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+    <footerCopyright style="top: 99%;"/>
+    </footer>
+</div>
 
-<script setup lang="ts">
-/**
- * Check if user is connected using api endpoints
- * if connected redirect to page
- * @param page the page to redirect user
- */
-async function redirectIfConnected(page: string) {
-  const { $apiFetch } = useNuxtApp();
-  await $apiFetch("/auth/isConnected").then(async () => await navigateTo(page));
-}
-</script>
+</template>
 
 <!-- -------------------------------------------------------------- -->
 
