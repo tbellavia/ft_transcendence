@@ -25,6 +25,7 @@ export class UsersService {
 
       console.log(`Created user ${createUserDto}`);
       await user.save();
+      return await this.find(user.user_id);
   }
 
   async update(updateUserDto: UpdateUserDTO, user_id: string) {
@@ -41,7 +42,8 @@ export class UsersService {
     const user = await this.userRepository.findOne({
       where: {
         user_id
-      }
+      },
+      select: selectUserOption
     });
     return user;
   }
