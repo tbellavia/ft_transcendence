@@ -12,9 +12,6 @@ export class UserEntity extends BaseEntity {
     @Column({ nullable: false, unique: true })
     username: string;
 
-    @Column({ nullable: true })
-    password: string;
-
     @CreateDateColumn()
     creation_date: Date;
 

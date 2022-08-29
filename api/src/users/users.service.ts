@@ -26,12 +26,10 @@ export class UsersService {
   }
 
   async update(updateUserDto: UpdateUserDTO, user_id: string) {
-    const { password } = updateUserDto;
     const user = await this.find(user_id);
 
     if ( user == null )
       return;
-    user.password = password;
     await user.save();
   }
 
