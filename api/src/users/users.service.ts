@@ -17,11 +17,8 @@ export class UsersService {
   ) { }
 
   async create(createUserDto: CreateUserDTO) {
-      const { username, password } = createUserDto;
-      const user = UserEntity.create({
-          username,
-          password
-      });
+      const { username } = createUserDto;
+      const user = UserEntity.create({ username });
 
       console.log(`Created user ${createUserDto}`);
       await user.save();
