@@ -17,14 +17,12 @@ export class UsersService {
   ) { }
 
   async create(createUserDto: CreateUserDTO) {
-      const { username, password } = createUserDto;
-      const user = UserEntity.create({
-          username,
-          password
-      });
+      const { username } = createUserDto;
+      const user = UserEntity.create({ username });
 
       console.log(`Created user ${createUserDto}`);
       await user.save();
+      return await this.find(user.user_id);
   }
 
   async update(updateUserDto: UpdateUserDTO, user_id: string) {
@@ -41,7 +39,8 @@ export class UsersService {
     const user = await this.userRepository.findOne({
       where: {
         user_id
-      }
+      },
+      select: selectUserOption
     });
     return user;
   }
