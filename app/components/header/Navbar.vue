@@ -1,9 +1,10 @@
 <template>
   <nav class="navbar">
-    <SVGStudioLogo class="navbar-left" />
+    <svgStudioLogo class="navbar-left" /> 
+    <!-- TODO  -->
     <div class="navbar-right">
-      <ChangeTheme class="navbar-sub" />
-      <SVGLogoParam class="navbar-sub" />
+      <headerButtonChangeTheme class="navbar-sub" />
+      <headerButtonDisconnect class="navbar-sub" />
     </div>
   </nav>
 </template>
@@ -14,6 +15,7 @@
     var(--main-color-darker),
     var(--grey-color-dark)
   );
+  font-size: 12px;
   width: 100%;
   height: 60px;
   overflow: visible;

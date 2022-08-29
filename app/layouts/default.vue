@@ -1,8 +1,8 @@
 <template>
  <div class="real-body">
-    <NavBar/>
+    <headerNavbar/>
     <slot />
-    <Copyright style="top: 99%;"/>
+    <footerCopyright style="top: 99%;"/>
 </div>
 
 </template>

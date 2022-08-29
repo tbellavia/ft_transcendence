@@ -2,7 +2,7 @@
   <NuxtLayout>
     <div class="home-page">
       <div style="width: 15%">
-        <homePageUserList />
+        <userpageUserList />
       </div>
       <div style="width: 60%; border: solid; border-color: blue"></div>
       <div style="width: 35%; border: solid; border-color: orange"></div>

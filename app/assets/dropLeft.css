@@ -1,0 +1,24 @@
+
+li.dropleft {
+	position: relative;
+}
+
+li.dropleft ul {
+  display: none;
+}
+
+li.dropleft:hover ul {
+	top: 18%;
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	right: 100%;
+	z-index: 2;
+	overflow: visible;
+}
+
+li.dropleft button {
+	padding-left: 10%;
+	text-align: left;
+	width: 100px;
+}
