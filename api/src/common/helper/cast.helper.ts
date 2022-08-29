@@ -4,8 +4,10 @@ interface ToNumberOptions {
     max?: number;
 }
 
-export function toBoolean(value: string) : boolean {
-    return value === "true" || value === "1"
+export function toBoolean(value: any) : boolean {
+    if ( typeof value == "boolean" )
+        return value;
+    return (typeof value == "string" && value === "true" || value === "1");
 }
 
 export function toDate(value: string) : Date {
