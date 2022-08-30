@@ -31,7 +31,24 @@ export class BlockedService {
         blocked.user_1 = user1;
         blocked.user_2 = user2;
         await blocked.save();
-        return { msg: "Blocked successful" };
+        return await this.findOne(user1_id, user2_id);
+    }
+
+    async findOne(user1_id: string, user2_id: string) {
+        return await this.blockedRepository.findOne({
+            where: {
+                user_1: { user_id: user1_id },
+                user_2: { user_id: user2_id }
+            },
+            relations: {
+                user_1: true,
+                user_2: true,
+            },
+            select: {
+                user_1: selectUserOption,
+                user_2: selectUserOption
+            }
+        });
     }
 
     async findAll(user_id: string, paginationQueryDto: PaginationQueryDto){
