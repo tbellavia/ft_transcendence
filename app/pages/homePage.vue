@@ -1,5 +1,9 @@
 <template>
-	<nuxtLayout name="home">
-    USER PROFILE
+<nuxtLayout name="home">
+	<userpageUserProfile />
+	<userpageUserParameters />
+
 </nuxtLayout>
 </template>
+
+

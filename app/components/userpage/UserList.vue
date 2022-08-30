@@ -44,12 +44,12 @@ async function getFriendsUsers() {
 			<!-- <div v-if="user.online"> </div>
 			<div v-else> </div> -->
 		</div>
-		<div class="OptionProfile">
-			<div class="userImage"> image </div>
+		<!-- <div class="OptionProfile">
+			<div class="userImage"> {{ user.image_url }}</div>
 			<button> add friend </button>
 			<button>  message </button>
 			<button>  suggest a match </button>
-		</div>
+		</div> -->
 	</div>
 </template>
 
