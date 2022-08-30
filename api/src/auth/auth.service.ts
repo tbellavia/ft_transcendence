@@ -18,7 +18,8 @@ export class AuthService {
    */
   async findOrCreateUser(username: string) {
     let user: UserEntity | undefined = await this.userService.findByName(username)
-      return this.userService.create({ username });
+    if (user) return user;
+    return this.userService.create({ username });
   }
 
   /**
