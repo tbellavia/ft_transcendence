@@ -2,9 +2,7 @@
 <li class="dropleft">
   <svgLogoParam />
   <ul>
-    <li>
-      <button @click="disconnect"> DISCONNECT </button>
-    </li>
+    <li><button @click="disconnect"> DISCONNECT </button></li>
   </ul>
 </li>
 </template>
@@ -12,6 +10,14 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
+
+// const emit = defineEmits(["disconnect"]);
+
+// async function disconnect() {
+//   const { $apiFetch } = useNuxtApp();
+//   await $apiFetch("/auth/disconnect").then(() => emit("disconnect"));
+// }
+
 async function disconnect() {
   const { $apiFetch } = useNuxtApp();
   await $apiFetch("/auth/disconnect")
@@ -20,7 +26,3 @@ async function disconnect() {
 }
 </script>
 
-<!-- -------------------------------------------------------------- -->
-
-<style scoped>
-</style>
