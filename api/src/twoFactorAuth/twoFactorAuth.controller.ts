@@ -7,8 +7,10 @@ export class TwoFactorAuthController {
 
   @Post('generate')
   async register(@Req() request) {
+    console.log('Generate for: ', request.user.username);
     const { otpUrl } = await this.twoFactorAuthService.generateSharedSecretAndUrl(request.user);
 
-    return this.twoFactorAuthService.generateQRCodeSVG(otpUrl);
+    const qrCode = await this.twoFactorAuthService.generateQRCodeSVG(otpUrl);
+    return qrCode;
   }
 }
