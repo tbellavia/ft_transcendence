@@ -33,8 +33,7 @@ export class MatchesService {
         match.user_2 = user2;
         match.begin_date = matchCreationDto.begin_date;
         await match.save();
-
-        return { msg: "Match successfuly created!" };
+        return await this.findLatest(user1_id, user2_id);
     }
 
     async findOne(match_id: string) {
@@ -133,7 +132,7 @@ export class MatchesService {
         match.player_2_outcome = updateMatchDto.player_2_outcome;
         match.end_date = updateMatchDto.end_date;
         await match.save();
-        return { msg: "Match updated successfuly!" };
+        return await this.findOne(match.match_id);
     }
 
     async remove(match_id: string) {
@@ -144,5 +143,29 @@ export class MatchesService {
         }
         await match.remove();
         return { msg: "Match successfuly deleted" };
+    }
+
+    async findLatest(user1_id: string, user2_id: string){
+        const matches = await this.matchRepositoy.find({
+            where: {
+                user_1: { user_id: user1_id },
+                user_2: { user_id: user2_id }
+            },
+            relations: {
+                user_1: true,
+                user_2: true,
+            },
+            select: {
+                user_1: selectUserOption,
+                user_2: selectUserOption
+            },
+            order: {
+                match_id: 'DESC'
+            }
+        });
+
+        if ( matches && matches.length > 0 ){
+            return matches[0];
+        }
     }
 }
