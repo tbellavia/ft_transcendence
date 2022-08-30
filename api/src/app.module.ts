@@ -18,6 +18,7 @@ import { StatsModule } from './stats/stats.module';
 import { FriendsModule } from './friends/friends.module';
 import { BlockedModule } from './blocked/blocked.module';
 import { MatchesModule } from './matches/matches.module';
+import { TwoFactorAuthModule } from './twoFactorAuth/twoFactorAuth.module';
 
 @Module({
   imports: [
@@ -44,7 +45,8 @@ import { MatchesModule } from './matches/matches.module';
     StatsModule,
     FriendsModule,
     BlockedModule,
-    MatchesModule
+    MatchesModule,
+    TwoFactorAuthModule
   ],
   controllers: [AppController, UsersController],
   providers: [
