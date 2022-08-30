@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/01 12:47:39 by lvirgini          #+#    #+#              #
-#    Updated: 2022/08/01 14:13:42 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/08/25 14:26:41 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,10 +27,13 @@ build:
 		@echo "\n\033[36;1m\033[4;5mDOCKER BUILD : DONE\033[0m\n"
 
 up:
-	$(DOCKER_COMPOSE) up -d
+	$(DOCKER_COMPOSE) up
 
 down:	
 	$(DOCKER_COMPOSE) down
+
+restart:
+	$(DOCKER_COMPOSE) restart
 
 config:
 	$(DOCKER_COMPOSE) config
@@ -41,26 +44,22 @@ config:
 # ----------------- #
 
 rm:
-		docker rm -f $$(docker ps -a -q)
+		- docker rm -f $$(docker ps -a -q)
 		
 rmi:
-		docker rmi -f $$(docker images -a -q)
+		- docker rmi -f $$(docker images -a -q)
 
 rm_volume:
-		docker volume rm $$(docker volume ls -q)
+		- docker volume rm $$(docker volume ls -q)
 
 rm_network:
-		docker rm $$(docker network ls -q)
+		- docker rm $$(docker network ls -q)
 
 clean:
-	$(DOCKER_COMPOSE) down -v --rmi all --remove-orphans
+	- $(DOCKER_COMPOSE) down -v --rmi all --remove-orphans
 
-fclean: clean
-		./cleaner.sh
-
+fclean: clean rm rmi rm_volume rm_network
 
 re: 	fclean all
-
-
 
 .PHONY: all setup build up down rm rmi rm_volume clean fclean re

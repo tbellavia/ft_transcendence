@@ -1,0 +1,142 @@
+/*
+** "largely inspired" by Chris Smith:  https://codepen.io/chris22smith/pen/YZPrjr 
+*/
+
+/* color for background */
+:root {
+  --grey-color-dark: #111;
+  --grey-color: #222;
+  --grey-color-light: #333;
+  --grey-color-lighter: #444;
+  --background-color: #000;
+}
+
+/* fonts and animations text */
+:root {
+  font-family: "Fira Mono", monospace;
+  animation: colorPulse 6s infinite ease-in-out;
+
+  background-color: var(--background-color);
+
+  /* box-sizing: border-box; */
+  overflow: hidden;
+  height: 100%;
+}
+
+/* pulse color on font: old screen effect */
+@keyframes colorPulse {
+  0%,
+  100% {
+    color: var(--main-color);
+    /* fill-opacity: 1; */
+  }
+  48%,
+  52% {
+    color: var(--main-color-dark);
+    /* fill-opacity: 0.7; */
+  }
+  50% {
+    color: var(--main-color-darker);
+    /* fill-opacity: 0.4; */
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+}
+
+/* --------------------------------------------------------------  */
+/* Visual line like old monitor */
+body:after {
+  background: repeating-linear-gradient(
+    transparent,
+    transparent 5px,
+    var(--background-line-color) 6px
+  );
+  content: "";
+  pointer-events: none;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  z-index: 2;
+}
+
+/* --------------------------------------------------------------  */
+/* color links invert the main color when hover */
+
+/* all a for chrome */
+a:-webkit-any-link {
+  color: var(--main-color);
+}
+
+/* all a for firefox */
+a:visited, a:link {
+  color: var(--main-color);
+}
+/* mouse on link : invert color */
+a:hover,
+a:visited:hover {
+  background-color: var(--main-color);
+  color: var(--background-color);
+}
+
+/* mouse selector text */
+::selection {
+  color: var(--background-color);
+  background: var(--main-color-dark);
+}
+
+/* --------------------------------------------------------------  */
+
+
+button {
+  background-color: transparent;
+  color: var(--main-color);
+  border: transparent;
+}
+/* stylelint-disable */
+
+button:hover {
+  background-color: var(--main-color);
+  color: var(--background-color);
+}
+
+/* --------------------------------------------------------------  */
+
+li {
+  list-style: none;
+}
+
+/* --------------------------------------------------------------  */
+
+
+/* wave for effects */
+/* body:before {
+	animation:wave 20s ease-in-out infinite;
+	content:"";
+	height:100vh;
+	left:0;
+	opacity:.3;
+	position:absolute;
+	right:0;
+	z-index:1;
+  }
+
+@keyframes wave {
+	0% {
+		box-shadow:0 -10vh 200vh var(--main-color-darker);
+		top:-10vh;
+	}
+
+	100% {
+	  box-shadow:0 -10vh 200vh var(--main-color-darker);
+	  top:200vh;
+	}
+  } */

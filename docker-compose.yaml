@@ -2,20 +2,20 @@ version: "3"
 
 services:
   app:
-    container_name: vuejs
-    image: transcendance/vuejs
+    container_name: nuxtjs
+    environment:
+      - NODE_OPTIONS=--openssl-legacy-provider
+    image: transcendance/nuxtjs
     build:
       context: ./app
     volumes:
       - type: bind
         source: ./app
-        target: /usr/src/app
+        target: /home/node/app
       - type: volume
-        target: /usr/src/app/node_modules
-    networks:
-      - frontend
+        target: /home/node/app/node_modules
     ports:
-      - "5173:5173"
+      - 8000:8000
 
   api:
     container_name: nestjs
@@ -25,13 +25,14 @@ services:
     volumes:
       - type: bind
         source: ./api
-        target: /usr/src/app
+        target: /home/node/app
       - type: volume
-        target: /usr/src/app/node_modules
+        target: /home/node/app/node_modules
+    # Expose API for clients using or SPA app
+    # Api Gateway or reverse proxy may be overkill for this type of project
     ports:
-      - "3000:3000"
+      - 3000:3000
     networks:
-      - frontend
       - backend
     depends_on:
       - db
@@ -40,12 +41,10 @@ services:
     container_name: db
     image: postgres
     restart: always
-    environment:
-      POSTGRES_USER: <user>
-      POSTGRES_PASSWORD: <password>
-      POSTGRES_DB: <database>
+    env_file:
+      - .env
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - db:/var/lib/postgresql/data
     networks:
@@ -59,14 +58,10 @@ services:
       - 8080:8080
     networks:
       - backend
-      - frontend
-    
-
 
 volumes:
   db:
     driver: local
 
 networks:
-  frontend:
   backend:
