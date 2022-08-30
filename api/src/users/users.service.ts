@@ -35,7 +35,7 @@ export class UsersService {
     if ( double_auth !== undefined )
       user.double_auth = double_auth;
     await user.save();
-    return this.findOne(user_id);
+    return await this.findOne(user_id);
   }
 
   async find(user_id: string) {
