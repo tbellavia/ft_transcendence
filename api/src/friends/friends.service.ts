@@ -91,9 +91,7 @@ export class FriendsService {
             return null;
         friendship.pending = updatePendingDto.pending;
         await friendship.save();
-        return {
-            msg: "Update success!"
-        };
+        return await this.findOne(user1_id, user2_id);
     }
 
     async delete(user1_id: string, user2_id: string) {
