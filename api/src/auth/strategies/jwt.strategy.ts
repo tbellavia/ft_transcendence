@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class JWTStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(private readonly config: ConfigService) {
+  constructor(
+    private readonly config: ConfigService,
+    private readonly userService: UsersService
+  ) {
     super({
       // Get JWT from cookie inside request
       jwtFromRequest: (request) => {
@@ -18,8 +22,8 @@ export class JWTStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  // Populate req.user with valid decoded payload
+  // Populate req.user with user's entity
   async validate(payload: any) {
-    return { id: payload.id, login: payload.login };
+    return this.userService.findOne(payload.user_id);
   }
 }

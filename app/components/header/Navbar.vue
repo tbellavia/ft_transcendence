@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar">
     <svgStudioLogo class="navbar-left" /> 
-    <!-- TODO  -->
+    <!-- TODO User name  -->
     <div class="navbar-right">
       <headerButtonChangeTheme class="navbar-sub" />
       <headerButtonDisconnect class="navbar-sub" />

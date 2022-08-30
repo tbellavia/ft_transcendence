@@ -2,6 +2,8 @@
       <Authentication @connect="redirectIfConnected('/homePage')" />
 </template>
 
+<!-- -------------------------------------------------------------- -->
+
 <script setup lang="ts">
 /**
  * Check if user is connected using api endpoints

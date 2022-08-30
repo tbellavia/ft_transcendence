@@ -11,7 +11,7 @@ export class MatchesController {
         private matchesService: MatchesService
     ) { }
 
-    @Public()
+    
     @Post("/:user1_id/matches/:user2_id")
     async create(
         @Param("user1_id") user1_id: string,
@@ -23,13 +23,13 @@ export class MatchesController {
     }
     
 
-    @Public()
+    
     @Get("/matches/all")
     async findAll(@Query() paginationQueryDto: PaginationQueryDto) {
         return this.matchesService.findAll(paginationQueryDto);
     }
 
-    @Public()
+    
     @Get("/matches/:match_id")
     async findOne(
         @Param("match_id") match_id: string
@@ -39,7 +39,7 @@ export class MatchesController {
     }
 
 
-    @Public()
+    
     @Get("/:user1_id/matches/:user2_id")
     async findAllByUsers(
         @Param("user1_id") user1_id: string,
@@ -50,7 +50,7 @@ export class MatchesController {
         return this.matchesService.findAllByUsers(user1_id, user2_id, paginationQueryDto);
     }
 
-    @Public()
+    
     @Get("/:user_id/matches")
     async findAllByUser(
         @Param("user_id") user_id: string,
@@ -60,7 +60,7 @@ export class MatchesController {
         return this.matchesService.findAllByUser(user_id, paginationQueryDto);
     }
 
-    @Public()
+    
     @Put("/matches/:match_id")
     async update(
         @Param("match_id") match_id: string,
@@ -70,7 +70,7 @@ export class MatchesController {
         return this.matchesService.update(match_id, updateMatchDto);
     }
 
-    @Public()
+    
     @Delete("/matches/:match_id")
     async remove(@Param("match_id") match_id: string) {
         return this.matchesService.remove(match_id);

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository, UsingJoinColumnIsNotAllowedError } from 'typeorm';
-import { User } from './class/user.class';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
@@ -9,22 +8,18 @@ import { selectUserOption } from './options/user-select.option';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [];
-
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>
   ) { }
 
   async create(createUserDto: CreateUserDTO) {
-      const { username, password } = createUserDto;
-      const user = UserEntity.create({
-          username,
-          password
-      });
+      const { username } = createUserDto;
+      const user = UserEntity.create({ username });
 
-      console.log(`Created user ${createUserDto}`);
+      console.log(`Created user ${ user }`);
       await user.save();
+      return await this.find(user.user_id);
   }
 
   async update(updateUserDto: UpdateUserDTO, user_id: string) {
@@ -41,7 +36,18 @@ export class UsersService {
     const user = await this.userRepository.findOne({
       where: {
         user_id
-      }
+      },
+      select: selectUserOption
+    });
+    return user;
+  }
+
+  async findByName(username: string) {
+    const user = await this.userRepository.findOne({
+      where: {
+        username
+      },
+      select: selectUserOption
     });
     return user;
   }
@@ -71,15 +77,4 @@ export class UsersService {
     await this.userRepository.delete(user_id);
   }
 
-  /* Lylian's code */
-  findUser(userID: number) {
-    return this.users.find((user) => user.id == userID);
-  }
- 
-  createUser(user: User) {
-    console.log('Add: ', user);
-    this.users.push(user);
-    console.log('Users:', this.users);
-    return user;
-  }
 }
