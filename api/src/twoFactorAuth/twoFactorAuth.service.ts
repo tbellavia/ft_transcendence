@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { UsersService } from "src/users/users.service";
 import { authenticator } from "otplib";
 import { UserEntity } from "src/users/entities/user.entity";
+import { toString } from "qrcode";
 
 @Injectable()
 export class TwoFactorAuthService {
@@ -26,11 +27,18 @@ export class TwoFactorAuthService {
       secret
     );
 
-    //TODO: save it in data base
+    //Save it into database under user's entity
+    this.userService.updateTwoFactorSecret(secret, user.user_id);
 
     return {
       secret,
       otpUrl,
     };
+  }
+
+  public async generateQRCodeSVG(otpUrl: string) {
+    return await toString(otpUrl, {
+      type: 'svg'
+    });
   }
 }

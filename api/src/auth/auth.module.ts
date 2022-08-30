@@ -5,10 +5,8 @@ import { JwtModule } from "@nestjs/jwt";
 import { UsersModule } from "src/users/users.module";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
-import { JWTAuthGuard } from "./guards/jwtauth.guard";
 import { Api42Strategy } from "./strategies/api42.strategy";
 import { JWTStrategy } from "./strategies/jwt.strategy";
-import { TwoFactorAuthService } from "./twoFactorAuth.service";
 
 @Module({
   imports: [
@@ -23,7 +21,7 @@ import { TwoFactorAuthService } from "./twoFactorAuth.service";
       }),
     }),
   ],
-  providers: [AuthService, Api42Strategy, JWTStrategy, TwoFactorAuthService],
+  providers: [AuthService, Api42Strategy, JWTStrategy],
   controllers: [AuthController],
   exports: [],
 })
