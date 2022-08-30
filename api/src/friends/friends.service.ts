@@ -21,6 +21,10 @@ export class FriendsService {
         const user1 = await this.userRepository.findOneBy({ user_id: user1_id });
         const user2 = await this.userRepository.findOneBy({ user_id: user2_id });
 
+        if ( await this.exists(user1_id, user2_id) ){
+            console.log("Friendship already exists");
+            return { msg: "Friendship already exists!" };
+        }
         if ( user1_id == user2_id ){
             console.log("User cannot add himself");
             return { msg: "User cannot add himself" };
@@ -73,6 +77,9 @@ export class FriendsService {
                 user_1: { user_id: user1_id },
                 user_2: { user_id: user2_id }
             },
+            relations: {
+                user_2: true
+            },
             select: selectFriendOptions
         });
     }
@@ -97,5 +104,9 @@ export class FriendsService {
         if ( result.affected == 0 )
             return { msg: "Relation not found!" };
         return { msg: "Relation deleted successfuly" };
+    }
+
+    async exists(user1_id: string, user2_id: string) {
+        return await this.findOne(user1_id, user2_id) !== undefined;
     }
 }
