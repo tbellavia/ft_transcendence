@@ -16,14 +16,9 @@ export class AuthService {
    * @param toFind The schema used to find the user or create it
    * @returns the user found in db or a new user
    */
-  async findOrCreateUser(userName: string) {
-    let user: UserEntity | undefined = await this.userService.findByName(userName)
-    if (!user) {
-      const userDTO = new CreateUserDTO();
-      userDTO.username = userName;
-      return this.userService.create(userDTO);
-    }
-    return user;
+  async findOrCreateUser(username: string) {
+    let user: UserEntity | undefined = await this.userService.findByName(username)
+      return this.userService.create({ username });
   }
 
   /**

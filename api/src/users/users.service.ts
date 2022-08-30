@@ -22,13 +22,30 @@ export class UsersService {
       return await this.find(user.user_id);
   }
 
+  /**
+   * Update two factor secret shared by applications
+   * @param two_factor_secret the new secret
+   * @param user_id the user id that stores the secret
+   * @returns n/a
+   */
+
+  async updateTwoFactorSecret(two_factor_secret: string, user_id: string) {
+    const user = await this.find(user_id);
+
+    if (user == null)
+      return ;
+
+    user.two_factor_auth_secret = two_factor_secret;
+    await user.save();
+  }
+
   async update(updateUserDto: UpdateUserDTO, user_id: string) {
     const { password } = updateUserDto;
     const user = await this.find(user_id);
 
     if ( user == null )
       return;
-    user.password = password;
+    user.two_factor_auth_secret = password;
     await user.save();
   }
 

@@ -1,4 +1,4 @@
-import { Inject } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { UsersService } from "src/users/users.service";
 import { authenticator } from "otplib";
