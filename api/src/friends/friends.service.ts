@@ -34,7 +34,7 @@ export class FriendsService {
         friend.user_1 = user1;
         friend.user_2 = user2;
         await friend.save()
-        return { msg: "Friend successfuly added" };
+        return await this.findOne(user1_id, user2_id);
     }
 
     async findAll(user_id: string, getFriendsQueryDto: GetFriendsQueryDTO) {
