@@ -41,4 +41,11 @@ export class TwoFactorAuthService {
       type: 'svg'
     });
   }
+
+  public async isTwoFactorAuthCodeValid(twoFactorAuthCode: string, user: UserEntity) {
+    return authenticator.verify({
+      token: twoFactorAuthCode,
+      secret: user.two_factor_auth_secret
+    });
+  }
 }

@@ -39,13 +39,20 @@ export class UsersService {
     await user.save();
   }
 
+  async turnOnTwoFactorAuth(user_id: string) {
+    return this.update({
+      is_two_factor_auth_enabled: true
+    }, user_id);
+  }
+
   async update(updateUserDto: UpdateUserDTO, user_id: string) {
-    const { password } = updateUserDto;
+    const { password, is_two_factor_auth_enabled } = updateUserDto;
     const user = await this.find(user_id);
 
     if ( user == null )
       return;
     user.two_factor_auth_secret = password;
+    user.is_two_factor_auth_enbaled = is_two_factor_auth_enabled;
     await user.save();
   }
 

@@ -1,7 +1,12 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class UpdateUserDTO {
+    @IsOptional()
     @IsNotEmpty()
     @IsString()
-    password: string;
+    public password?: string;
+
+    @IsOptional()
+    @IsBoolean()
+    public is_two_factor_auth_enabled?: boolean;
 }
