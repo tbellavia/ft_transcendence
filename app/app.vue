@@ -3,6 +3,7 @@
 @import "~/assets/theme.css";
 @import "~/assets/imagesSVG.css";
 @import "~/assets/dropLeft.css";
+@import "~/assets/buttonSlider.css";
 </style>
 
 <!-- -------------------------------------------------------------- -->
