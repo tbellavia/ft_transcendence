@@ -13,7 +13,8 @@
  */
 async function redirectIfConnected(page: string) {
   const { $apiFetch } = useNuxtApp();
-  await $apiFetch("/auth/isConnected").then(async () => await navigateTo(page));
+  await $apiFetch("/auth/isConnected").then(async () => await navigateTo(page))
+  .catch(() => {});
 }
 
 </script>

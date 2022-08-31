@@ -1,15 +1,7 @@
 <template>
-    <div class="home-page">
-      <div style="width: 15%">
-        <userpageUserList />
-      </div>
-      <div style="width: 60%; border: solid; border-color: blue">
-      </div>
-      <div style="width: 35%; border: solid; border-color: orange; color: var(--main-color-light)">
-        <div v-html="svg.outerHTML"></div>
-        <!-- <div v-html="temp.innerHTML"></div> -->
-      </div>
-  </div>
+	<nuxtLayout name="home">
+      <div v-html="svg.outerHTML"></div>
+  </nuxtLayout>
 </template>
 
 <script setup>

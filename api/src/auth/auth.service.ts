@@ -17,9 +17,9 @@ export class AuthService {
    * @returns the user found in db or a new user
    */
   async findOrCreateUser(username: string) {
-    let user: UserEntity | undefined = await this.userService.findByName(username)
+    const user: UserEntity | undefined = await this.userService.findByName(username)
     if (user) return user;
-    return this.userService.create({ username });
+    return await this.userService.create({ username });
   }
 
   /**
