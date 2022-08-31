@@ -16,14 +16,10 @@ export class AuthService {
    * @param toFind The schema used to find the user or create it
    * @returns the user found in db or a new user
    */
-  async findOrCreateUser(userName: string) {
-    let user: UserEntity | undefined = await this.userService.findByName(userName)
-    if (!user) {
-      const userDTO = new CreateUserDTO();
-      userDTO.username = userName;
-      return this.userService.create(userDTO);
-    }
-    return user;
+  async findOrCreateUser(username: string) {
+    const user: UserEntity | undefined = await this.userService.findByName(username)
+    if (user) return user;
+    return await this.userService.create({ username });
   }
 
   /**
@@ -32,8 +28,13 @@ export class AuthService {
    * @param user the user object (TODO: replace it by db calls or api calls)
    * @returns a string containing the token encoded
    */
-  async login(user: UserEntity) {
-    const payload = {username: user.username, id: user.user_id};
+  async login(user: UserEntity, isTwoFactorAuthenticated = false) {
+    const payload = {
+      username: user.username,
+      id: user.user_id,
+      is_two_factor_authenticated: isTwoFactorAuthenticated
+    };
+
     return await this.jwtService.sign(payload);
   }
 }

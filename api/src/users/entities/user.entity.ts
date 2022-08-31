@@ -13,7 +13,10 @@ export class UserEntity extends BaseEntity {
     username: string;
 
     @Column({ nullable: true })
-    password: string;
+    public two_factor_auth_secret?: string;
+
+    @Column({ default: false })
+    public is_two_factor_auth_enbaled: boolean;
 
     @CreateDateColumn()
     creation_date: Date;
