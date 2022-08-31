@@ -1,4 +1,5 @@
-import { Body, Controller, Post, Req, UnauthorizedException } from "@nestjs/common";
+import { Body, Controller, Post, Req, Res, UnauthorizedException } from "@nestjs/common";
+import { AuthService } from "src/auth/auth.service";
 import { UsersService } from "src/users/users.service";
 import TwoFactorCodeDTO from "./dto/twoFactorCodeDTO";
 import { TwoFactorAuthService } from "./twoFactorAuth.service";
@@ -7,7 +8,8 @@ import { TwoFactorAuthService } from "./twoFactorAuth.service";
 export class TwoFactorAuthController {
   constructor(
     private readonly twoFactorAuthService: TwoFactorAuthService,
-    private readonly userService: UsersService
+    private readonly userService: UsersService,
+    private readonly authService: AuthService
   ) {}
 
   /**
@@ -40,4 +42,16 @@ export class TwoFactorAuthController {
   }
 
   @Post('authenticate')
+  async authenticate(@Req() requestWithUser, @Body() { code }: TwoFactorCodeDTO, @Res({ passthrough: true}) res) {
+    const isCodeValid = this.twoFactorAuthService.isTwoFactorAuthCodeValid(
+      code,
+      requestWithUser.user
+    );
+    if (!isCodeValid)
+      throw new UnauthorizedException('Wrong authentication code');
+
+    // Set-Cookie with 2fa enabled into cookie
+    const accessToken = this.authService.login(requestWithUser.user, true);
+    res.cookie('jwtAuth', accessToken);
+  }
 }

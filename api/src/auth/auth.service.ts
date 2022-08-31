@@ -28,8 +28,13 @@ export class AuthService {
    * @param user the user object (TODO: replace it by db calls or api calls)
    * @returns a string containing the token encoded
    */
-  async login(user: UserEntity) {
-    const payload = {username: user.username, id: user.user_id};
+  async login(user: UserEntity, isTwoFactorAuthenticated = false) {
+    const payload = {
+      username: user.username,
+      id: user.user_id,
+      is_two_factor_authenticated: isTwoFactorAuthenticated
+    };
+
     return await this.jwtService.sign(payload);
   }
 }

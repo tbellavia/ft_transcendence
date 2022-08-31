@@ -24,6 +24,10 @@ export class JWTStrategy extends PassportStrategy(Strategy, 'jwt') {
 
   // Populate req.user with user's entity
   async validate(payload: any) {
-    return  await this.userService.findOne(payload.user_id);
+    const user = await this.userService.findOne(payload.user_id);
+    if (!user.is_two_factor_auth_enbaled)
+      return user;
+    if (payload.is_two_factor_authenticated)
+      return user;
   }
 }
