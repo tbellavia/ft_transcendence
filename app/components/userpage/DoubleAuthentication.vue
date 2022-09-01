@@ -1,34 +1,36 @@
 <template>
   <div>
-    Double Authentication : 
-
-
 			<!-- https://lightrun.com/answers/vuetifyjs-vuetify-documentation-v-slotactivator-on-
 			https://ramblings.mcpher.com/snipgraphql/vuejs/vuejs-and-vuetify-what-does-v-on-mean/ -->
-    <div id="app">
-        <v-row justify="center" left="100%">
+    <div id="DA">
+      <v-row justify="center" left="100%">
           <v-dialog
             v-model="activatePopup"
             persistent
             max-width="290">
             <template v-slot:activator="{ on: activatePopup }">
-              <v-switch
+              Double Authentication :
+              <v-switch justify="center"
               v-model="userChoice"
               v-bind="userChoice"
               v-on="activatePopup" >
               </v-switch>
            </template>
-          <v-card>
-            <v-card-title class="text-h5">
+          <v-card density="comfortable">
+            <v-card-title justify="center" class="text-h5">
                Scan the qrCode
             </v-card-title>
             <v-spacer></v-spacer>
             <v-card-item>
               <div id=QrCode v-html="svg?.outerHTML"></div>
             </v-card-item>
-            <v-card-actions>
             <v-spacer></v-spacer>
-            <userpageDoubleAuthenticationForm @DoubleAuthValidate="printOk"/> 
+            <v-card-actions>
+            <userpageDoubleAuthenticationForm 
+              justify="center" 
+              @DoubleAuthValidate="printOk; activatePopup=false"/>
+            </v-card-actions>
+            <v-card-actions>
             <v-btn justify="center"
               color="green darken-1"
               text
@@ -52,7 +54,7 @@ import { computed } from 'vue'
 // const props = defineProps(['userChoiceDoubleAuth'])
 // const emit = defineEmits(['update:modelValue'])
 function printOk(){
-  console.log('OK');
+  activatePopup = false;
 };
 
 let svg = ref();
@@ -122,6 +124,13 @@ watch(userChoice, (newUserChoice) => {
 	padding: 10%;
 }
 
+.v-card {
+  left: -30%;
+  background-color: var(--grey-color);
+  opacity: 90%;
+  border: solid;
+  border-color: var(--main-color-darker);
+}
 /* div#QrCode {
 } */
 </style>

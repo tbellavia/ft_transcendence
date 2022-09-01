@@ -101,14 +101,15 @@ a:visited:hover {
 /* --------------------------------------------------------------  */
 
 
-button {
+button, v-btn {
   background-color: transparent;
   color: var(--main-color);
   border: transparent;
 }
 /* stylelint-disable */
 
-button:hover {
+button:hover, v-btn:hover, v-btn__content:hover{
+  /* transition: transform, opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1); */
   background-color: var(--main-color);
   color: var(--background-color);
 }
