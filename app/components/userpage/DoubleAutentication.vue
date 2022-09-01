@@ -14,40 +14,42 @@
   <v-app id="inspire">
     <v-row justify="center">
       <v-dialog
-        v-model="open"
+        v-model="activatePopup"
         persistent
         max-width="290"
       >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
+        <template v-slot:activator="{ on: activatePopup }">
+        <!-- <template v-on:click="test"> -->
+			<v-switch
+			v-model="userChoice"
+			v-bind="userChoice"
+			v-on="activatePopup" >
+     	 </v-switch>
+          <!-- <v-btn
             color="primary"
             dark
-            v-bind="attrs"
-            v-on="generateQrCode()"
+			v-on="activatePopup"
+			v-bind="activatePopup"
           >
             Open Dialog
-          </v-btn>
+          </v-btn> -->
         </template>
         <v-card>
           <v-card-title class="text-h5">
-            Use Google's location service?
+            Double Authentication:
           </v-card-title>
-          <v-card-text>Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.</v-card-text>
+		  <v-spacer></v-spacer>
+		  <v-card-item>
+			  <div id=QrCode v-html="svg?.outerHTML"></div>
+		  </v-card-item>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn
+			<v-btn
               color="green darken-1"
               text
-              @click="open = false"
+              @click="activatePopup = false"
             >
               Disagree
-            </v-btn>
-            <v-btn
-              color="green darken-1"
-              text
-              @click="open = false"
-            >
-              Agree
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -69,6 +71,7 @@
 	</div>
 </template>
 	
+
 	
 <script setup lang="ts">
 import { computed } from 'vue'
@@ -77,13 +80,16 @@ const props = defineProps(['userChoiceDoubleAuth'])
 const emit = defineEmits(['update:modelValue'])
 
 let svg = ref();
+let activatePopup = ref(true);
 let open = ref(true);
-
+let userChoice = ref(false);
 
 function test() {
 	console.log("OK");
-	return true;
+	activatePopup.value = true;
+	userChoice.value = true;
 }
+
 async function generateQrCode() {
 	const { data: qrCode } = await useApiFetch('/2fa/generate', {
 		method: 'POST'
@@ -96,8 +102,17 @@ async function generateQrCode() {
 		svg.value.children[i].setAttribute('stroke', 'currentColor');
 		svg.value.children[i].setAttribute('fill', 'none');
 	}
+
 	return (true);
 }
+
+watch(userChoice, (newUserChoice) => {
+	console.log(`user choice: ${userChoice.value}`);
+	if (userChoice.value == true) {
+		generateQrCode();
+		activatePopup.value = true;
+	}
+})
 
 
 const value = computed({
