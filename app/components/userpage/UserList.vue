@@ -36,20 +36,20 @@ async function getFriendsUsers() {
 <template>
 	<div  v-for="user in getUser()">
 		<div class=Profile> {{ user.username }}
-			<!-- <div class="userImage"> image </div>
+			<div class="userImage"> image </div>
 			<div class="userDatas">
 				<div class="userName"> {{ user.username }}</div>
 				<div class="rank"> rank </div>
-			</div> -->
+			</div> 
 			<!-- <div v-if="user.online"> </div>
-			<div v-else> </div> -->
-		</div>
+			<div v-else> </div>
+		</div> __-->
 		<!-- <div class="OptionProfile">
 			<div class="userImage"> {{ user.image_url }}</div>
 			<button> add friend </button>
 			<button>  message </button>
-			<button>  suggest a match </button>
-		</div> -->
+			<button>  suggest a match </button> -->
+		</div> 
 	</div>
 </template>
 
