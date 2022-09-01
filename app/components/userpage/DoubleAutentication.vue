@@ -6,13 +6,64 @@
       <span class="slider round" ></span>
 		</label>
 	
-		<Teleport to="main">
+		<div>
+
+			<!-- https://lightrun.com/answers/vuetifyjs-vuetify-documentation-v-slotactivator-on-
+			https://ramblings.mcpher.com/snipgraphql/vuejs/vuejs-and-vuetify-what-does-v-on-mean/ -->
+			<div id="app">
+  <v-app id="inspire">
+    <v-row justify="center">
+      <v-dialog
+        v-model="open"
+        persistent
+        max-width="290"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="primary"
+            dark
+            v-bind="attrs"
+            v-on="generateQrCode()"
+          >
+            Open Dialog
+          </v-btn>
+        </template>
+        <v-card>
+          <v-card-title class="text-h5">
+            Use Google's location service?
+          </v-card-title>
+          <v-card-text>Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="green darken-1"
+              text
+              @click="open = false"
+            >
+              Disagree
+            </v-btn>
+            <v-btn
+              color="green darken-1"
+              text
+              @click="open = false"
+            >
+              Agree
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+  </v-app>
+</div>
+</div>
+
+		<!-- <Teleport to="main">
 			<div v-if="open" class="modal">
 				<div> Qr code You need for login </div>
 				<div id=QrCode v-html="svg.outerHTML"></div>
 		  <button @click="open = false">Close</button>
 		</div>
-	  </Teleport>
+	  </Teleport> -->
 	  <!-- {{ svg?: svg }} -->
 
 	</div>
@@ -26,8 +77,13 @@ const props = defineProps(['userChoiceDoubleAuth'])
 const emit = defineEmits(['update:modelValue'])
 
 let svg = ref();
-let open = ref(false);
+let open = ref(true);
 
+
+function test() {
+	console.log("OK");
+	return true;
+}
 async function generateQrCode() {
 	const { data: qrCode } = await useApiFetch('/2fa/generate', {
 		method: 'POST'
@@ -40,6 +96,7 @@ async function generateQrCode() {
 		svg.value.children[i].setAttribute('stroke', 'currentColor');
 		svg.value.children[i].setAttribute('fill', 'none');
 	}
+	return (true);
 }
 
 
@@ -80,6 +137,6 @@ const value = computed({
 	padding: 10%;
 }
 
-div#QrCode {
-}
+/* div#QrCode {
+} */
 </style>

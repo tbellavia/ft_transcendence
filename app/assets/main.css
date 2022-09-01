@@ -12,7 +12,7 @@
 }
 
 /* fonts and animations text */
-:root {
+:root, v-app {
   font-family: "Fira Mono", monospace;
   animation: colorPulse 6s infinite ease-in-out;
 
@@ -22,6 +22,11 @@
   overflow: hidden;
   height: 100%;
 }
+v-app, .v-theme--light {
+  background-color: transparent;
+  color: var(--main-color);
+}
+
 
 /* pulse color on font: old screen effect */
 @keyframes colorPulse {
