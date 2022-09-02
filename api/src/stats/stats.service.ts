@@ -22,8 +22,8 @@ export class StatsService {
         const stat = StatEntity.create();
         
         stat.user = user;
-        stat.save();
-        return { msg: "Stat created successfuly!" };
+        await stat.save();
+        return await this.findOne(user_id);
     }
 
     async findOne(user_id: string) {

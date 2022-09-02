@@ -20,7 +20,7 @@ export class UsersController {
     //TODO: replace :user_id by me to only updates current auth user
     @Put("/:user_id")
     async updateUser(@Body() updateUserDto: UpdateUserDTO, @Param('user_id') user_id: string) {
-        this.usersService.update(updateUserDto, user_id);
+        return this.usersService.update(updateUserDto, user_id);
     }
 
     

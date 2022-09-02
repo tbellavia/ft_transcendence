@@ -54,6 +54,7 @@ export class UsersService {
     user.two_factor_auth_secret = password;
     user.is_two_factor_auth_enbaled = is_two_factor_auth_enabled;
     await user.save();
+    return await this.findOne(user_id);
   }
 
   async find(user_id: string) {

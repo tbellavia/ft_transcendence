@@ -1,11 +1,10 @@
 <template>
-    <main>
       <Authentication @connect="redirectIfConnected('/homePage')" />
-    </main>
 </template>
 
-<script setup lang="ts">
+<!-- -------------------------------------------------------------- -->
 
+<script setup lang="ts">
 /**
  * Check if user is connected using api endpoints
  * if connected redirect to page
@@ -16,5 +15,4 @@ async function redirectIfConnected(page: string) {
   await $apiFetch("/auth/isConnected").then(async () => await navigateTo(page))
   .catch(() => {});
 }
-
 </script>

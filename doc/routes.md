@@ -4,15 +4,15 @@ Users :
     - POST      /api/v1/users
         - Body 
         {
-            username: string(20),
-            password: string(30)
+            username: string(20)
         }
     - GET       /api/v1/users?limit=<int>
     - GET       /api/v1/users/:user_id
     - PUT       /api/v1/users/:user_id
         - Body
         {
-            password: string(30),
+            avatar: string(),
+            double_auth: boolean()
         }
     - DELETE    /api/v1/users/:user_id
 
