@@ -23,4 +23,4 @@ import * as Joi from 'joi';
     })
   })],
 })
-export default class ConfigurationModule {}
+export class ConfigurationModule {}

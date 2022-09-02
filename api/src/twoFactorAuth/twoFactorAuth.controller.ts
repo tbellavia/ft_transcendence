@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Req, Res, UnauthorizedException } from "@nestjs/common";
 import { AuthService } from "src/auth/auth.service";
 import { UsersService } from "src/users/users.service";
-import TwoFactorCodeDTO from "./dto/twoFactorCodeDTO";
+import { TwoFactorCodeDTO } from "./dto/twoFactorCodeDTO";
 import { TwoFactorAuthService } from "./twoFactorAuth.service";
 
 @Controller('2fa')

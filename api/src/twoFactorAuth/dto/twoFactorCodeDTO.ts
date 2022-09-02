@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber, IsNumberString } from "class-validator";
 
-export default class TwoFactorCodeDTO {
+export class TwoFactorCodeDTO {
   @IsNotEmpty()
   @IsNumberString()
   code: string

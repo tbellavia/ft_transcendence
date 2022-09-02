@@ -3,7 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/common/decorators/public.decorator';
-import RequestWithUser from './interfaces/requestWithUser.interface';
+import { RequestWithUser } from './interfaces/requestWithUser.interface';
 
 @Controller('auth')
 export class AuthController {

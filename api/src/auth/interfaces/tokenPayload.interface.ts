@@ -1,4 +1,4 @@
-export default interface TokenPayload {
+export interface TokenPayload {
   username: string;
   uuid: string;
   isTwoFactorAuthenticated: boolean;

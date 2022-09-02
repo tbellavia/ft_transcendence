@@ -6,7 +6,7 @@ import { MatchEntity } from "src/matches/entity/match.entity";
 
 @Entity("users")
 export class UserEntity extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn("uuid")
     user_id: string;
 
     @Column({ nullable: false, unique: true })

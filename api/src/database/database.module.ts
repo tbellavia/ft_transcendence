@@ -22,4 +22,4 @@ import { config } from "dotenv";
     }),
   ]
 })
-export default class DataBaseModule {}
+export class DataBaseModule {}
