@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UsersService } from 'src/users/users.service';
+import TokenPayload from '../interfaces/tokenPayload.interface';
 
 @Injectable()
 export class JWTStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -23,11 +24,11 @@ export class JWTStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   // Populate req.user with user's entity
-  async validate(payload: any) {
-    const user = await this.userService.findOne(payload.user_id);
+  async validate(payload: TokenPayload) {
+    const user = await this.userService.findOne(payload.uuid);
     if (!user.is_two_factor_auth_enbaled)
       return user;
-    if (payload.is_two_factor_authenticated)
+    if (payload.isTwoFactorAuthenticated)
       return user;
   }
 }

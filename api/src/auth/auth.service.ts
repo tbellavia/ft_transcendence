@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDTO } from 'src/users/dto/create-user.dto';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
+import TokenPayload from './interfaces/tokenPayload.interface';
 
 @Injectable()
 export class AuthService {
@@ -29,10 +30,10 @@ export class AuthService {
    * @returns a string containing the token encoded
    */
   async login(user: UserEntity, isTwoFactorAuthenticated = false) {
-    const payload = {
+    const payload: TokenPayload = {
       username: user.username,
-      id: user.user_id,
-      is_two_factor_authenticated: isTwoFactorAuthenticated
+      uuid: user.user_id,
+      isTwoFactorAuthenticated
     };
 
     return await this.jwtService.sign(payload);
