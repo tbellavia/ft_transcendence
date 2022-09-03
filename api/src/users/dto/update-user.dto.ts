@@ -1,10 +1,12 @@
-import { Transform } from "class-transformer";
-import { IsBoolean, IsOptional } from "class-validator";
-import { toBoolean } from "src/common/helper/cast.helper";
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class UpdateUserDTO {
     @IsOptional()
+    @IsNotEmpty()
+    @IsString()
+    public password?: string;
+
+    @IsOptional()
     @IsBoolean()
-    @Transform(({ value }) => toBoolean(value))
-    double_auth: boolean;
+    public is_two_factor_auth_enabled?: boolean;
 }

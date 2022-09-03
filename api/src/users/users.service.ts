@@ -22,15 +22,37 @@ export class UsersService {
       return await this.find(user.user_id);
   }
 
-  async update(updateUserDto: UpdateUserDTO, user_id: string) {
-    const { double_auth } = updateUserDto;
+  /**
+   * Update two factor secret shared by applications
+   * @param two_factor_secret the new secret
+   * @param user_id the user id that stores the secret
+   * @returns n/a
+   */
+
+  async updateTwoFactorSecret(two_factor_secret: string, user_id: string) {
     const user = await this.find(user_id);
 
-    console.log(double_auth)
+    if (user == null)
+      return ;
+
+    user.two_factor_auth_secret = two_factor_secret;
+    await user.save();
+  }
+
+  async turnOnTwoFactorAuth(user_id: string) {
+    return this.update({
+      is_two_factor_auth_enabled: true
+    }, user_id);
+  }
+
+  async update(updateUserDto: UpdateUserDTO, user_id: string) {
+    const { password, is_two_factor_auth_enabled } = updateUserDto;
+    const user = await this.find(user_id);
+
     if ( user == null )
       return;
-    if ( double_auth !== undefined )
-      user.double_auth = double_auth;
+    user.two_factor_auth_secret = password;
+    user.is_two_factor_auth_enbaled = is_two_factor_auth_enabled;
     await user.save();
     return await this.findOne(user_id);
   }

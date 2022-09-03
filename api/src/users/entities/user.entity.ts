@@ -6,14 +6,17 @@ import { MatchEntity } from "src/matches/entity/match.entity";
 
 @Entity("users")
 export class UserEntity extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn("uuid")
     user_id: string;
 
     @Column({ nullable: false, unique: true })
     username: string;
 
+    @Column({ nullable: true })
+    public two_factor_auth_secret?: string;
+
     @Column({ default: false })
-    double_auth: boolean;
+    public is_two_factor_auth_enbaled: boolean;
 
     @CreateDateColumn()
     creation_date: Date;

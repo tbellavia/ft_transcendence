@@ -3,6 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/common/decorators/public.decorator';
+import { RequestWithUser } from './interfaces/requestWithUser.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -18,7 +19,7 @@ export class AuthController {
   @Public()
   @Get('api42')
   @UseGuards(AuthGuard('api42'))
-  async log42Api(@Request() req, @Res({ passthrough: true }) res) {
+  async log42Api(@Request() req: RequestWithUser, @Res({ passthrough: true }) res) {
     res.cookie('jwtAuth', await this.authService.login(req.user), {
       httpOnly: true,
     });
