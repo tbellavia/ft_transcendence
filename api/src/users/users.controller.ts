@@ -18,9 +18,9 @@ export class UsersController {
     }
 
     //TODO: replace :user_id by me to only updates current auth user
-    @Put("/:user_id")
-    async updateUser(@Body() updateUserDto: UpdateUserDTO, @Param('user_id') user_id: string) {
-        return this.usersService.update(updateUserDto, user_id);
+    @Put("/:username")
+    async updateUser(@Body() updateUserDto: UpdateUserDTO, @Param('username') username: string) {
+        return this.usersService.update(updateUserDto, username);
     }
 
     
@@ -32,14 +32,14 @@ export class UsersController {
     }
 
     //TODO: replace :user_id by me to only get current auth user
-    @Get("/:user_id")
-    async findOne(@Param("user_id") user_id: string) {
-        return await this.usersService.findOne(user_id);
+    @Get("/:username")
+    async findOne(@Param("username") username: string) {
+        return await this.usersService.findOne(username);
     }
 
     //TODO: replace :user_id by me to only delete current auth user
-    @Delete("/:user_id")
-    async delete(@Param("user_id") user_id: string){
-        this.usersService.delete(user_id);
+    @Delete("/:username")
+    async delete(@Param("username") username: string){
+        return this.usersService.delete(username);
     }
 }
