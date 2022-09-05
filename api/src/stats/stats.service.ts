@@ -14,8 +14,8 @@ export class StatsService {
         private statRepository: Repository<StatEntity>
     ) { }
 
-    async create(user_id: string) {
-        const user = await this.userRepository.findOne({ where: { user_id } });
+    async create(username: string) {
+        const user = await this.userRepository.findOne({ where: { username } });
 
         if ( user == null ){
             return { msg: "User not found!" };
@@ -24,11 +24,11 @@ export class StatsService {
         
         stat.user = user;
         await stat.save();
-        return await this.findOne(user_id);
+        return await this.findOne(username);
     }
 
-    async update(user_id: string, updateStatDto: UpdateStatDto) {
-        const stat = await this.findOne(user_id);
+    async update(username: string, updateStatDto: UpdateStatDto) {
+        const stat = await this.findOne(username);
 
         if ( !stat ){
             return { msg: "Not found!" };
@@ -47,22 +47,25 @@ export class StatsService {
         return stat;
     }
 
-    async findOne(user_id: string) {
-        const user = await this.userRepository.findOne({ where: { user_id } });
+    async findOne(username: string) {
+        const user = await this.userRepository.findOne({ where: { username } });
 
         if ( user == null ){
             return null;
         }
         return await this.statRepository.findOne({ 
             where: {
-                user: { user_id }
+                user: { username }
             }
         });
     }
 
-    async remove(user_id: string) {
-        await this.statRepository.delete({
-            user: { user_id }
-        });
+    async remove(username: string) {
+        const stat = await this.findOne(username);
+
+        if ( stat == null )
+            return { msg: "Stat not found!" };
+        await stat.remove();
+        return { msg: "Stat successfuly removed!" };
     }
 }
