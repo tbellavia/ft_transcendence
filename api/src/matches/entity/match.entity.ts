@@ -9,7 +9,7 @@ export enum MatchOutcomeEnum {
 
 @Entity("matches")
 export class MatchEntity extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn("uuid")
     match_id: string;
 
     @ManyToOne(() => UserEntity, (user) => user.matches)
