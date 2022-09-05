@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
@@ -8,6 +9,7 @@ import { TokenPayload } from './interfaces/tokenPayload.interface';
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
+    private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -20,6 +22,15 @@ export class AuthService {
     const user: UserEntity | undefined = await this.userService.findByName(username)
     if (user) return user;
     return await this.userService.create({ username });
+  }
+
+  async getUserFromAuthenticationToken(token: string ) {
+    const payload: TokenPayload = this.jwtService.verify(token, {
+      secret: this.configService.get('JWT_SECRET')
+    }); 
+    if (payload.uuid) {
+      return await this.userService.findOne(payload.uuid);
+    } 
   }
 
   /**
