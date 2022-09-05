@@ -3,7 +3,7 @@ import { UserEntity } from "../../users/entities/user.entity"
 
 @Entity("friends")
 export class FriendEntity extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn("uuid")
     friend_id: string;
 
     @ManyToOne(() => UserEntity, (user) => user.friends)
