@@ -24,7 +24,7 @@ import { ChatModule } from './chat/chat.module';
     BlockedModule,
     MatchesModule,
     TwoFactorAuthModule,
-    ChatModule
+    ChatModule,
   ],
   providers: [
     {

@@ -27,7 +27,7 @@ export class AuthService {
   async getUserFromAuthenticationToken(token: string ) {
     const payload: TokenPayload = this.jwtService.verify(token, {
       secret: this.configService.get('JWT_SECRET')
-    }); 
+    });
     if (payload.uuid) {
       return await this.userService.findOne(payload.uuid);
     } 
