@@ -11,6 +11,7 @@ import { MatchesModule } from './matches/matches.module';
 import { TwoFactorAuthModule } from './twoFactorAuth/twoFactorAuth.module';
 import { DataBaseModule } from './database/database.module';
 import { ConfigurationModule } from './configuration/configuration.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { ConfigurationModule } from './configuration/configuration.module';
     FriendsModule,
     BlockedModule,
     MatchesModule,
-    TwoFactorAuthModule
+    TwoFactorAuthModule,
+    ChatModule
   ],
   providers: [
     {
