@@ -10,53 +10,48 @@ export class FriendsController {
         private friendsService: FriendsService
     ) {}
 
-    
-    @Post(":user1_id/friends/:user2_id")
+    @Post(":username1/friends/:username2")
     async create(
-        @Param("user1_id") user1_id: string,
-        @Param("user2_id") user2_id: string
+        @Param("username1") username1: string,
+        @Param("username2") username2: string
     ) 
     {
-        return this.friendsService.create(user1_id, user2_id);
+        return this.friendsService.create(username1, username2);
     }
 
-    
-    @Get(":user_id/friends")
+    @Get(":username/friends")
     async findAll(
-        @Param("user_id") user_id: string,
+        @Param("username") username: string,
         @Query() getFriendsQueryDto: GetFriendsQueryDTO) 
     {
-        return this.friendsService.findAll(user_id, getFriendsQueryDto);
+        return this.friendsService.findAll(username, getFriendsQueryDto);
     }
 
-    
-    @Get(":user1_id/friends/:user2_id")
+    @Get(":username1/friends/:username2")
     async findOne(
-        @Param("user1_id") user1_id: string,
-        @Param("user2_id") user2_id: string
+        @Param("username1") username1: string,
+        @Param("username2") username2: string
     )
     {
-        return this.friendsService.findOne(user1_id, user2_id);
+        return this.friendsService.findOne(username1, username2);
     }
 
-    
-    @Put(":user1_id/friends/:user2_id")
+    @Put(":username1/friends/:username2")
     async update(
-        @Param("user1_id") user1_id: string,
-        @Param("user2_id") user2_id: string,
+        @Param("username1") username1: string,
+        @Param("username2") username2: string,
         @Body() updatePendingDto: UpdatePendingDto
     )
     {
-        return this.friendsService.update(user1_id, user2_id, updatePendingDto);
+        return await this.friendsService.update(username1, username2, updatePendingDto);
     }
 
-    
-    @Delete(":user1_id/friends/:user2_id")
+    @Delete(":username1/friends/:username2")
     async delete(
-        @Param("user1_id") user1_id: string,
-        @Param("user2_id") user2_id: string,
+        @Param("username1") username1: string,
+        @Param("username2") username2: string,
     )
     {
-        return this.friendsService.delete(user1_id, user2_id);
+        return this.friendsService.delete(username1, username2);
     }
 }

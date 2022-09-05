@@ -17,15 +17,15 @@ export class FriendsService {
         private friendRepository: Repository<FriendEntity>
     ) { }
 
-    async create(user1_id: string, user2_id: string){
-        const user1 = await this.userRepository.findOneBy({ user_id: user1_id });
-        const user2 = await this.userRepository.findOneBy({ user_id: user2_id });
+    async create(username1: string, username2: string){
+        const user1 = await this.userRepository.findOneBy({ username: username1 });
+        const user2 = await this.userRepository.findOneBy({ username: username2 });
 
-        if ( await this.exists(user1_id, user2_id) ){
+        if ( await this.exists(username1, username2) ){
             console.log("Friendship already exists");
             return { msg: "Friendship already exists!" };
         }
-        if ( user1_id == user2_id ){
+        if ( username1 == username2 ){
             console.log("User cannot add himself");
             return { msg: "User cannot add himself" };
         }
@@ -38,17 +38,17 @@ export class FriendsService {
         friend.user_1 = user1;
         friend.user_2 = user2;
         await friend.save()
-        return await this.findOne(user1_id, user2_id);
+        return await this.findOne(username1, username2);
     }
 
-    async findAll(user_id: string, getFriendsQueryDto: GetFriendsQueryDTO) {
-        const user = await this.userRepository.findOneBy({ user_id });
+    async findAll(username: string, getFriendsQueryDto: GetFriendsQueryDTO) {
+        const user = await this.userRepository.findOneBy({ username });
 
         if ( !user ){
             return null;
         }
         const whereOpts: FindOptionsWhere<FriendEntity> = {
-            user_1: { user_id }
+            user_1: { username }
         };
         const opts: FindManyOptions<FriendEntity> = {
             select: {
@@ -71,11 +71,11 @@ export class FriendsService {
         return await this.friendRepository.find(opts);
     }
 
-    async findOne(user1_id: string, user2_id: string){
+    async findOne(username1: string, username2: string){
         return await this.friendRepository.findOne({
             where: {
-                user_1: { user_id: user1_id },
-                user_2: { user_id: user2_id }
+                user_1: { username: username1 },
+                user_2: { username: username2 }
             },
             relations: {
                 user_2: true
@@ -84,27 +84,26 @@ export class FriendsService {
         });
     }
 
-    async update(user1_id: string, user2_id: string, updatePendingDto: UpdatePendingDto) {
-        const friendship = await this.findOne(user1_id, user2_id);
+    async update(username1: string, username2: string, updatePendingDto: UpdatePendingDto) {
+        const friendship = await this.findOne(username1, username2);
 
-        if ( !friendship )
-            return null;
+        if ( friendship == null )
+            return { msg: "Friendship not found!" };
         friendship.pending = updatePendingDto.pending;
         await friendship.save();
-        return await this.findOne(user1_id, user2_id);
+        return friendship;
     }
 
-    async delete(user1_id: string, user2_id: string) {
-        const result = await this.friendRepository.delete({
-            user_1: { user_id: user1_id },
-            user_2: { user_id: user2_id }
-        });
-        if ( result.affected == 0 )
+    async delete(username1: string, username2: string) {
+        const friendship = await this.findOne(username1, username2);
+
+        if ( friendship == null )
             return { msg: "Relation not found!" };
+        await friendship.remove();
         return { msg: "Relation deleted successfuly" };
     }
 
-    async exists(user1_id: string, user2_id: string) {
-        return await this.findOne(user1_id, user2_id) !== undefined;
+    async exists(username1: string, username2: string) {
+        return await this.findOne(username1, username2) !== null;
     }
 }
