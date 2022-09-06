@@ -50,7 +50,11 @@ Matches :
     - GET       /api/v1/users/matches/all?limit=<int>&skip=<int>
     - GET       /api/v1/users/matches/:match_id
     - GET       /api/v1/users/:username/matches?limit=<int>&skip=<int>&date=<date>
-    - GET       /api/v1/users/:username1/matches/:username2?limit=<int>&skip=<int>
+    - GET       /api/v1/users/:username1/matches/:username2?limit=<int>&skip=<int>\
+    <!-- Get the latest match between user 1 and user 2 -->
+    - GET       /api/v1/users/:username1/matches/:username2/last
+    <!-- Get the latest match of user -->
+    - GET       /api/v1/users/:username/matches/last
     - PUT       /api/v1/users/matches/:match_id
         - Body
         {
