@@ -16,9 +16,8 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDTO) {
-    const user = UserEntity.create({ ...createUserDto });
-
-    await user.save();
+    const user = this.userRepository.create(createUserDto);
+    await this.userRepository.save(user);
     return await this.findOneByName(user.username);
   }
 
@@ -62,7 +61,6 @@ export class UsersService {
 
   async findAll(limit?: number | undefined) {
     const options: FindManyOptions<UserEntity> = {
-      select: selectUserOption,
       order: {
         user_id: "ASC",
       },
@@ -72,12 +70,7 @@ export class UsersService {
   }
   
   async findOneById(user_id: string) {
-    const user = await this.userRepository.findOne({
-      where: {
-        user_id,
-      },
-      select: selectUserOption,
-    });
+    const user = await this.userRepository.findOneBy({ user_id });
     if (!user)
       throw new UserNotFoundException(user_id);
     return user;
@@ -85,12 +78,7 @@ export class UsersService {
 
 
   async findOneByName(username: string) {
-    const user = await this.userRepository.findOne({
-      where: {
-        username,
-      },
-      select: selectUserOption,
-    });
+    const user = await this.userRepository.findOneBy({ username });
     if (!user) throw new UserNotFoundException(username);
     return user;
   }
