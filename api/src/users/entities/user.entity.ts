@@ -9,6 +9,10 @@ export class UserEntity extends BaseEntity {
     @PrimaryGeneratedColumn("uuid")
     user_id: string;
 
+    // Used to find 42 registered user uppon connection if it change its name in database.
+    @Column({ unique: true, nullable: true })
+    user42_id?: number;
+
     @Column({ nullable: false, unique: true })
     username: string;
 

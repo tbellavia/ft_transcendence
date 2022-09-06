@@ -52,6 +52,6 @@ export class TwoFactorAuthController {
 
     // Set-Cookie with 2fa enabled into cookie
     const accessToken = this.authService.login(requestWithUser.user, true);
-    res.cookie('jwtAuth', accessToken);
+    res.cookie('Authentication', accessToken);
   }
 }
