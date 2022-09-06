@@ -20,7 +20,7 @@ export class AuthController {
   @Get('api42')
   @UseGuards(AuthGuard('api42'))
   async log42Api(@Request() req: RequestWithUser, @Res({ passthrough: true }) res) {
-    res.cookie('jwtAuth', await this.authService.login(req.user), {
+    res.cookie('Authentication', await this.authService.login(req.user), {
       httpOnly: true,
     });
   }
@@ -31,7 +31,7 @@ export class AuthController {
    */
   @Get('disconnect')
   disconnectCookie(@Res({ passthrough: true }) res) {
-    res.clearCookie('jwtAuth')
+    res.clearCookie('Authentication')
   }
 
   /**

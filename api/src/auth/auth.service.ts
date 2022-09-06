@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { TokenPayload } from './interfaces/tokenPayload.interface';
+import { Api42UserDatas } from './interfaces/api42UserDatas.interface';
 
 @Injectable()
 export class AuthService {
@@ -11,15 +12,16 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  /**
-   * Create or find a user in the db
-   * @param toFind The schema used to find the user or create it
-   * @returns the user found in db or a new user
-   */
-  async findOrCreateUser(username: string) {
-    const user: UserEntity | undefined = await this.userService.findOne(username)
-    if (user) return user;
-    return await this.userService.create({ username });
+  async api42LoginOrRegister(user42: Api42UserDatas) {
+    const user : UserEntity | undefined = await this.userService.findUser42Registered(user42);
+
+    if (!user) {
+      return await this.userService.create({
+        username: user42.login,
+        user42_id: user42.id
+      });
+    }
+    return user;
   }
 
   /**

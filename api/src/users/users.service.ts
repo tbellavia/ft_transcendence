@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, Repository, UsingJoinColumnIsNotAllowedError } from 'typeorm';
+import { Api42UserDatas } from '../auth/interfaces/api42UserDatas.interface';
+import { FindManyOptions, Repository } from 'typeorm';
 import { CreateUserDTO } from './dto/create-user.dto';
 import { UpdateUserDTO } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
@@ -14,10 +15,9 @@ export class UsersService {
   ) { }
 
   async create(createUserDto: CreateUserDTO) {
-      const { username } = createUserDto;
-      const user = UserEntity.create({ username });
+      const { username, user42_id } = createUserDto;
+      const user = UserEntity.create({ username, user42_id });
 
-      console.log(`Created user ${ user }`);
       await user.save();
       return await this.findOne(user.username);
   }
@@ -60,6 +60,24 @@ export class UsersService {
     
     await user.save();
     return await this.findOne(username);
+  }
+
+  async find(user_id: string) {
+    const user = await this.userRepository.findOne({
+      where: {
+        user_id
+      },
+      select: selectUserOption
+    });
+    return user;
+  }
+
+  async findUser42Registered(user42Datas: Api42UserDatas) {
+    const user = await this.userRepository.findOneBy([
+      { username: user42Datas.login },
+      { user42_id: user42Datas.id }
+    ]);
+    return user;
   }
 
   async findAll(limit?: number | undefined) {
