@@ -7,30 +7,27 @@ import { StatsService } from './stats.service';
 export class StatsController {
   constructor(private readonly statsService: StatsService) {}
 
-  
-  @Post("/:user_id/stats")
-  async create(@Param("user_id") user_id: string) {
-    return this.statsService.create(user_id);
+  @Post("/:username/stats")
+  async create(@Param("username") username: string) {
+    return this.statsService.create(username);
   }
 
-  
-  @Get("/:user_id/stats")
-  async findOne(@Param("user_id") user_id: string) {
-    return this.statsService.findOne(user_id);
+  @Get("/:username/stats")
+  async findOne(@Param("username") username: string) {
+    return this.statsService.findOne(username);
   }
 
-  @Put("/:user_id/stats")
+  @Put("/:username/stats")
   async update(
-    @Param("user_id") user_id: string,
+    @Param("username") username: string,
     @Body() updateStatDto: UpdateStatDto
   ) 
   {
-    return this.statsService.update(user_id, updateStatDto);
+    return this.statsService.update(username, updateStatDto);
   }
 
-  
-  @Delete("/:user_id/stats")
-  async remove(@Param("user_id") user_id: string){
-    return this.statsService.remove(user_id);
+  @Delete("/:username/stats")
+  async remove(@Param("username") username: string){
+    return this.statsService.remove(username);
   }
 }

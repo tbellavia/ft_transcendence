@@ -19,18 +19,18 @@ export class UsersService {
       const user = UserEntity.create({ username, user42_id });
 
       await user.save();
-      return await this.find(user.user_id);
+      return await this.findOne(user.username);
   }
 
   /**
    * Update two factor secret shared by applications
    * @param two_factor_secret the new secret
-   * @param user_id the user id that stores the secret
+   * @param username the username that stores the secret
    * @returns n/a
    */
 
-  async updateTwoFactorSecret(two_factor_secret: string, user_id: string) {
-    const user = await this.find(user_id);
+  async updateTwoFactorSecret(two_factor_secret: string, username: string) {
+    const user = await this.findOne(username);
 
     if (user == null)
       return ;
@@ -45,16 +45,21 @@ export class UsersService {
     }, user_id);
   }
 
-  async update(updateUserDto: UpdateUserDTO, user_id: string) {
+  async update(updateUserDto: UpdateUserDTO, username: string) {
     const { password, is_two_factor_auth_enabled } = updateUserDto;
-    const user = await this.find(user_id);
-
+    const user = await this.findOne(username);
+    
+    console.log(password, is_two_factor_auth_enabled);
+    // Todo send appropriate error
     if ( user == null )
       return;
-    user.two_factor_auth_secret = password;
-    user.is_two_factor_auth_enbaled = is_two_factor_auth_enabled;
+    if ( password !== undefined )
+      user.two_factor_auth_secret = password;
+    if ( is_two_factor_auth_enabled !== undefined )
+      user.is_two_factor_auth_enbaled = is_two_factor_auth_enabled;
+    
     await user.save();
-    return await this.findOne(user_id);
+    return await this.findOne(username);
   }
 
   async find(user_id: string) {
@@ -75,16 +80,6 @@ export class UsersService {
     return user;
   }
 
-  async findByName(username: string) {
-    const user = await this.userRepository.findOne({
-      where: {
-        username
-      },
-      select: selectUserOption
-    });
-    return user;
-  }
-
   async findAll(limit?: number | undefined) {
     const options: FindManyOptions<UserEntity> = {
       select: selectUserOption,
@@ -97,17 +92,22 @@ export class UsersService {
     return await this.userRepository.find(options);
   }
 
-  async findOne(user_id: string) {
+  async findOne(username: string) {
     return await this.userRepository.findOne({
       where: {
-        user_id
+        username
       },
       select: selectUserOption
     });
   }
 
-  async delete(user_id: string){
-    await this.userRepository.delete(user_id);
+  async delete(username: string){
+    const user = await this.findOne(username);
+
+    if ( user == null )
+      return { msg: "User not found!" };
+    await user.remove();
+    return { msg: "User successfuly removed" };
   }
 
 }
