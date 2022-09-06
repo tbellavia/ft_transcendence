@@ -34,7 +34,7 @@ export class UsersController {
     //TODO: replace :user_id by me to only get current auth user
     @Get("/:username")
     async findOne(@Param("username") username: string) {
-        return await this.usersService.findOne(username);
+        return await this.usersService.findOneByName(username);
     }
 
     //TODO: replace :user_id by me to only delete current auth user

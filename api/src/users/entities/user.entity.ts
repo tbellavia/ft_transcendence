@@ -8,13 +8,16 @@ import { MatchEntity } from "src/matches/entity/match.entity";
 export class UserEntity extends BaseEntity {
     @PrimaryGeneratedColumn("uuid")
     user_id: string;
+    
+    @Column({ nullable: false, unique: true })
+    username: string;
 
     // Used to find 42 registered user uppon connection if it change its name in database.
     @Column({ unique: true, nullable: true })
     user42_id?: number;
 
-    @Column({ nullable: false, unique: true })
-    username: string;
+    @Column({ nullable: true })
+    password?: string;
 
     @Column({ nullable: true })
     public two_factor_auth_secret?: string;
