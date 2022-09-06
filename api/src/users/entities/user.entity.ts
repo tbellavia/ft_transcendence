@@ -3,25 +3,33 @@ import { StatEntity } from "../../stats/entities/stat.entity";
 import { BlockedEntity } from "../../blocked/entity/blocked.entity";
 import { FriendEntity } from "../../friends/entity/friend.entity";
 import { MatchEntity } from "src/matches/entity/match.entity";
+import { Expose } from "class-transformer";
 
 @Entity("users")
 export class UserEntity extends BaseEntity {
     @PrimaryGeneratedColumn("uuid")
     user_id: string;
+    
+    @Expose()
+    @Column({ nullable: false, unique: true })
+    username: string;
 
     // Used to find 42 registered user uppon connection if it change its name in database.
     @Column({ unique: true, nullable: true })
     user42_id?: number;
 
-    @Column({ nullable: false, unique: true })
-    username: string;
+    @Column({ nullable: true })
+    password?: string;
 
+    @Expose()
     @Column({ nullable: true })
     public two_factor_auth_secret?: string;
 
+    @Expose()
     @Column({ default: false })
     public is_two_factor_auth_enbaled: boolean;
 
+    @Expose()
     @CreateDateColumn()
     creation_date: Date;
 

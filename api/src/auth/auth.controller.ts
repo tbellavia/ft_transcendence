@@ -1,9 +1,11 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, HttpCode, Post, Req, SerializeOptions, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/common/decorators/public.decorator';
 import { RequestWithUser } from './interfaces/requestWithUser.interface';
+import { PasswordAuthDTO } from './dto/passwordAuth.dto';
+import { PasswordAuthGuard } from './guards/passwordAuth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -19,10 +21,28 @@ export class AuthController {
   @Public()
   @Get('api42')
   @UseGuards(AuthGuard('api42'))
-  async log42Api(@Request() req: RequestWithUser, @Res({ passthrough: true }) res) {
+  async registerOrLogApi42(@Request() req: RequestWithUser, @Res({ passthrough: true }) res) {
     res.cookie('Authentication', await this.authService.login(req.user), {
       httpOnly: true,
     });
+    return req.user;
+  }
+
+  @Public()
+  @Post('register')
+  async registerWithPassword(@Body() passwordAuth: PasswordAuthDTO) {
+    return this.authService.registerUserPassword(passwordAuth);
+  }
+
+  @Public()
+  @UseGuards(new PasswordAuthGuard())
+  @Post('connect')
+  @HttpCode(200)
+  async loginWithPassword(@Request() req: RequestWithUser, @Res({ passthrough: true }) res) {
+    res.cookie('Authentication', await this.authService.login(req.user), {
+      httpOnly: true,
+    });
+    return req.user;
   }
 
   /**

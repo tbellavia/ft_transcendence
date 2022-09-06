@@ -1,10 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { TokenPayload } from './interfaces/tokenPayload.interface';
 import { Api42UserDatas } from './interfaces/api42UserDatas.interface';
+import { PasswordAuthDTO } from './dto/passwordAuth.dto';
+import * as bcrypt from 'bcrypt';
+import { PostgresErrorCode } from 'src/database/postgresErrorCode.enum';
 
 @Injectable()
 export class AuthService {
@@ -31,8 +34,39 @@ export class AuthService {
       secret: this.configService.get('JWT_SECRET')
     });
     if (payload.uuid) {
-      return await this.userService.findOne(payload.uuid);
-    } 
+      return await this.userService.findOneById(payload.uuid);
+    }
+  }
+
+  async registerUserPassword(passwordAuth: PasswordAuthDTO) {
+    const hashedPassword = await bcrypt.hash(passwordAuth.password, 10);
+    try {
+      const user = await this.userService.create({
+        ...passwordAuth,
+        password: hashedPassword 
+      });
+      return user;
+    } catch (error) {
+      if (error?.code === PostgresErrorCode.UniqueViolation)
+        throw new BadRequestException('User with that username already exists');
+      throw new InternalServerErrorException('Something went wrong');
+    }
+  }
+
+  async validateUserPassword(passwordAuth: PasswordAuthDTO) {
+    try {
+      const user = await this.userService.findOneByName(passwordAuth.username);
+      await this.verifyPassword(passwordAuth.password, user.password);
+      return user;
+    } catch (error) {
+      throw new BadRequestException('Invalid credentials');
+    }
+  }
+
+  async verifyPassword(password: string, hashedPassword) {
+    const isValidate = await bcrypt.compare(password, hashedPassword);
+    if (!isValidate)
+      throw new BadRequestException('Invalid credentials');
   }
 
   /**
