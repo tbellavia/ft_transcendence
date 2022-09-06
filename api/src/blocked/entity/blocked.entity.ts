@@ -3,7 +3,7 @@ import { UserEntity } from "../../users/entities/user.entity";
 
 @Entity("blocked")
 export class BlockedEntity extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn("uuid")
     blocked_id: string;
 
     @ManyToOne(() => UserEntity, (user) => user.blocked_users)

@@ -10,7 +10,7 @@ import * as Joi from 'joi';
       POSTGRES_PORT: Joi.number().required(),
       POSTGRES_USER: Joi.string().required(),
       POSTGRES_PASSWORD: Joi.string().min(8).required(),
-      POSTGRES_DATABASe: Joi.string().required,
+      POSTGRES_DATABASE: Joi.string().required(),
       //Authentication config (oauth2 and Jwt)
       API_UID: Joi.string().required(),
       API_SECRET: Joi.string().required(),

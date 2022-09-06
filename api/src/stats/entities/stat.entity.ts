@@ -10,7 +10,7 @@ export enum RankEnum {
 
 @Entity("stats")
 export class StatEntity extends BaseEntity {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn("uuid")
     stat_id: string;
 
     @Column({ nullable: true, default: 0 })
