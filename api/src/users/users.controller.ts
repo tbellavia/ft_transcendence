@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, SerializeOptions } from "@nestjs/common";
 import { Public } from "../common/decorators/public.decorator";
 import { CreateUserDTO } from "./dto/create-user.dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
@@ -10,14 +10,12 @@ export class UsersController {
         private usersService: UsersService
     ) { }
     
-    
-    //TODO: removes it at end (user should not be able to creates other users)
+
     @Post()
     async createUser(@Body() createUserDto: CreateUserDTO) {
         return this.usersService.create(createUserDto);
     }
 
-    //TODO: replace :user_id by me to only updates current auth user
     @Put("/:username")
     async updateUser(@Body() updateUserDto: UpdateUserDTO, @Param('username') username: string) {
         return this.usersService.update(updateUserDto, username);
