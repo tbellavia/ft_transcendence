@@ -47,8 +47,9 @@
     position: fixed;
   
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
     flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
   }
   </style>

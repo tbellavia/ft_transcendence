@@ -11,8 +11,6 @@
 </template>
 
 <script setup lang="ts">
-import { stringifyQuery } from "vue-router";
-
 const emit = defineEmits({
   // Define connect event for notify the page
   // No validation checking for emit

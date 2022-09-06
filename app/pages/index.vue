@@ -1,5 +1,6 @@
 <template>
-      <Authentication @connect="redirectIfConnected('/homePage')" />
+      <!-- <Authentication42 @connect="redirectIfConnected('/homePage')" /> -->
+      <AuthenticationPassword></AuthenticationPassword>
 </template>
 
 <!-- -------------------------------------------------------------- -->
