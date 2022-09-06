@@ -4,14 +4,12 @@ import { defineNuxtConfig } from "nuxt";
 export default defineNuxtConfig({
   // Currently not working ;-(
 
-  // css: ['vuetify/lib/styles/main.sass'],
+  css: [
+    'vuetify/lib/styles/main.sass',
+    'mdi/css/materialdesignicons.min.css',
+  ],
   build: {
     transpile: ['vuetify'],
-    vuetify: {
-      theme: {
-        disable: true
-      },
-    },
   },
   vite: {
     define: {
@@ -23,6 +21,7 @@ export default defineNuxtConfig({
     },
   },
   vuetify: {
+    customVariables: ["~/assets/variables.scss"],
     theme: {
       disable: true
     },

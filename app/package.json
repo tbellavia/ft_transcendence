@@ -11,5 +11,9 @@
     "nuxt": "3.0.0-rc.8",
     "sass": "^1.54.5",
     "vuetify": "^3.0.0-beta.9"
+  },
+  "dependencies": {
+    "mdi": "^2.2.43",
+    "vue3-otp-input": "^0.3.6"
   }
 }

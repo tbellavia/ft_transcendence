@@ -42,6 +42,21 @@
           </v-card>
         </v-dialog>
       </v-row>
+      <otp-input
+        v-model="token"
+        size="0"
+      ></otp-input>
+
+     
+      <!-- <form method="get" class="digit-group" data-group-name="digits" data-autosubmit="false" autocomplete="off">
+	<input type="text" id="digit-1" name="digit-1" data-next="digit-2" />
+	<input type="text" id="digit-2" name="digit-2" data-next="digit-3" data-previous="digit-1" />
+	<input type="text" id="digit-3" name="digit-3" data-next="digit-4" data-previous="digit-2" />
+	<span class="splitter">&ndash;</span>
+	<input type="text" id="digit-4" name="digit-4" data-next="digit-5" data-previous="digit-3" />
+	<input type="text" id="digit-5" name="digit-5" data-next="digit-6" data-previous="digit-4" />
+	<input type="text" id="digit-6" name="digit-6" data-previous="digit-5" />
+</form> -->
   </div>
 </div>
 </template>
@@ -50,6 +65,41 @@
 	
 <script setup lang="ts">
 import { computed } from 'vue'
+import VOtpInput from 'vue3-otp-input';
+
+export default defineComponent({
+  name: 'App',
+  components: {
+    VOtpInput,
+  },
+  setup() {
+    const otpInput = ref(null)
+
+    const handleOnComplete = (value: string) => {
+      console.log('OTP completed: ', value);
+    };
+
+    const handleOnChange = (value: string) => {
+      console.log('OTP changed: ', value);
+    };
+
+     const clearInput = () => {
+      otpInput.value.clearInput()
+    }
+
+    return { handleOnComplete, handleOnChange, clearInput, otpInput };
+  },
+});
+
+
+let token = ref(1230564);
+
+
+
+
+
+
+
 
 // const props = defineProps(['userChoiceDoubleAuth'])
 // const emit = defineEmits(['update:modelValue'])
@@ -107,6 +157,19 @@ watch(userChoice, (newUserChoice) => {
 	
 	
 <style scoped>
+
+otp-inputtt {
+  width: 10px;
+  height: 40px;
+  padding: 5px;
+  margin: 0 10px;
+  font-size: 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+
 .modal {
 	position: fixed;
 	background-color: var(--grey-color);
