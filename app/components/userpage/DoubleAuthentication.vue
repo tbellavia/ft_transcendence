@@ -2,12 +2,13 @@
   <div>
 			<!-- https://lightrun.com/answers/vuetifyjs-vuetify-documentation-v-slotactivator-on-
 			https://ramblings.mcpher.com/snipgraphql/vuejs/vuejs-and-vuetify-what-does-v-on-mean/ -->
-    <div id="DA">
+    <div>
+      <v-icon small color="red" >mdi-cancel</v-icon>
       <v-row justify="center" left="100%">
           <v-dialog
             v-model="activatePopup"
             persistent
-            max-width="290">
+            max-width="400">
             <template v-slot:activator="{ on: activatePopup }">
               Double Authentication :
               <v-switch justify="center"
@@ -16,29 +17,37 @@
               v-on="activatePopup" >
               </v-switch>
            </template>
+
+           <!-- Pop windows with Qr Code here -->
           <v-card density="comfortable">
-            <v-card-title justify="center" class="text-h5">
-               Scan the qrCode
+            
+            <!-- title and cancel button -->
+            <v-card-title class="card-title" >
+              <p class="card-title-sub">Scan the QR Code</p>
+            <v-spacer></v-spacer>
+              <div class="card-title-sub" style="height: 40px; width: 40px">
+              <button class="xmark"  
+                @click="activatePopup = false; userChoice = false"
+              >
+                <svgXmark style="height: 40px; width: 40px; display: flex"/>
+              </button>
+            </div>
             </v-card-title>
             <v-spacer></v-spacer>
+
+            <!-- SVG Qr code -->
             <v-card-item>
               <div id=QrCode v-html="svg?.outerHTML"></div>
             </v-card-item>
             <v-spacer></v-spacer>
             <v-card-actions>
+
+              <!-- formulaire pour recuperer la clé (component) -->
             <userpageDoubleAuthenticationForm 
               justify="center" 
               @DoubleAuthValidate="printOk; activatePopup=false"/>
             </v-card-actions>
-            <v-card-actions>
-            <v-btn justify="center"
-              color="green darken-1"
-              text
-              @click="activatePopup = false; userChoice = false"
-            >
-              Cancel
-            </v-btn>
-            </v-card-actions>
+
           </v-card>
         </v-dialog>
       </v-row>
@@ -49,18 +58,22 @@
 
 	
 <script setup lang="ts">
-import { computed } from 'vue'
+import Xmark from '../svg/Xmark.vue';
 
-// const props = defineProps(['userChoiceDoubleAuth'])
-// const emit = defineEmits(['update:modelValue'])
+/*
+** test for form 
+*/
 function printOk(){
   activatePopup = false;
 };
 
 let svg = ref();
 let activatePopup = ref(false);
-let userChoice = ref(false);
+let userChoice = ref(false);  // TODO: a recuperer sur l'api.
 
+/*
+** Generate Qr Code for 2fa
+*/
 async function generateQrCode() {
 	const { data: qrCode } = await useApiFetch('/2fa/generate', {
 		method: 'POST'
@@ -73,10 +86,13 @@ async function generateQrCode() {
 		svg.value.children[i].setAttribute('stroke', 'currentColor');
 		svg.value.children[i].setAttribute('fill', 'none');
 	}
-
 	return (true);
 }
 
+
+/*
+** Watcher of switch activator for Double Authentication
+*/
 watch(userChoice, (newUserChoice) => {
 	console.log(`user choice: ${userChoice.value}`);
 	if (userChoice.value == true) {
@@ -85,24 +101,6 @@ watch(userChoice, (newUserChoice) => {
  		  .catch(error => console.warn(error));
 	}
 })
-
-
-// const value = computed({
-// 	get() {
-// 		return props.userChoiceDoubleAuth // choix de l'utilisateur
-// 	},
-// 	set(value) {
-// 	console.log(value)
-// 		if (value == true) {
-// 			 generateQrCode()
-// 				.then( () => open.value = true )
-// 				.catch(error => console.warn(error));
-// 		}
-// 		else {
-// 			open.value = false;
-// 		}
-// 	}
-// })
 </script>
 	
 	
@@ -131,6 +129,27 @@ watch(userChoice, (newUserChoice) => {
   border: solid;
   border-color: var(--main-color-darker);
 }
+
+.card-title {
+  display: flex;
+  justify-content: space-between;
+
+} 
+
+.card-title-sub {
+  display: flex;
+
+}
+
+.xmark, .xmark:hover {
+  height: 20px;
+  width: 20px;
+  background-color: transparent !important;
+  display: flex;
+  align-self: center;
+  
+}
+
 /* div#QrCode {
 } */
 </style>

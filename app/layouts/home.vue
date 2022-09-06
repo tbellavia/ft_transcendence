@@ -1,3 +1,7 @@
+<!-- sub division page:                     -->
+<!-- 3 column:                              -->
+<!-- usersList | This user profile |  chat  -->
+
 <template>
   <div class="home-page">
     <div style="width: 15%">
