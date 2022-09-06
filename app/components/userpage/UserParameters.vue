@@ -1,10 +1,17 @@
 <template>
 <div class="User-Parameters">
-  
-  <ul>USER PARAMETER
+  <ul>
     <li> <userpageDoubleAuthentication /> </li>
+    <li> other </li>
   </ul>
-    <li></li>
-  </div>
+</div>
 </template>
 
+
+<style scoped>
+  .User-Parameters, .User-Parameters ul li, .User-Parameters ul li  {
+    width: 100%;
+    display: flex;
+
+  }
+</style>

@@ -4,14 +4,9 @@ import { defineNuxtConfig } from "nuxt";
 export default defineNuxtConfig({
   // Currently not working ;-(
 
-  // css: ['vuetify/lib/styles/main.sass'],
+  css: ['vuetify/lib/styles/main.sass'],
   build: {
     transpile: ['vuetify'],
-    vuetify: {
-      theme: {
-        disable: true
-      },
-    },
   },
   vite: {
     define: {
@@ -20,11 +15,6 @@ export default defineNuxtConfig({
     server: {
       host: "0.0.0.0",
       port: 8000,
-    },
-  },
-  vuetify: {
-    theme: {
-      disable: true
     },
   },
   // Targeting an SPA application so no server-side rendering and static website

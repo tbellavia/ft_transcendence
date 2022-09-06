@@ -2,16 +2,13 @@
   <div>
 			<!-- https://lightrun.com/answers/vuetifyjs-vuetify-documentation-v-slotactivator-on-
 			https://ramblings.mcpher.com/snipgraphql/vuejs/vuejs-and-vuetify-what-does-v-on-mean/ -->
-    <div>
-      <v-icon small color="red" >mdi-cancel</v-icon>
-      <v-row justify="center" left="100%">
           <v-dialog
             v-model="activatePopup"
             persistent
             max-width="400">
-            <template v-slot:activator="{ on: activatePopup }">
+            <template class="firstLine" v-slot:activator="{ on: activatePopup }">
               Double Authentication :
-              <v-switch justify="center"
+              <v-switch style="display: flex;"
               v-model="userChoice"
               v-bind="userChoice"
               v-on="activatePopup" >
@@ -50,8 +47,6 @@
 
           </v-card>
         </v-dialog>
-      </v-row>
-  </div>
 </div>
 </template>
 	
@@ -148,6 +143,11 @@ watch(userChoice, (newUserChoice) => {
   display: flex;
   align-self: center;
   
+}
+
+.firstLine {
+  position:relative;
+  display: flex;
 }
 
 /* div#QrCode {
