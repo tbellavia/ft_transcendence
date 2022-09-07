@@ -28,11 +28,8 @@ export class UsersService {
    * @returns n/a
    */
 
-  async updateTwoFactorSecret(two_factor_secret: string, username: string) {
-    const user = await this.findOneByName(username);
-
-    if (user == null) return;
-
+  async updateTwoFactorSecret(two_factor_secret: string, user_id: string) {
+    const user = await this.findOneById(user_id);
     user.two_factor_auth_secret = two_factor_secret;
     await user.save();
   }
@@ -46,9 +43,9 @@ export class UsersService {
       );
     }
     
-    async update(updateUserDto: UpdateUserDTO, username: string) {
+    async update(updateUserDto: UpdateUserDTO, user_id: string) {
       const { password, is_two_factor_auth_enabled } = updateUserDto;
-      const user = await this.findOneByName(username);
+      const user = await this.findOneById(user_id);
       
       if (password !== undefined)
         user.two_factor_auth_secret = password;
@@ -56,7 +53,7 @@ export class UsersService {
         user.is_two_factor_auth_enbaled = is_two_factor_auth_enabled;
 
       await user.save();
-      return await this.findOneByName(username);
+      return await this.findOneById(user_id);
     }
 
   async findAll(limit?: number | undefined) {
@@ -94,8 +91,8 @@ export class UsersService {
     return user;
   }
 
-  async delete(username: string) {
-    const user = await this.findOneByName(username);
+  async delete(user_id: string) {
+    const user = await this.findOneById(user_id);
     await user.remove();
   }
 }

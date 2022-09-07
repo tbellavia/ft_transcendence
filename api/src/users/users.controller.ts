@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, SerializeOptions } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Req, SerializeOptions } from "@nestjs/common";
+import { RequestWithUser } from "src/auth/interfaces/requestWithUser.interface";
 import { Public } from "../common/decorators/public.decorator";
 import { CreateUserDTO } from "./dto/create-user.dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
@@ -16,9 +17,12 @@ export class UsersController {
         return this.usersService.create(createUserDto);
     }
 
-    @Put("/:username")
-    async updateUser(@Body() updateUserDto: UpdateUserDTO, @Param('username') username: string) {
-        return this.usersService.update(updateUserDto, username);
+    @Put("/me")
+    async updateUser(
+        @Req() request: RequestWithUser,
+        @Body() updateUserDto: UpdateUserDTO, 
+    ) {
+        return this.usersService.update(updateUserDto, request.user.user_id);
     }
 
     
@@ -36,8 +40,8 @@ export class UsersController {
     }
 
     //TODO: replace :user_id by me to only delete current auth user
-    @Delete("/:username")
-    async delete(@Param("username") username: string){
-        return this.usersService.delete(username);
+    @Delete("/me")
+    async delete(@Req() request: RequestWithUser) {
+        return this.usersService.delete(request.user.user_id);
     }
 }
