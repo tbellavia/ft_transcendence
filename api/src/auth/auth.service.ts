@@ -8,6 +8,7 @@ import { Api42UserDatas } from './interfaces/api42UserDatas.interface';
 import { PasswordAuthDTO } from './dto/passwordAuth.dto';
 import * as bcrypt from 'bcrypt';
 import { PostgresErrorCode } from 'src/database/postgresErrorCode.enum';
+import { UserNotFoundException } from 'src/users/exceptions/userNotFound.exception';
 
 @Injectable()
 export class AuthService {
@@ -18,15 +19,18 @@ export class AuthService {
   ) {}
 
   async api42LoginOrRegister(user42: Api42UserDatas) {
-    const user : UserEntity | undefined = await this.userService.findUser42Registered(user42);
-
-    if (!user) {
-      return await this.userService.create({
-        username: user42.login,
-        user42_id: user42.id
-      });
+    try {
+      const user = await this.userService.findUser42Registered(user42);
+      return user;
     }
-    return user;
+    catch (error) {
+      if (error instanceof UserNotFoundException)
+        return await this.userService.create({
+          username: user42.login,
+          user42_id: user42.id
+        });
+      throw new InternalServerErrorException('Something went wrong');
+    }
   }
 
   async getUserFromAuthenticationToken(token: string ) {
