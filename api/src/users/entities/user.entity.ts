@@ -27,7 +27,7 @@ export class UserEntity extends BaseEntity {
 
     @Expose()
     @Column({ default: false })
-    public is_two_factor_auth_enbaled: boolean;
+    public is_two_factor_auth_enabled: boolean;
 
     @Expose()
     @CreateDateColumn()
