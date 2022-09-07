@@ -2,8 +2,16 @@ import { defineNuxtConfig } from "nuxt";
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
-  // Currently not working ;-(
 
+  modules: [
+    'nuxt-socket-io'
+  ],
+  io: {
+    sockets: [{
+      url: 'http://localhost:3000/',
+      default: true
+    }]
+  },
   css: ['vuetify/lib/styles/main.sass'],
   build: {
     transpile: ['vuetify'],
