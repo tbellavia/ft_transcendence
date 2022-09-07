@@ -1,7 +1,8 @@
 import { UseFilters } from "@nestjs/common";
-import { MessageBody, OnGatewayConnection, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from 'socket.io';
 import { SocketService } from "src/socket/socket.service";
+import { SendMessageDTO } from "./dto/sendMessage.dto";
 import { WsExceptionFilter } from "./filters/wsException.filter";
 
 @UseFilters(new WsExceptionFilter())
@@ -24,11 +25,23 @@ export class ChatGateway implements OnGatewayConnection {
   async handleConnection(socket: Socket) {
     try {
       const user = await this.socketService.getUserFromSocket(socket);
-      socket.join(user.user_id);
+      socket.join(user.username);
     } catch (exception: any) {
       //TODO: send error as response ?
       //Silently ignores error, when client will make a request the filter will work :)
     }
   }
 
+  @SubscribeMessage('send_message')
+  async handleMessage(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() message: SendMessageDTO
+  ) {
+    const user = await this.socketService.getUserFromSocket(socket);
+
+    this.server.to(message.target).emit('receive_message', {
+      message,
+      from: user.username
+    });
+  }
 }
