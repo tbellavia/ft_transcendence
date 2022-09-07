@@ -1,3 +1,3 @@
 <template>
-  <Authentication42></Authentication42>
+  <AuthenticationApi42></AuthenticationApi42>
 </template>
