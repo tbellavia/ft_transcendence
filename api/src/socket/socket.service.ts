@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
+import { AuthService } from "src/auth/auth.service";
 import { Socket } from "socket.io";
-import { AuthService } from "../auth/auth.service";
-import { parse } from 'cookie';
 import { WsException } from "@nestjs/websockets";
+import { parse } from "cookie";
 
 @Injectable()
-export class ChatService {
+export class SocketService {
   constructor(
-    private authService: AuthService
+    private readonly authService: AuthService
   ) {}
 
   async getUserFromSocket(socket: Socket) {
@@ -18,4 +18,5 @@ export class ChatService {
       throw new WsException('Invalid credentials');
     return user;
   }
+
 }
