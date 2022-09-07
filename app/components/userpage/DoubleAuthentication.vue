@@ -1,14 +1,14 @@
 <template>
-  <div>
+  <div class="line" style="height: 20px;">
 			<!-- https://lightrun.com/answers/vuetifyjs-vuetify-documentation-v-slotactivator-on-
 			https://ramblings.mcpher.com/snipgraphql/vuejs/vuejs-and-vuetify-what-does-v-on-mean/ -->
           <v-dialog
             v-model="activatePopup"
             persistent
             max-width="400">
-            <template class="firstLine" v-slot:activator="{ on: activatePopup }">
-              Double Authentication :
-              <v-switch style="display: flex;"
+            <template  v-slot:activator="{ on: activatePopup }">
+             <span class="line-sub"> Double Authentication :</span>
+              <v-switch class="line-sub"
               v-model="userChoice"
               v-bind="userChoice"
               v-on="activatePopup" >
@@ -100,30 +100,6 @@ watch(userChoice, (newUserChoice) => {
 	
 	
 <style scoped>
-.modal {
-	position: fixed;
-	background-color: var(--grey-color);
-	opacity: 100%;
-	z-index: 999;
-	top: 20%;
-	left: 30%;
-	width: 350px;
-	height: 400px;
-	border: solid;
-}
-
-.modal div {
-	position:relative;
-	padding: 10%;
-}
-
-.v-card {
-  left: -30%;
-  background-color: var(--grey-color);
-  opacity: 90%;
-  border: solid;
-  border-color: var(--main-color-darker);
-}
 
 .card-title {
   display: flex;
@@ -145,9 +121,13 @@ watch(userChoice, (newUserChoice) => {
   
 }
 
-.firstLine {
-  position:relative;
+.line {
   display: flex;
+}
+
+span.line-sub, switch.line-sub {
+  display: flex;
+  align-self: center;
 }
 
 /* div#QrCode {
