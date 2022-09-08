@@ -1,8 +1,11 @@
 <template>
-  <form action="" @submit.prevent="sendMessage">
-      <input type="text" placeholder="message" v-model="message"/>
-      <input type="submit" value="send message" />
-  </form>
+  <div class="send-chat">
+    <form action="" @submit.prevent="sendMessage">
+        <input type="text" placeholder="type message to sent" v-model="message"/>
+        <input type="submit" value="send message" />
+    </form>
+    <p v-if="error" class="error">{{ error }}</p>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -22,17 +25,29 @@ interface sendMessage {
   target: string;
   isChannel: boolean;
 }
-
 const message = ref<string>('');
 const socket = useSocketChat();
 function sendMessage() {
+  error.value = '';
   socket.value.emit('send_message', {
     message: message.value,
     ...props
   });
 }
 
-socket.value.on('exception', ({status, message}) => {
-  console.log('Socket exception:', status);
+// Captures errors on exception and display them
+const error = ref<string>('');
+socket.value.on('exception', ({ message }) => {
+  error.value = message;
 });
 </script>
+
+<style>
+  .error {
+    color: red;
+  }
+
+  .send-chat {
+    background-color: var(--background-line-color);
+  }
+</style>

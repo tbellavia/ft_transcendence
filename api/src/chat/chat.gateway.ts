@@ -1,11 +1,9 @@
-import { UseFilters } from "@nestjs/common";
-import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
+import { userInfo } from "os";
 import { Server, Socket } from 'socket.io';
 import { SocketService } from "src/socket/socket.service";
 import { SendMessageDTO } from "./dto/sendMessage.dto";
-import { WsExceptionFilter } from "./filters/wsException.filter";
 
-@UseFilters(new WsExceptionFilter())
 @WebSocketGateway({
   namespace: 'chat',
   cors: {
@@ -27,8 +25,10 @@ export class ChatGateway implements OnGatewayConnection {
       const user = await this.socketService.getUserFromSocket(socket);
       socket.join(user.username);
     } catch (exception: any) {
-      //TODO: send error as response ?
-      //Silently ignores error, when client will make a request the filter will work :)
+      socket.emit('exception', {
+        status: 'error',
+        exception: 'Failed to connect'
+      });
     }
   }
 
@@ -39,9 +39,17 @@ export class ChatGateway implements OnGatewayConnection {
   ) {
     const user = await this.socketService.getUserFromSocket(socket);
 
-    this.server.to(message.target).emit('receive_message', {
-      message,
-      from: user.username
-    });
+
+    const sockets = await this.server.to(message.target).fetchSockets();
+    if (!sockets.length) {
+      throw new WsException(`${message.target} not connected`);
+    }
+
+    this.server
+      .to(message.target)
+      .emit('receive_message', {
+        message: message.message,
+        from: user.username
+      });
   }
 }

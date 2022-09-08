@@ -1,6 +1,7 @@
 <template>
   <!-- Displaying chat messages area -->
   <ul class="display-chat">
+    <h2>{{ target }}</h2>
     <li v-for="message in messages">
       <p>
         <span class="author">{{ message.from }}</span>
@@ -30,7 +31,7 @@ const messages = ref<chatMessage[]>([]);
 
 // Global shared socket chat that received messages
 const socket = useSocketChat();
-socket.value.on('received_message', chatMessage => {
+socket.value.on('receive_message', chatMessage => {
   messages.value.push(chatMessage);
 })
 </script>
@@ -38,6 +39,7 @@ socket.value.on('received_message', chatMessage => {
 <style>
   ul {
     color: var(--main-color);
+    border: solid var(--background-line-color);
   }
 
   .display-chat {
@@ -51,5 +53,11 @@ socket.value.on('received_message', chatMessage => {
 
   input {
     color: var(--main-color);
+  }
+
+  h2 {
+    padding: 0.2rem;
+    text-align: center;
+    background-color: var(--background-line-color);
   }
 </style>
