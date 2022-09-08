@@ -35,7 +35,8 @@ export class ChatGateway implements OnGatewayConnection {
   @SubscribeMessage('send_message')
   async handleMessage(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() message: SendMessageDTO
+    @MessageBody() message: SendMessageDTO,
+    callback
   ) {
     const user = await this.socketService.getUserFromSocket(socket);
 
@@ -51,5 +52,6 @@ export class ChatGateway implements OnGatewayConnection {
         message: message.message,
         from: user.username
       });
+    return '';
   }
 }

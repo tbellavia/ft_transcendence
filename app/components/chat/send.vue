@@ -28,10 +28,13 @@ const message = ref<string>('');
 const socket = useSocketChat();
 function sendMessage() {
   error.value = '';
-  socket.value.emit('send_message', {
-    message: message.value,
-    ...props
-  });
+  socket.value.emit(
+    'send_message', {
+      message: message.value,
+      ...props
+    },
+    () => console.log()
+  );
 }
 
 // Captures errors on exception and display them
