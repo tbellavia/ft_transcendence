@@ -8,11 +8,6 @@
       </p>
     </li>
   </ul>
-
-  <!-- Send message -->
-  <form action="#" submit="sendMessage">
-    <input type="text" />
-  </form>
 </template>
 
 <script lang="ts" setup>
@@ -38,5 +33,23 @@ const socket = useSocketChat();
 socket.value.on('received_message', chatMessage => {
   messages.value.push(chatMessage);
 })
-
 </script>
+
+<style>
+  ul {
+    color: var(--main-color);
+  }
+
+  .display-chat {
+    height: 80vh;
+    background-color: var(--main-color-darker);
+  }
+
+  input::placeholder {
+    color: var(--main-color);
+  }
+
+  input {
+    color: var(--main-color);
+  }
+</style>

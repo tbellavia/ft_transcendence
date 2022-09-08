@@ -1,7 +1,7 @@
 <template>
-  <form action="" @submit="sendMessage">
+  <form action="" @submit.prevent="sendMessage">
       <input type="text" placeholder="message" v-model="message"/>
-      <input type="submit" />
+      <input type="submit" value="send message" />
   </form>
 </template>
 
@@ -31,4 +31,8 @@ function sendMessage() {
     ...props
   });
 }
+
+socket.value.on('exception', ({status, message}) => {
+  console.log('Socket exception:', status);
+});
 </script>
