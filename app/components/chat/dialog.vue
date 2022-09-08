@@ -5,12 +5,12 @@
       <h2>{{ target }}</h2>
       <li v-for="message in messages">
         <p>
-          <span class="author">{{ message.from }}</span>
+          <span class="author">{{ message.from }}:</span>
           {{ message.message }}
         </p>
       </li>
     </ul>
-    <ChatSend :target="target" :isChannel="isChannel" />
+    <ChatSend @messageSend="messageSend" :target="target" :isChannel="isChannel" />
   </div>
 </template>
 
@@ -37,6 +37,10 @@ const socket = useSocketChat();
 socket.value.on('receive_message', chatMessage => {
   messages.value.push(chatMessage);
 })
+
+function messageSend(message: chatMessage) {
+  messages.value.push(message);
+}
 </script>
 
 <style scoped>

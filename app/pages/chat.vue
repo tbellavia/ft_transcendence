@@ -1,3 +1,3 @@
 <template>
-  <ChatDialog target="bbellavi" />
+  <ChatDialog target="bbellavi"/>
 </template>

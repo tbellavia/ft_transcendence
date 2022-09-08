@@ -52,8 +52,10 @@ async function authenticateApi() {
       }
     });
     errorMessage.value = '';
+    password.value = '';
   } catch (error) {
     errorMessage.value = error.data.message;
+    password.value = '';
   }
 }
 
