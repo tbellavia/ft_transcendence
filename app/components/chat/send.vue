@@ -1,14 +1,14 @@
 <template>
-  <form action="" @submit.prevent="">
-      <input type="text" placeholder="message"  v-model="message"/>
-      <input type="submit" />
+  <form action="" @submit.prevent="sendMessage">
+      <input type="text" placeholder="message" v-model="message"/>
+      <input type="submit" value="send message" />
   </form>
 </template>
 
 <script lang="ts" setup>
 // Target is the name of the discussion (username or channel)
 // isChannel control if the name target a channel discussion
-defineProps({
+const props = defineProps({
   isChannel: Boolean,
   target: {
     type: String,
@@ -23,6 +23,12 @@ interface sendMessage {
   isChannel: boolean;
 }
 
-const message = ref<string | undefined>();
-
+const message = ref<string>('');
+const socket = useSocketChat();
+function sendMessage() {
+  socket.value.emit('send_message', {
+    message,
+    ...props
+  });
+}
 </script>

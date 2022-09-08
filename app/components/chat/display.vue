@@ -32,6 +32,11 @@ interface chatMessage {
   from: string;
 };
 const messages = ref<chatMessage[]>([]);
-const ctx = useContext();
+
+// Global shared socket chat that received messages
+const socket = useSocketChat();
+socket.value.on('received_message', chatMessage => {
+  messages.value.push(chatMessage);
+})
 
 </script>
