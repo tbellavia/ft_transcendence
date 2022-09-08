@@ -6,5 +6,5 @@ export const useSocketChat = () => {
     return io('http://localhost:3000/chat', {
       withCredentials: true
     });
-  })
+  });
 }

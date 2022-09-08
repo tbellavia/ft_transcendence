@@ -1,7 +1,7 @@
 <template>
-  <form action="" @submit.prevent="sendMessage">
+  <form action="" @submit="sendMessage">
       <input type="text" placeholder="message" v-model="message"/>
-      <input type="submit" value="send message" />
+      <input type="submit" />
   </form>
 </template>
 
@@ -27,7 +27,7 @@ const message = ref<string>('');
 const socket = useSocketChat();
 function sendMessage() {
   socket.value.emit('send_message', {
-    message,
+    message: message.value,
     ...props
   });
 }
