@@ -12,7 +12,7 @@ export class SocketService {
 
   async getUserFromSocket(socket: Socket) {
     const cookies = socket.handshake.headers.cookie;
-    const { jwtAuth: token } = parse(cookies);
+    const { Authentication: token } = parse(cookies);
     const user = await this.authService.getUserFromAuthenticationToken(token);
     if (!user)
       throw new WsException('Invalid credentials');
