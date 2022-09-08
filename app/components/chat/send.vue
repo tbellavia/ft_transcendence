@@ -2,7 +2,6 @@
   <div class="send-chat">
     <form action="" @submit.prevent="sendMessage">
         <input type="text" placeholder="type message to sent" v-model="message"/>
-        <input type="submit" value="send message" />
     </form>
     <p v-if="error" class="error">{{ error }}</p>
   </div>
@@ -42,12 +41,22 @@ socket.value.on('exception', ({ message }) => {
 });
 </script>
 
-<style>
+<style scoped>
   .error {
     color: red;
   }
 
   .send-chat {
     background-color: var(--background-line-color);
+  }
+
+  input {
+    padding: 0.2rem;
+    width: 100%;
+    color: var(--main-color);
+  }
+
+  input::placeholder {
+    text-align: center;
   }
 </style>
