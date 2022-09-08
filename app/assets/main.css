@@ -82,7 +82,8 @@ a:visited, a:link {
 }
 /* mouse on link : invert color */
 a:hover,
-a:visited:hover {
+a:visited:hover,
+input[type="submit"]:hover {
   background-color: var(--main-color);
   color: var(--background-color);
 }

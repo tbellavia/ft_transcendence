@@ -36,6 +36,8 @@ services:
       - backend
     depends_on:
       - db
+    # environment:
+    #   # - DEBUG=*
 
   db:
     container_name: db

@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Req, SerializeOptions } from "@nestjs/common";
+import { RequestWithUser } from "src/auth/interfaces/requestWithUser.interface";
 import { Public } from "../common/decorators/public.decorator";
 import { CreateUserDTO } from "./dto/create-user.dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
@@ -10,17 +11,18 @@ export class UsersController {
         private usersService: UsersService
     ) { }
     
-    
-    //TODO: removes it at end (user should not be able to creates other users)
+
     @Post()
     async createUser(@Body() createUserDto: CreateUserDTO) {
         return this.usersService.create(createUserDto);
     }
 
-    //TODO: replace :user_id by me to only updates current auth user
-    @Put("/:user_id")
-    async updateUser(@Body() updateUserDto: UpdateUserDTO, @Param('user_id') user_id: string) {
-        return this.usersService.update(updateUserDto, user_id);
+    @Put("/me")
+    async updateUser(
+        @Req() request: RequestWithUser,
+        @Body() updateUserDto: UpdateUserDTO, 
+    ) {
+        return this.usersService.update(updateUserDto, request.user.user_id);
     }
 
     
@@ -32,14 +34,14 @@ export class UsersController {
     }
 
     //TODO: replace :user_id by me to only get current auth user
-    @Get("/:user_id")
-    async findOne(@Param("user_id") user_id: string) {
-        return await this.usersService.findOne(user_id);
+    @Get("/:username")
+    async findOne(@Param("username") username: string) {
+        return await this.usersService.findOneByName(username);
     }
 
     //TODO: replace :user_id by me to only delete current auth user
-    @Delete("/:user_id")
-    async delete(@Param("user_id") user_id: string){
-        this.usersService.delete(user_id);
+    @Delete("/me")
+    async delete(@Req() request: RequestWithUser) {
+        return this.usersService.delete(request.user.user_id);
     }
 }

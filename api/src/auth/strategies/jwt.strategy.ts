@@ -15,7 +15,7 @@ export class JWTStrategy extends PassportStrategy(Strategy, 'jwt') {
       // Get JWT from cookie inside request
       jwtFromRequest: (request) => {
         let token = null;
-        if (request && request.cookies) token = request.cookies['jwtAuth'];
+        if (request && request.cookies) token = request.cookies['Authentication'];
         return token;
       },
       ignoreExpiration: false,
@@ -25,10 +25,13 @@ export class JWTStrategy extends PassportStrategy(Strategy, 'jwt') {
 
   // Populate req.user with user's entity
   async validate(payload: TokenPayload) {
-    const user = await this.userService.findOne(payload.uuid);
-    if (!user.is_two_factor_auth_enbaled)
+    const user = await this.userService.findOneById(payload.uuid);
+    /*
+    if (!user.is_two_factor_auth_enabled)
       return user;
     if (payload.isTwoFactorAuthenticated)
       return user;
+    */
+    return user;
   }
 }

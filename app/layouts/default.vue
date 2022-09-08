@@ -34,6 +34,8 @@
   
   /* Global style for all component with animation pulse for blink letters */
   main {
+    padding: 2em;
+
     background-image: radial-gradient(
       var(--grey-color-lighter),
       var(--grey-color-dark)
@@ -47,8 +49,9 @@
     position: fixed;
   
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
     flex-direction: column;
+
+    align-items: center;
+    justify-content: baseline;
   }
   </style>
