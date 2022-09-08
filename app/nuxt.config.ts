@@ -2,20 +2,11 @@ import { defineNuxtConfig } from "nuxt";
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
-
-  modules: [
-    'nuxt-socket-io'
-  ],
-  io: {
-    sockets: [{
-      url: 'http://localhost:3000/',
-      default: true
-    }]
-  },
   css: ['vuetify/lib/styles/main.sass'],
   build: {
     transpile: ['vuetify'],
   },
+  // Vite config currently not working ;-(
   vite: {
     define: {
       'process.env.DEBUG': false,

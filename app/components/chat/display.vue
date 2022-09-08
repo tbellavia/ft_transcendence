@@ -32,5 +32,6 @@ interface chatMessage {
   from: string;
 };
 const messages = ref<chatMessage[]>([]);
+const ctx = useContext();
 
 </script>
