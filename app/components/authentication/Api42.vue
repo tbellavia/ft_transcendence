@@ -12,16 +12,12 @@
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits({
-  // Define connect event for notify the page
-  // No validation checking for emit
-  connect: null,
-});
+const emit = defineEmits(['connect']);
 
 async function oauth42(code: string) {
   const { $apiFetch } = useNuxtApp();
   await $apiFetch(`/auth/api42?code=${code}`)
-    .then(() => emit("connect")) //Emit connection event when success)
+    .then(() => emit('connect')) //Emit connection event when success)
     .catch((error) => console.warn(error));
 }
 

@@ -33,6 +33,8 @@
 <script setup lang="ts">
 import { Ref } from 'vue';
 
+const emits = defineEmits(['connect']);
+
 const isRegistering: Ref<boolean> = ref(false);
 const password: Ref<string> = ref('');
 const username: Ref<string> = ref('');
@@ -53,6 +55,7 @@ async function authenticateApi() {
     });
     errorMessage.value = '';
     password.value = '';
+    emits('connect');
   } catch (error) {
     errorMessage.value = error.data.message;
     password.value = '';
