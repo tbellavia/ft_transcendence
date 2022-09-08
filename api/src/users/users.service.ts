@@ -31,6 +31,12 @@ export class UsersService {
     return await this.findOneByName(user.username);
   }
 
+  async getAvatar(username: string) {
+    const user = await this.findOneByName(username);
+
+    return user.avatar;
+  }
+
   /**
    * Update two factor secret shared by applications
    * @param two_factor_secret the new secret
