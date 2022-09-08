@@ -7,16 +7,26 @@ import { UpdateUserDTO } from "./dto/update-user.dto";
 import { UserEntity } from "./entities/user.entity";
 import { selectUserOption } from "./options/user-select.option";
 import { UserNotFoundException } from "./exceptions/userNotFound.exception";
+import * as path from "path";
+import { readFile, readFileSync } from "fs";
+
+const STATIC_DIR = path.join(path.resolve(__dirname, ".."), "static"); 
 
 @Injectable()
 export class UsersService {
+  static default_avatar: Buffer = readFileSync(path.join(STATIC_DIR, "avatar.default.png"));
+
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>
   ) {}
 
   async create(createUserDto: CreateUserDTO) {
-    const user = this.userRepository.create(createUserDto);
+    const user = this.userRepository.create({
+      ...createUserDto, 
+      avatar: UsersService.default_avatar
+    });
+
     await this.userRepository.save(user);
     return await this.findOneByName(user.username);
   }
@@ -32,6 +42,18 @@ export class UsersService {
     const user = await this.findOneById(user_id);
     user.two_factor_auth_secret = two_factor_secret;
     user.is_two_factor_auth_enabled = true;
+    await user.save();
+  }
+
+  /**
+   * Change avatar of the user
+   * @param username the user username
+   * @param avatar the new avatar to change
+   */
+  async changeAvatar(username: string, avatar: Buffer) {
+    const user = await this.findOneByName(username);
+
+    user.avatar = avatar;
     await user.save();
   }
 

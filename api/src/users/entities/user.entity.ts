@@ -14,6 +14,10 @@ export class UserEntity extends BaseEntity {
     @Column({ nullable: false, unique: true })
     username: string;
 
+    @Expose()
+    @Column({ nullable: false, type: "bytea" })
+    avatar: Uint8Array;
+
     // Used to find 42 registered user uppon connection if it change its name in database.
     @Column({ unique: true, nullable: true })
     user42_id?: number;
