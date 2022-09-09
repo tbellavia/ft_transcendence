@@ -2,8 +2,11 @@ import {
     Body,
     Controller,
     Delete,
+    FileTypeValidator,
     Get,
+    MaxFileSizeValidator,
     Param,
+    ParseFilePipe,
     Post,
     Put,
     Query,
@@ -37,7 +40,15 @@ export class UsersController {
     @UseInterceptors(FileInterceptor('file'))
     async uploadAvatar(
         @Param("username") username: string,
-        @UploadedFile() file: Express.Multer.File
+        @UploadedFile(
+            new ParseFilePipe({
+                validators: [
+                    new MaxFileSizeValidator({ maxSize: 90000 }),
+                    new FileTypeValidator({ fileType: /(jpeg|png)/gm })
+                ]
+            })
+        ) 
+        file: Express.Multer.File
     ) 
     {
         return this.usersService.addAvatar(username, file.buffer);
