@@ -1,3 +1,6 @@
 <template>
-	PROFILE USER
+	<div>
+		PROFILE USER
+
+	</div>
 </template>

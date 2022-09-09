@@ -1,3 +1,6 @@
 <template>
-	USER PARAMETERS
+	<div>
+		USER PARAMETERS
+		<userpageUserParameters />
+	</div>
 </template>

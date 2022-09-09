@@ -1,3 +1,6 @@
 <template>
-	FRIENDS LIST
+	<div>
+		FRIENDS LIST
+		<userpageUsersList />
+	</div>
 </template>
