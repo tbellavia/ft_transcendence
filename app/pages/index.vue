@@ -26,6 +26,7 @@ async function redirectIfConnected(page: string, otherPage: string) {
 }
 
 onMounted(async () => {
+  const data = await useUserDatas();
   await redirectIfConnected('/homePage', '/');
 })
 

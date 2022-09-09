@@ -39,7 +39,7 @@ export class UsersController {
         return await this.usersService.findOneByName(username);
     }
 
-    @Get("/me")
+    @Get("/user/me")
     async findMe(@Req() request: RequestWithUser) {
         return request.user;
     }
