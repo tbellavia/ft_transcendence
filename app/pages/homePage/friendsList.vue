@@ -1,0 +1,3 @@
+<template>
+	FRIENDS LIST
+</template>

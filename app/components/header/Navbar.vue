@@ -1,7 +1,12 @@
 <template>
   <nav class="navbar">
-    <svgStudioLogo class="navbar-left" /> 
     <!-- TODO User name  -->
+    <div class="link">
+    <NuxtLink to="/homePage/profileParameters">PROFILE</NuxtLink>
+    <NuxtLink to="/homePage/friendsList">FRIENDS</NuxtLink>
+    <NuxtLink to="/homePage/matchHistory">MATCH HISTORY</NuxtLink>
+  </div>
+
     <div class="navbar-right">
       <headerButtonChangeTheme class="navbar-sub" />
       <headerButtonDisconnect class="navbar-sub" />
@@ -9,40 +14,34 @@
   </nav>
 </template>
 
+<script setup lang="ts">
+
+</script>
+
 <style scoped>
-.navbar {
-  position: static;
-  background-image: radial-gradient(
-    var(--main-color-darker),
-    var(--grey-color-dark)
-  );
-  font-size: 12px;
-  width: 100%;
+
+.link {
+    height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+
+a {
+  display: block;
+  align-self: center;
   height: 60px;
-  overflow: visible;
-  display: flex;
-  justify-content: space-between;
-  border-top-left-radius: 10%;
-  border-top-right-radius: 10%;
+  width: 150px;
+  font-size: 18px;
+  text-align: center;
+  padding-top: 15px;
+  text-decoration: none;
+}
+/* home route and active route will show in bold as it matches / and /about */
+a.router-link-active {
+  border-bottom: solid;
 }
 
-.navbar-left {
-  align-content: flex-start;
-  align-items: flex-start;
-  overflow: hidden;
-  width: 100px;
-}
 
-.navbar-right {
-  width: 100px;
-  display: flex;
-  align-items: flex-end;
-  flex-direction: column;
-}
-
-.navbar-sub {
-  width: 30px;
-  height: 30px;
-  display: flex;
-}
 </style>
