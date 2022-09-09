@@ -16,6 +16,7 @@ import { Public } from "../common/decorators/public.decorator";
 import { CreateUserDTO } from "./dto/create-user.dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
 import { UsersService } from "./users.service";
+import { Response } from "express";
 
 @Controller("users")
 export class UsersController {
@@ -24,6 +25,7 @@ export class UsersController {
     ) { }
     
 
+    @Public()
     @Post()
     async createUser(@Body() createUserDto: CreateUserDTO) {
         return this.usersService.create(createUserDto);
@@ -31,13 +33,17 @@ export class UsersController {
 
     @Get("/:username/avatar")
     async getAvatar(
-        @Param("username") username: string, 
-        @Res({ passthrough: true }) response: Response
+        @Res({ passthrough: true }) response: Response,
+        @Param("username") username: string
     ) 
     {
         const file: Uint8Array = await this.usersService.getAvatar(username);
 
         const stream = Readable.from(file);
+        response.set({
+            "Content-Disposition" : `inline; filename="avatar.png"`,
+            "Content-Type" : "image"
+        })
         return new StreamableFile(stream);
     }
     
