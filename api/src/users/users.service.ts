@@ -31,7 +31,26 @@ export class UsersService {
     await this.userRepository.save(user);
     return await this.findOneByName(user.username);
   }
+  
+  /**
+   * Add avatar to user
+   * @param username username of user
+   * @param avatar the new avatar to change
+   * @returns UserEntity
+   */
+  async addAvatar(username: string, avatar: Buffer) {
+    const user = await this.findOneByName(username);
 
+    user.avatar = avatar;
+    await user.save();
+    return user;
+  }
+
+  /**
+   * Return the avatar byte buffer
+   * @param username username of user
+   * @returns avatar buffer
+   */
   async getAvatar(username: string) {
     const user = await this.findOneByName(username);
 

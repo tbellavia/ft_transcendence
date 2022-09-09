@@ -9,7 +9,9 @@ import {
     Query,
     Req,
     Res,
-    StreamableFile } from "@nestjs/common";
+    StreamableFile, 
+    UploadedFile, 
+    UseInterceptors} from "@nestjs/common";
 import { RequestWithUser } from "src/auth/interfaces/requestWithUser.interface";
 import { Readable } from "stream";
 import { Public } from "../common/decorators/public.decorator";
@@ -17,6 +19,7 @@ import { CreateUserDTO } from "./dto/create-user.dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
 import { UsersService } from "./users.service";
 import { Response } from "express";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller("users")
 export class UsersController {
@@ -28,6 +31,16 @@ export class UsersController {
     @Post()
     async createUser(@Body() createUserDto: CreateUserDTO) {
         return this.usersService.create(createUserDto);
+    }
+
+    @Post("/:username/avatar")
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadAvatar(
+        @Param("username") username: string,
+        @UploadedFile() file: Express.Multer.File
+    ) 
+    {
+        return this.usersService.addAvatar(username, file.buffer);
     }
 
     @Get("/:username/avatar")
