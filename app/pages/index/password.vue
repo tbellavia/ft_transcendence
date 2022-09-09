@@ -1,0 +1,3 @@
+<template>
+  <AuthenticationPassword></AuthenticationPassword>
+</template>

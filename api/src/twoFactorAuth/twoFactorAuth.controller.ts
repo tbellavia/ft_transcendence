@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Req, Res, UnauthorizedException } from "@nestjs/common";
 import { AuthService } from "src/auth/auth.service";
 import { UsersService } from "src/users/users.service";
-import TwoFactorCodeDTO from "./dto/twoFactorCodeDTO";
+import { TwoFactorCodeDTO } from "./dto/twoFactorCodeDTO";
 import { TwoFactorAuthService } from "./twoFactorAuth.service";
 
 @Controller('2fa')
@@ -52,6 +52,6 @@ export class TwoFactorAuthController {
 
     // Set-Cookie with 2fa enabled into cookie
     const accessToken = this.authService.login(requestWithUser.user, true);
-    res.cookie('jwtAuth', accessToken);
+    res.cookie('Authentication', accessToken);
   }
 }

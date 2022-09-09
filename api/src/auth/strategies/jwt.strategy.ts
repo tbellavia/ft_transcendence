@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Strategy } from 'passport-jwt';
 import { UsersService } from 'src/users/users.service';
+import { TokenPayload } from '../interfaces/tokenPayload.interface';
 
 @Injectable()
 export class JWTStrategy extends PassportStrategy(Strategy, 'jwt') {
@@ -14,7 +15,7 @@ export class JWTStrategy extends PassportStrategy(Strategy, 'jwt') {
       // Get JWT from cookie inside request
       jwtFromRequest: (request) => {
         let token = null;
-        if (request && request.cookies) token = request.cookies['jwtAuth'];
+        if (request && request.cookies) token = request.cookies['Authentication'];
         return token;
       },
       ignoreExpiration: false,
@@ -23,11 +24,14 @@ export class JWTStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   // Populate req.user with user's entity
-  async validate(payload: any) {
-    const user = await this.userService.findOne(payload.user_id);
-    if (!user.is_two_factor_auth_enbaled)
+  async validate(payload: TokenPayload) {
+    const user = await this.userService.findOneById(payload.uuid);
+    /*
+    if (!user.is_two_factor_auth_enabled)
       return user;
-    if (payload.is_two_factor_authenticated)
+    if (payload.isTwoFactorAuthenticated)
       return user;
+    */
+    return user;
   }
 }

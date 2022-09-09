@@ -16,12 +16,16 @@ export class BlockedService {
     ) { }
 
     // TODO: Check if user already block the other user ?
-    async create(user1_id: string, user2_id: string) {
-        if ( user1_id === user2_id ){
+    async create(username1: string, username2: string) {
+        const exists = this.exists(username1, username2);
+        if ( exists ) {
+            return { msg: "User already blocked!" };
+        }
+        if ( username1 === username2 ){
             return { msg: "User cannot block himself" };
         }
-        const user1 = await this.userRepository.findOneBy({ user_id: user1_id });
-        const user2 = await this.userRepository.findOneBy({ user_id: user2_id });
+        const user1 = await this.userRepository.findOneBy({ username: username1 });
+        const user2 = await this.userRepository.findOneBy({ username: username2 });
 
         if ( !user1 || !user2 ){
             return { msg: "One or more user does not exist!" };
@@ -31,31 +35,51 @@ export class BlockedService {
         blocked.user_1 = user1;
         blocked.user_2 = user2;
         await blocked.save();
-        return { msg: "Blocked successful" };
+        return await this.findOne(username1, username2);
     }
 
-    async findAll(user_id: string, paginationQueryDto: PaginationQueryDto){
-        const user = await this.userRepository.findOneBy({ user_id });
+    async findOne(username1: string, username2: string) {
+        return await this.blockedRepository.findOne({
+            where: {
+                user_1: { username: username1 },
+                user_2: { username: username2 }
+            },
+            relations: {
+                user_1: true,
+                user_2: true,
+            },
+            select: {
+                user_1: selectUserOption,
+                user_2: selectUserOption
+            }
+        });
+    }
+
+    async exists(username1: string, username2: string) {
+        return await this.findOne(username1, username2) !== null;
+    }
+
+    async findAll(username: string, paginationQueryDto: PaginationQueryDto){
+        const user = await this.userRepository.findOneBy({ username });
 
         if ( !user ){
             return { msg: "User not found!" };
         }
         const opts: FindManyOptions<BlockedEntity> = paginationQueryDto.getConfig<BlockedEntity>(
-            { user_1: { user_id } },
+            { user_1: { username } },
             { user_2: true },
             { user_2: selectUserOption }
         );
         return await this.blockedRepository.find(opts);
     }
 
-    async delete(user1_id: string, user2_id: string) {
-        const result = await this.blockedRepository.delete({
-            user_1: { user_id: user1_id },
-            user_2: { user_id: user2_id }
-        });
-        if ( result.affected == 0 ){
-            return { msg: `Blocked relationship does not exist between user id ${user1_id} and ${user2_id}` };
+    async delete(username1: string, username2: string) {
+        const blocked = await this.findOne(username1, username2);
+
+        if ( blocked == null ){
+            return { msg: `Blocked relationship does not exist between user id ${username1} and ${username2}` };
         }
+        await blocked.remove();
         return { msg: "Delete block relationship successful" };
     }
 }

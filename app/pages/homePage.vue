@@ -20,6 +20,9 @@
     </v-tab-item>
 	</v-tab-items>
 </nuxtLayout>
+	<!-- <nuxtLayout name="home">
+      <div v-html="svg.outerHTML"></div>
+  </nuxtLayout> -->
 </template>
 
 <script setup lang="ts">
@@ -32,4 +35,38 @@ let items = ref([
         { tab: 'Three', content: 'Tab 3 Content' },
         { tab: 'Four', content: 'Tab 4 Content' },
       ])
+  const temp = document.createElement('temporary');
+  temp.innerHTML = qrCode.trim();
+  const svg = temp.firstChild;
+
+  for (let i = 0; i < svg.children.length; ++i) {
+    svg.children[i].setAttribute('stroke', 'currentColor');
+    svg.children[i].setAttribute('fill', 'none');
+  }
+  console.log(svg);
 </script>
+
+<style>
+.home-page {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  justify-content: space-around;
+  top: 1%;
+}
+
+.all-users {
+  display: flex;
+}
+
+.self-profile {
+  display: flex;
+}
+
+.chat {
+  width: 28%;
+  border: solid;
+  border-color: red;
+}
+</style>
