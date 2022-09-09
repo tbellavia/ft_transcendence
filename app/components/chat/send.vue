@@ -31,15 +31,18 @@ const socket = useSocketChat();
 function sendMessage() {
   error.value = '';
   socket.value.emit(
-    'send_message', {
+    'send_message',
+    {
       message: message.value,
       ...props
     },
-    (username: string) => emits('messageSend', {
-      message: message.value,
-      from: username
-    })
-  );
+    (username: string) => {
+      emits('messageSend', {
+        message: message.value,
+        from: username
+      });
+      message.value = '';
+    });
 }
 
 // Captures errors on exception and display them
