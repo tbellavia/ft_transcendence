@@ -24,19 +24,18 @@
     height: 60px;
     width: 100%;
     display: flex;
-    align-items: center;
-    align-content: center;
+
 }
 
 a {
-  display: block;
-  align-self: center;
   height: 60px;
   width: 150px;
   font-size: 18px;
+  text-decoration: none;
+  
+  display: block;
   text-align: center;
   padding-top: 15px;
-  text-decoration: none;
 }
 /* home route and active route will show in bold as it matches / and /about */
 a.router-link-active {
