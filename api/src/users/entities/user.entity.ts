@@ -4,6 +4,7 @@ import { BlockedEntity } from "../../blocked/entity/blocked.entity";
 import { FriendEntity } from "../../friends/entity/friend.entity";
 import { MatchEntity } from "src/matches/entity/match.entity";
 import { Expose } from "class-transformer";
+import { MessageEntity } from "src/chat/entities/message.entity";
 
 @Entity("users")
 export class UserEntity extends BaseEntity {
@@ -60,4 +61,11 @@ export class UserEntity extends BaseEntity {
 
     @OneToMany(() => MatchEntity, (match) => match.user_2)
     opponents: MatchEntity[];
+
+    // Message History
+    @OneToMany(() => MessageEntity, (message) => message.author, { cascade: true })
+    messages_author: MessageEntity[];
+
+    @OneToMany(() => MessageEntity, (message) => message.target, { cascade: true })
+    messages_target: MessageEntity[];
 }
