@@ -1,5 +1,17 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Req, SerializeOptions } from "@nestjs/common";
+import { 
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Put,
+    Query,
+    Req,
+    Res,
+    StreamableFile } from "@nestjs/common";
 import { RequestWithUser } from "src/auth/interfaces/requestWithUser.interface";
+import { Readable } from "stream";
 import { Public } from "../common/decorators/public.decorator";
 import { CreateUserDTO } from "./dto/create-user.dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
@@ -17,6 +29,18 @@ export class UsersController {
         return this.usersService.create(createUserDto);
     }
 
+    @Get("/:username/avatar")
+    async getAvatar(
+        @Param("username") username: string, 
+        @Res({ passthrough: true }) response: Response
+    ) 
+    {
+        const file: Uint8Array = await this.usersService.getAvatar(username);
+
+        const stream = Readable.from(file);
+        return new StreamableFile(stream);
+    }
+    
     @Put("/me")
     async updateUser(
         @Req() request: RequestWithUser,
