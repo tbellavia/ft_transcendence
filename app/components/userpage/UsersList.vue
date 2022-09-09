@@ -16,53 +16,45 @@ function getUser() {
 		first_name: "Tony",
 		rank: "rank",
 	}]
+};
+
+async function getFriendsUsers() {
+	const { $apiFetch } = useNuxtApp();
+	const users = await $apiFetch("/users")
+		.then( async (user) => console.log(user))
+		.catch((error) => console.warn(error));
+	console.log(users[0]);
+	for (let user in users)
+	{
+		// console.log(`user: ${user}`);
+	}
+	return users;
 }
-
-// function listProfiles() {
-// 	let div = document.createElement("div");
-// 	for (let user in users) {
-// 		let div = document.createElement("div")
-// 	}
-
-// }
-
-// let users = getAllUsers()
 </script>
 
 <template>
-	<div  v-for="user in getUser()">
-		<div class=Profile>
-			<div class="userImage"> {{ user.image_url }}</div>
+	<div  v-for="user in getFriendsUsers()">
+		<div class=Profile> {{ user.username }}
+			<div class="userImage"> image </div>
 			<div class="userDatas">
-				<div class="userName"> {{ user.first_name }}</div>
-				<div class="rank">{{ user.rank }}</div>
-			</div>
-			<div v-if="user.online"> </div>
+				<div class="userName"> {{ user.username }}</div>
+				<div class="rank"> rank </div>
+			</div> 
+			<!-- <div v-if="user.online"> </div>
 			<div v-else> </div>
-		</div>
-		<div class="OptionProfile">
+		</div> __-->
+		<!-- <div class="OptionProfile">
 			<div class="userImage"> {{ user.image_url }}</div>
 			<button> add friend </button>
 			<button>  message </button>
-			<button>  suggest a match </button>
-		</div>
-	</div>
-
-	<div class=Profile2 v-for="user in getUser()">
-		<div class="userImage"> {{ user.image_url }}</div>
-		<div class="userDatas">
-			<div class="userName"> {{ user.first_name }}</div>
-			<div class="rank">{{ user.rank }}</div>
-		</div>
-		<v-list>
-			Coucou
-		</v-list>
+			<button>  suggest a match </button> -->
+		</div> 
 	</div>
 </template>
 
 <style scoped>
  
- .Profile, .Profile2 {
+ .Profile {
 	font-size: 12px;
 	display: flex;
 	align-content: flex-start;
@@ -87,20 +79,8 @@ function getUser() {
  }
 
  @keyframe displayOptionProfile {
-
-
+	
  }
-
- .Profile2:hover {
-		 border: solid;
-	 border-color: currentColor;
-	border-width: 1px;
-
- background-color: var(--main-color);
-  color: var(--background-color);
-
- }
-
 
 .userImage{
 	display: flex;
