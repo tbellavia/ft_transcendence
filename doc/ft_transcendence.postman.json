@@ -134,6 +134,62 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get avatar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/avatar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"bbellavi",
+								"avatar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload avatar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/mnt/nfs/homes/bbellavi/Downloads/avatar.one.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/avatar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"bbellavi",
+								"avatar"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
