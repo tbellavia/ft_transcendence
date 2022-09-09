@@ -55,7 +55,9 @@ async function authenticateApi() {
     });
     errorMessage.value = '';
     password.value = '';
-    emits('connect');
+
+    const { $eventBus } = useNuxtApp();
+    $eventBus.$emit('connect');
   } catch (error) {
     errorMessage.value = error.data.message;
     password.value = '';
