@@ -14,7 +14,6 @@ export class UserEntity extends BaseEntity {
     @Column({ nullable: false, unique: true })
     username: string;
 
-    @Expose()
     @Column({ nullable: false, type: "bytea" })
     avatar: Uint8Array;
 
