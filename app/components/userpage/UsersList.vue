@@ -1,52 +1,5 @@
 <script setup lang="ts">
-// const loading = ref(true);
-
-
-// const friends = ref(await getFriendsUsers());
-// const allUser = ref(await getAllUsers());
-
-
-// async function  getFriendsUsers() {
-// 	const { $apiFetch } = useNuxtApp();
-// 	return await $apiFetch("/users/lvirgini/friends")
-// 		.then( async (user) =>{
-// 			loading.value = false;
-// 			return user;
-// 		})
-// 		.catch((error) => {
-// 			console.warn(error);
-// 			return null
-// 		});
-// }
-
-// async function getAllUsers() {
-// 	const { $apiFetch } = useNuxtApp();
-// 	return await $apiFetch("/users")
-// 		.then( async (user) =>{
-// 			loading.value = false;
-// 			return user;
-// 		})
-// 		.catch((error) => {
-// 			console.warn(error);
-// 			return null
-// 		});
-// }
-
-
-// let displayUser = ref(false);
-// let users = friends;
-// function changeUserList(list: string) {
-// 	if (list === 'Friends')
-// 		users = ref(friends.value);
-// 	else
-// 		users = ref(allUser.value);
-// 	loading.value = false;
-// 	loading.value = true;
-// 	console.log(users.value);
-// }
-
 let friends = ref(true);
-
 </script>
 
 <template>

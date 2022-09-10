@@ -6,8 +6,8 @@
 	 .Profile {
 		font-size: 14px;
 		display: flex;
-		align-content: flex-start;
-	
+		align-content: center;
+		justify-content: space-between;
 		border: solid;
 		border-width: 1px;
 		border-color: var(--main-color-op-30);
@@ -23,30 +23,31 @@
 	  color: var(--main-color-light);
 	 }
 	
-	 .Profile:hover OptionProfile {
-		animation: displayOptionprofile 5s;
-	 }
-	
-	 @keyframe displayOptionProfile {
-		
-	 }
-	
+	.userName {
+		font-size: 18px;
+	}
 	.userImage{
 		display: flex;
 		margin: 5%;
 		border: solid;
 		border-radius: 5%;
-		height: 100%;
+		height: 100px;
+		width: 100px;
 	}
 	
 	.userDatas {
 		display: flex;
-		flex-direction: column;
 		justify-content: center;
 	}
 	
 	.OptionProfile {
-		position: relative;
-		left: 100%;
-		/* display: hidden; */
+		width: 30%;
+		display: flex;
+		flex-direction: column;
+		align-self: right;
+	}
+
+	.OptionProfile_sub {
+		display: flex;
+		align-self: right;
 	}

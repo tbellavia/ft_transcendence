@@ -4,7 +4,7 @@ usernames = [
     "bbellavi", "eassouli", 
     "lvirgini", "mvo-van-", 
     "alelaval", "lperson-",
-    "anclarma", "plam"]
+    "mli", "plam"]
 
 BASE_URL = "http://localhost:3000/api/v1"
 
