@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "7dd126a7-85e0-41c9-b20e-53d7874f100b",
+		"_postman_id": "0f492b32-100b-445a-9aa4-8086d6e5afce",
 		"name": "ft_transcendence",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\" : \"tony\"\n}",
+							"raw": "{\n    \"username\" : \"mvo-van-\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -45,10 +45,15 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"password\" : \"54321\"\n}"
+							"raw": "{\n    \"is_two_factor_auth_enabled\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/1",
+							"raw": "http://localhost:3000/api/v1/users/bbellavi",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -58,7 +63,7 @@
 								"api",
 								"v1",
 								"users",
-								"1"
+								"bbellavi"
 							]
 						}
 					},
@@ -68,17 +73,9 @@
 					"name": "Get all users",
 					"request": {
 						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "Get user by id",
-					"request": {
-						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/1",
+							"raw": "http://localhost:3000/api/v1/users/",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -88,7 +85,29 @@
 								"api",
 								"v1",
 								"users",
-								"1"
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by username",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/bbellavi",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"bbellavi"
 							]
 						}
 					},
@@ -97,8 +116,78 @@
 				{
 					"name": "Delete a user",
 					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/bbellavi",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"bbellavi"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get avatar",
+					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/avatar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"bbellavi",
+								"avatar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload avatar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/mnt/nfs/homes/bbellavi/Downloads/avatar.one.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/avatar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"bbellavi",
+								"avatar"
+							]
+						}
 					},
 					"response": []
 				}
@@ -112,8 +201,12 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/1/stats",
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/stats",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -123,7 +216,7 @@
 								"api",
 								"v1",
 								"users",
-								"1",
+								"bbellavi",
 								"stats"
 							]
 						}
@@ -134,15 +227,77 @@
 					"name": "Get stat by user",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/stats",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"bbellavi",
+								"stats"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "Delete stat of a user",
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/stats",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"bbellavi",
+								"stats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update stat",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"game_total\": 10,\n    \"game_won\": 1,\n    \"game_abandonned\": 0,\n    \"rank\": \"Gold\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/stats",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"bbellavi",
+								"stats"
+							]
+						}
 					},
 					"response": []
 				}
@@ -157,7 +312,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/1/friends/6",
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/friends/lperson-",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -167,9 +322,9 @@
 								"api",
 								"v1",
 								"users",
-								"1",
+								"bbellavi",
 								"friends",
-								"6"
+								"lperson-"
 							]
 						}
 					},
@@ -181,7 +336,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/1/friends",
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/friends",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -191,7 +346,7 @@
 								"api",
 								"v1",
 								"users",
-								"1",
+								"bbellavi",
 								"friends"
 							]
 						}
@@ -201,26 +356,19 @@
 				{
 					"name": "Update friendship",
 					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "Get a friendship",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "Delete a friendsip between two user",
-					"request": {
-						"method": "DELETE",
+						"method": "PUT",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pending\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/1/friends/6",
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/friends/mvo-van-",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -230,9 +378,57 @@
 								"api",
 								"v1",
 								"users",
-								"1",
+								"bbellavi",
 								"friends",
-								"6"
+								"mvo-van-"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a friendship",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/friends/mvo-van-",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"bbellavi",
+								"friends",
+								"mvo-van-"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a friendsip between two user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/friends/lperson-",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"bbellavi",
+								"friends",
+								"lperson-"
 							]
 						}
 					},
@@ -249,7 +445,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/1/blocked/4",
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/blocked/lperson-",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -259,9 +455,9 @@
 								"api",
 								"v1",
 								"users",
-								"1",
+								"bbellavi",
 								"blocked",
-								"4"
+								"lperson-"
 							]
 						}
 					},
@@ -273,7 +469,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/1/blocked/4",
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/blocked/lperson-",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -283,9 +479,9 @@
 								"api",
 								"v1",
 								"users",
-								"1",
+								"bbellavi",
 								"blocked",
-								"4"
+								"lperson-"
 							]
 						}
 					},
@@ -295,7 +491,22 @@
 					"name": "Get the users blocked by user",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/blocked",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"bbellavi",
+								"blocked"
+							]
+						}
 					},
 					"response": []
 				}
@@ -319,7 +530,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/1/matches/4",
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/matches/lperson-",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -329,9 +540,9 @@
 								"api",
 								"v1",
 								"users",
-								"1",
+								"bbellavi",
 								"matches",
-								"4"
+								"lperson-"
 							]
 						}
 					},
@@ -343,7 +554,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/1/matches/4",
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/matches/eassouli",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -353,9 +564,9 @@
 								"api",
 								"v1",
 								"users",
-								"1",
+								"bbellavi",
 								"matches",
-								"4"
+								"eassouli"
 							]
 						}
 					},
@@ -367,7 +578,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/1/matches",
+							"raw": "http://localhost:3000/api/v1/users/bbellavi/matches",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -377,7 +588,7 @@
 								"api",
 								"v1",
 								"users",
-								"1",
+								"bbellavi",
 								"matches"
 							]
 						}
@@ -399,7 +610,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/matches/9",
+							"raw": "http://localhost:3000/api/v1/users/matches/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -410,7 +621,7 @@
 								"v1",
 								"users",
 								"matches",
-								"9"
+								"1"
 							]
 						}
 					},
@@ -480,7 +691,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/matches/",
+							"raw": "http://localhost:3000/api/v1/users/matches/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -491,7 +702,7 @@
 								"v1",
 								"users",
 								"matches",
-								""
+								"3"
 							]
 						}
 					},

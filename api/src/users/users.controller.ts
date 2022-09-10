@@ -1,9 +1,28 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Req, SerializeOptions } from "@nestjs/common";
+import { 
+    Body,
+    Controller,
+    Delete,
+    FileTypeValidator,
+    Get,
+    MaxFileSizeValidator,
+    Param,
+    ParseFilePipe,
+    Post,
+    Put,
+    Query,
+    Req,
+    Res,
+    StreamableFile, 
+    UploadedFile, 
+    UseInterceptors} from "@nestjs/common";
 import { RequestWithUser } from "src/auth/interfaces/requestWithUser.interface";
+import { Readable } from "stream";
 import { Public } from "../common/decorators/public.decorator";
 import { CreateUserDTO } from "./dto/create-user.dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
 import { UsersService } from "./users.service";
+import { Response } from "express";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller("users")
 export class UsersController {
@@ -17,6 +36,40 @@ export class UsersController {
         return this.usersService.create(createUserDto);
     }
 
+    @Post("/:username/avatar")
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadAvatar(
+        @Param("username") username: string,
+        @UploadedFile(
+            new ParseFilePipe({
+                validators: [
+                    new MaxFileSizeValidator({ maxSize: 90000 }),
+                    new FileTypeValidator({ fileType: /(jpeg|png)/gm })
+                ]
+            })
+        ) 
+        file: Express.Multer.File
+    ) 
+    {
+        return this.usersService.addAvatar(username, file.buffer);
+    }
+
+    @Get("/:username/avatar")
+    async getAvatar(
+        @Res({ passthrough: true }) response: Response,
+        @Param("username") username: string
+    ) 
+    {
+        const file: Uint8Array = await this.usersService.getAvatar(username);
+
+        const stream = Readable.from(file);
+        response.set({
+            "Content-Disposition" : `inline; filename="avatar.png"`,
+            "Content-Type" : "image"
+        })
+        return new StreamableFile(stream);
+    }
+    
     @Put("/me")
     async updateUser(
         @Req() request: RequestWithUser,
