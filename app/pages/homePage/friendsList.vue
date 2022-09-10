@@ -1,6 +1,10 @@
 <template>
-	<div>
-		FRIENDS LIST
 		<userpageUsersList />
-	</div>
 </template>
+
+<style scoped>
+
+	userpageUsersList {
+		width: 100%;
+	}
+</style>

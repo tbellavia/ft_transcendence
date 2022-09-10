@@ -1,104 +1,82 @@
-
-
 <script setup lang="ts">
-function getUser() {
-	return [{
-		image_url: "image",
-		first_name: "Lylian",
-		rank: "rank",
-	}, {
-		image_url: "image",
-		first_name: "Virginie",
-		rank: "rank",
-	},
-	{
-		image_url: "image",
-		first_name: "Tony",
-		rank: "rank",
-	}]
-};
+// const loading = ref(true);
 
-async function getFriendsUsers() {
-	const { $apiFetch } = useNuxtApp();
-	const users = await $apiFetch("/users")
-		.then( async (user) => console.log(user))
-		.catch((error) => console.warn(error));
-	console.log(users[0]);
-	for (let user in users)
-	{
-		// console.log(`user: ${user}`);
-	}
-	return users;
-}
+
+// const friends = ref(await getFriendsUsers());
+// const allUser = ref(await getAllUsers());
+
+
+// async function  getFriendsUsers() {
+// 	const { $apiFetch } = useNuxtApp();
+// 	return await $apiFetch("/users/lvirgini/friends")
+// 		.then( async (user) =>{
+// 			loading.value = false;
+// 			return user;
+// 		})
+// 		.catch((error) => {
+// 			console.warn(error);
+// 			return null
+// 		});
+// }
+
+// async function getAllUsers() {
+// 	const { $apiFetch } = useNuxtApp();
+// 	return await $apiFetch("/users")
+// 		.then( async (user) =>{
+// 			loading.value = false;
+// 			return user;
+// 		})
+// 		.catch((error) => {
+// 			console.warn(error);
+// 			return null
+// 		});
+// }
+
+
+// let displayUser = ref(false);
+// let users = friends;
+// function changeUserList(list: string) {
+// 	if (list === 'Friends')
+// 		users = ref(friends.value);
+// 	else
+// 		users = ref(allUser.value);
+// 	loading.value = false;
+// 	loading.value = true;
+// 	console.log(users.value);
+// }
+
+let friends = ref(true);
+
 </script>
 
 <template>
-	<div  v-for="user in getFriendsUsers()">
-		<div class=Profile> {{ user.username }}
-			<div class="userImage"> image </div>
-			<div class="userDatas">
-				<div class="userName"> {{ user.username }}</div>
-				<div class="rank"> rank </div>
-			</div> 
-			<!-- <div v-if="user.online"> </div>
-			<div v-else> </div>
-		</div> __-->
-		<!-- <div class="OptionProfile">
-			<div class="userImage"> {{ user.image_url }}</div>
-			<button> add friend </button>
-			<button>  message </button>
-			<button>  suggest a match </button> -->
-		</div> 
+<div class="all">
+	<div class="friends-buttons">
+		<button @click="friends = true"> Friends </button>
+		<button @click="friends = false"> All Users </button>
 	</div>
+	<Suspense v-if="friends">
+		<userpageListFriends />
+	</Suspense>
+	<Suspense v-else>
+		<userpageListUsers />
+	</Suspense>
+</div>
 </template>
 
 <style scoped>
- 
- .Profile {
-	font-size: 12px;
+
+.friends-buttons {
 	display: flex;
-	align-content: flex-start;
-
-	border: solid;
-	border-width: 1px;
-	border-color: var(--main-color-op-30);
-	border-radius: 4%;
- }
-
- .Profile:hover {
-	 border: solid;
-	 border-color: currentColor;
-	border-width: 1px;
-
-	   background-color: var(--main-color-op-30);
-  color: var(--main-color-light);
- }
-
- .Profile:hover OptionProfile {
-	animation: displayOptionprofile 5s;
- }
-
- @keyframe displayOptionProfile {
-	
- }
-
-.userImage{
-	display: flex;
-	margin: 5%;
-	border: solid;
-	border-radius: 5%;
-	height: 100%;
+	align-items: center;
 }
-
-.userDatas {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-}
-
-.OptionProfile {
-	position: relative;
-	left: 100%;
-	/* display: hidden; */
+.friends-buttons button {
+		width: 150px;
+		height: 50px;
+		display: block;
+		text-align: center;
+	}
+.friends-buttons button:active {
+border: solid;
 }
 </style>

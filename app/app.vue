@@ -5,6 +5,7 @@
 @import "~/assets/navbar.css";
 @import "~/assets/dropLeft.css";
 @import "~/assets/buttonSlider.css";
+@import "~/assets/ListUsers.css";
 </style>
 
 <!-- -------------------------------------------------------------- -->

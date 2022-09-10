@@ -1,0 +1,52 @@
+
+	.all {
+		width: 100%;
+	}
+	 
+	 .Profile {
+		font-size: 14px;
+		display: flex;
+		align-content: flex-start;
+	
+		border: solid;
+		border-width: 1px;
+		border-color: var(--main-color-op-30);
+		width: 100%;
+	 }
+	
+	 .Profile:hover {
+		 border: solid;
+		 border-color: currentColor;
+		border-width: 1px;
+	
+		   background-color: var(--main-color-op-30);
+	  color: var(--main-color-light);
+	 }
+	
+	 .Profile:hover OptionProfile {
+		animation: displayOptionprofile 5s;
+	 }
+	
+	 @keyframe displayOptionProfile {
+		
+	 }
+	
+	.userImage{
+		display: flex;
+		margin: 5%;
+		border: solid;
+		border-radius: 5%;
+		height: 100%;
+	}
+	
+	.userDatas {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	
+	.OptionProfile {
+		position: relative;
+		left: 100%;
+		/* display: hidden; */
+	}
