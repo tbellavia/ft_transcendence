@@ -2,12 +2,11 @@ import { defineNuxtConfig } from "nuxt";
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
-  // Currently not working ;-(
-
   css: ['vuetify/lib/styles/main.sass'],
   build: {
     transpile: ['vuetify'],
   },
+  // Vite config currently not working ;-(
   vite: {
     define: {
       'process.env.DEBUG': false,

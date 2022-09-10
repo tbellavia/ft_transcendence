@@ -1,11 +1,17 @@
 <template>
-  <h1>Chat</h1>
+  <div class="chat-page">
+    <ChatDialog class="chat-box" target="bbellavi"/>
+    <ChatDialog class="chat-box" target="lperson-"/>
+  </div>
 </template>
 
-<script lang="ts" setup>
-import { io } from "socket.io-client";
+<style scoped>
+  .chat-page {
+    display: flex;
+    justify-content: space-evenly;
+  }
 
-const socket = io('http://localhost:3000/chat', {
-  withCredentials: true
-});
-</script>
+  .chat-box {
+    margin: 2rem;
+  }
+</style>

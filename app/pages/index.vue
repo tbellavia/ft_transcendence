@@ -28,6 +28,9 @@ async function redirectIfConnected(page: string, otherPage: string) {
 onMounted(async () => {
   await redirectIfConnected('/homePage', '/');
 })
+
+const { $eventBus } = useNuxtApp();
+$eventBus.$on('connect', () => redirectIfConnected('/homePage', '/'));
 </script>
 
 <style>

@@ -51,11 +51,6 @@ export class FriendsService {
             user_1: { username }
         };
         const opts: FindManyOptions<FriendEntity> = {
-            select: {
-                friend_id: true,
-                user_2: selectUserOption,
-                pending: true,
-            },
             relations: {
                 user_2: true
             }
@@ -67,7 +62,6 @@ export class FriendsService {
         if ( getFriendsQueryDto.pending ){
             whereOpts.pending = getFriendsQueryDto.pending;
         }
-        opts.where = whereOpts;
         return await this.friendRepository.find(opts);
     }
 

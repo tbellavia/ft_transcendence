@@ -12,7 +12,7 @@
 }
 
 /* fonts and animations text */
-:root {
+:root, v-app {
   font-family: "Fira Mono", monospace;
   animation: colorPulse 6s infinite ease-in-out;
 
@@ -22,6 +22,12 @@
   overflow: hidden;
   height: 100%;
 }
+
+v-app, .v-theme--light {
+  background-color: transparent;
+  color: var(--main-color);
+}
+
 
 /* pulse color on font: old screen effect */
 @keyframes colorPulse {
@@ -69,6 +75,47 @@ body:after {
 }
 
 /* --------------------------------------------------------------  */
+
+.real-body {
+  width: 100%;
+  height: 100%;
+}
+
+ /* Visual monitor */
+/* position static ? TODO a verifier pour que la barre de navigation reste fixe */
+header {
+  width: 100%;
+  position: static;
+  background-image: radial-gradient(
+    var(--grey-color-lighter),
+    var(--background-color)
+  );
+}
+
+/* Global style for all component with animation pulse for blink letters */
+main {
+  padding: 2em;
+
+  background-image: radial-gradient(
+    var(--grey-color-lighter),
+    var(--grey-color-dark)
+  );
+
+  box-shadow: 0 0 10vmin 2vmin var(--background-color) inset;
+  height: 90%;
+  width: 100%;
+
+  /* TODO check*/
+  position: fixed;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: baseline;
+}
+
+/* --------------------------------------------------------------  */
 /* color links invert the main color when hover */
 
 /* all a for chrome */
@@ -97,14 +144,15 @@ input[type="submit"]:hover {
 /* --------------------------------------------------------------  */
 
 
-button {
+button, v-btn {
   background-color: transparent;
   color: var(--main-color);
   border: transparent;
 }
 /* stylelint-disable */
 
-button:hover {
+button:hover, v-btn:hover, v-btn__content:hover{
+  /* transition: transform, opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1); */
   background-color: var(--main-color);
   color: var(--background-color);
 }
@@ -113,6 +161,15 @@ button:hover {
 
 li {
   list-style: none;
+}
+
+/* --------------------------------------------------------------  */
+
+input {
+  background-color: transparent;
+  border-color: var(--main-color);
+  color: var(--main-color);
+  border: solid;
 }
 
 /* --------------------------------------------------------------  */

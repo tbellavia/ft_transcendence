@@ -1,11 +1,19 @@
-import { UseFilters } from "@nestjs/common";
+import { ClassSerializerInterceptor, SerializeOptions, UseInterceptors } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from 'socket.io';
 import { SocketService } from "src/socket/socket.service";
+import { UserNotFoundException } from "src/users/exceptions/userNotFound.exception";
+import { UsersService } from "src/users/users.service";
+import { ChatService } from "./chat.service";
+import { GetAllMessagesDTO } from "./dto/getAllMessages.dto";
 import { SendMessageDTO } from "./dto/sendMessage.dto";
-import { WsExceptionFilter } from "./filters/wsException.filter";
+import { WsInternalError } from "./exceptions/wsInternalError";
+import { WsUserNotFoundException } from "./exceptions/wsUserNotFound";
 
-@UseFilters(new WsExceptionFilter())
+@UseInterceptors(ClassSerializerInterceptor)
+@SerializeOptions({
+  strategy: 'excludeAll'
+})
 @WebSocketGateway({
   namespace: 'chat',
   cors: {
@@ -18,7 +26,9 @@ export class ChatGateway implements OnGatewayConnection {
   server: Server
 
   constructor(
-    private readonly socketService: SocketService
+    private readonly socketService: SocketService,
+    private readonly userService: UsersService,
+    private readonly chatService: ChatService
   ) {}
 
   //Be aware filters does not works on handleConnection !
@@ -27,8 +37,10 @@ export class ChatGateway implements OnGatewayConnection {
       const user = await this.socketService.getUserFromSocket(socket);
       socket.join(user.username);
     } catch (exception: any) {
-      //TODO: send error as response ?
-      //Silently ignores error, when client will make a request the filter will work :)
+      socket.emit('exception', {
+        status: 'error',
+        exception: 'Failed to connect'
+      });
     }
   }
 
@@ -37,11 +49,46 @@ export class ChatGateway implements OnGatewayConnection {
     @ConnectedSocket() socket: Socket,
     @MessageBody() message: SendMessageDTO
   ) {
-    const user = await this.socketService.getUserFromSocket(socket);
+    const author = await this.socketService.getUserFromSocket(socket);
+    try {
+      const target = await this.userService.findOneByName(message.target);
+      //TODO: check if user's target blocked author (or when we fetch messages)
+      this.chatService.saveMessage({
+        author,
+        target,
+        content: message.message
+      });
+    } catch (error) {
+      if (error instanceof UserNotFoundException) {
+        throw new WsUserNotFoundException(message.target);
+      }
+      throw new WsInternalError();
+    }
+    
+    this.server
+      .to(message.target)
+      .emit('receive_message', {
+        content: message.message,
+        author: author.username
+      });
+    return author.username;
+  }
 
-    this.server.to(message.target).emit('receive_message', {
-      message,
-      from: user.username
-    });
+  @SubscribeMessage('get_all_messages')
+  async getAllMessagesOfAuthor(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() from: GetAllMessagesDTO
+  ) {
+    const target = await this.socketService.getUserFromSocket(socket);
+    try {
+      const author = await this.userService.findOneByName(from.target);
+      const messages = await this.chatService.getAllMessageFromAuthorToTarget(author, target);
+      return messages;
+    }
+    catch(error) {
+      if (error instanceof UserNotFoundException)
+        throw new WsUserNotFoundException(from.target);
+      throw new WsInternalError();
+    }
   }
 }
