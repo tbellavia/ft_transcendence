@@ -1,20 +1,6 @@
 <script setup lang="ts">
-	const friends = ref(await getFriendsUsers());
-	
-	async function  getFriendsUsers() {
-		const { $apiFetch } = useNuxtApp();
-		return await $apiFetch("/users/lvirgini/friends") // TODO this User
-			.then( async (user) =>{
-				console.log('friends');
-				console.log(user);
-				return user;
-			})
-			.catch((error) => {
-				console.warn(error);
-				return null
-			});
-	}
-	</script>
+	const friends = ref(await getUserFriends("lvirgini")); // TODO change for this user
+</script>
 	
 	<template>
 	<div>

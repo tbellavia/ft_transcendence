@@ -1,14 +1,25 @@
-async function getUsers(username: string) {
-	const truc =  await useApiFetch(`/users/${username}`)
-	console.log(truc);
+
+export async function isBlocked(username: string, username2 : string) {
+	return useApiFetch(`/users/${username}/blocked/${username2}`)
 }
 
-async function getFriends(username: string) {
-	return useApiFetch(`/users/${username}/friends`)
+export async function  getUserFriends(username: string) {
+		return (username ? await useApi(`/users/${username}/friends`) : null);
 }
 
-async function isBlocked(username: string, username2 : string) {
-	return useApiFetch(`users/${username}/blocked/${username2}`)
+export async function  getAllUsers() {
+	return (await useApi(`/users`));
 }
 
+export async function  getUserInfos(username: string) {
+	return (username ? await useApi(`users/${username}`) : null);
+}
 
+// TODO dont work
+export async function  getUserStats(username: string) {
+	return (username ? await useApi(`/users/${username}/stats`) : null);
+}
+
+export async function  getUserAvatar(username: string) {
+	return (username ? await useApi(`/users/${username}/avatar`) : null);
+}

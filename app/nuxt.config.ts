@@ -16,6 +16,12 @@ export default defineNuxtConfig({
       port: 8000,
     },
   },
+  imports: {
+    dirs: [
+      // ... or scan all modules within given directory
+      'composables/**'
+    ]
+  },
   // Targeting an SPA application so no server-side rendering and static website
   ssr: false,
   target: 'static'
