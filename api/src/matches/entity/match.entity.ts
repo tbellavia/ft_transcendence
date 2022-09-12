@@ -25,11 +25,11 @@ export class MatchEntity extends BaseEntity {
     user_2: UserEntity;
 
     @Expose()
-    @Column({ nullable: true })
+    @Column({ nullable: true, default: 0})
     player_1_point: number;
 
     @Expose()
-    @Column({ nullable: true })
+    @Column({ nullable: true, default: 0 })
     player_2_point: number;
 
     @Expose()
