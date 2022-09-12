@@ -21,7 +21,11 @@
 async function disconnect() {
   const { $apiFetch } = useNuxtApp();
   await $apiFetch("/auth/disconnect")
-    .then(async () => await navigateTo("/"))
+    .then(async () => {
+      const { $eventBus } = useNuxtApp();
+      $eventBus.$emit('disconnect');
+      await navigateTo("/")
+    })
     .catch((error) => {
       console.warn(error);
       navigateTo("/");
