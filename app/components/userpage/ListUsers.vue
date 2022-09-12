@@ -1,5 +1,6 @@
 <script setup lang="ts">
-	const users = ref(await getAllUsers());
+	const userApi = await useUserApi();
+	const users = await userApi.getAllUsers();
 </script>
 	
 	<template>
