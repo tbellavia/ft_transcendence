@@ -54,6 +54,24 @@ export class UsersController {
         return this.usersService.addAvatar(username, file.buffer);
     }
 
+    @Post("/avatar/me")
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadAvatarById(
+        @Req() request: RequestWithUser,
+        @UploadedFile(
+            new ParseFilePipe({
+                validators: [
+                    new MaxFileSizeValidator({ maxSize: 90000 }),
+                    new FileTypeValidator({ fileType: /(jpeg|png)/gm })
+                ],
+            })
+        ) 
+        file: Express.Multer.File
+    ) 
+    {
+        return this.usersService.addAvatarById(request.user.user_id, file.buffer);
+    }
+
     @Get("/:username/avatar")
     async getAvatar(
         @Res({ passthrough: true }) response: Response,
