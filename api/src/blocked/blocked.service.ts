@@ -17,7 +17,7 @@ export class BlockedService {
 
     // TODO: Check if user already block the other user ?
     async create(username1: string, username2: string) {
-        const exists = this.exists(username1, username2);
+        const exists = await this.exists(username1, username2);
         if ( exists ) {
             return { msg: "User already blocked!" };
         }
