@@ -5,7 +5,10 @@ export async function useGetUser() {
 
   try {
     const { data: user } = await useAsyncData<User>('logged-user', () => {
-      return $apiFetch('/users/user/me');
+      return $apiFetch('/users/user/me')
+        .catch(error => {
+          return {};
+        })
     });
     return user;
   } catch(error) {
