@@ -12,7 +12,7 @@ let users = ref('friends');
 	<Suspense v-if="users === 'friends'">
 		<userpageListFriends />
 	</Suspense>
-	<Suspense v-else-if="users == 'all'">
+	<Suspense v-else-if="users === 'all'">
 		<userpageListUsers />
 	</Suspense>
 	<Suspense v-else>
