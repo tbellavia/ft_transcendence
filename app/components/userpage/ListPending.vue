@@ -1,6 +1,6 @@
 <script setup lang="ts">
-	const friends = ref(await getPendingFriends("lvirgini")); // TODO change for this user
-	let drawer = ref(null);
+	const userApi = await useUserApi();
+	const friends = await userApi.getPendingFriends();
 </script>
 	
 	<template>
