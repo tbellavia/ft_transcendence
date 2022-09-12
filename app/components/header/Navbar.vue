@@ -1,10 +1,8 @@
 <template>
   <nav class="navbar">
     <!-- TODO User name  -->
-    <div class="link">
-    <NuxtLink to="/homePage/profileParameters">PROFILE</NuxtLink>
-    <NuxtLink to="/homePage/friendsList">FRIENDS</NuxtLink>
-    <NuxtLink to="/homePage/matchHistory">MATCH HISTORY</NuxtLink>
+  <div class="link">
+    <NuxtLink v-for="link in links" :to="`/${user.username}/${link.link}`">{{ link.name }}</NuxtLink>
   </div>
 
     <div class="navbar-right">
@@ -15,7 +13,12 @@
 </template>
 
 <script setup lang="ts">
-
+  const links = ref([
+    {name: 'PROFILE', link: 'profileParameters'},
+    {name: 'FRIENDS', link: 'friendsList'},
+    {name: 'MATCH HISTORY', link: 'matchHistory'}
+  ]);
+  const user = await useGetUser();
 </script>
 
 <style scoped>
