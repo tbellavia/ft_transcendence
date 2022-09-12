@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationQueryDto } from 'src/common/dto/pagination.query-dto';
+import { UserNotFoundException } from 'src/users/exceptions/userNotFound.exception';
 import { selectUserOption } from 'src/users/options/user-select.option';
 import { FindManyOptions, Repository } from 'typeorm';
 import { UserEntity } from '../users/entities/user.entity';
@@ -28,7 +29,7 @@ export class BlockedService {
         const user2 = await this.userRepository.findOneBy({ username: username2 });
 
         if ( !user1 || !user2 ){
-            return { msg: "One or more user does not exist!" };
+            throw new UserNotFoundException(user1.user_id)
         }
         const blocked = BlockedEntity.create();
 
