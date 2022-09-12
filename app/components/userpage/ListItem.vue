@@ -10,9 +10,11 @@
 		<div class="OptionProfile">
 			<button v-if="pendingFriend" class="OptionsProfile_sub" @click="setAcceptFriends('lvirgini', user.username)"> accept friend </button>
 			<button v-else-if="!isFriend" class="OptionsProfile_sub" @click="setFriends('lvirgini', user.username)"> add friend </button>
-			<button class="OptionsProfile_sub">  message </button>
+			<button v-if=isFriend class="OptionsProfile_sub">  message </button>
 			<button class="OptionsProfile_sub">  suggest a match </button>
 			<button class="OptionsProfile_sub">  see Profile Page </button>
+			<button v-if=!isblocked class="OptionsProfile_sub">  block </button>
+			<button v-if=isblocked class="OptionsProfile_sub">  unblock </button>
 		</div> 
 	</div>
 </template>
@@ -30,9 +32,17 @@ const props = defineProps({
 		type: Boolean
 	}
 })
+let isblocked = ref(false);
 
 let user = ref( await getUserInfos(props.username));
 let stat = ref( await getUserStats(props.username));
 let avatar = ref( await getUserAvatar(props.username));
 
 </script>
+
+<style scoped>
+	button {
+		text-align: left;
+		padding-left: 15px;
+	}
+</style>

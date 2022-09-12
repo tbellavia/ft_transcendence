@@ -25,5 +25,5 @@ export async function  getUserAvatar(username: string) {
 }
 
 export async function getPendingFriends(username: string) {
-	return (username ? await useApi(`/users/${username}/friend?pending=true`) : null);
+	return (username ? await useApi(`/users/${username}/friends?pending=true`) : null);
 }
