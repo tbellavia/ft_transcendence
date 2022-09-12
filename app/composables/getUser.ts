@@ -23,3 +23,7 @@ export async function  getUserStats(username: string) {
 export async function  getUserAvatar(username: string) {
 	return (username ? await useApi(`/users/${username}/avatar`) : null);
 }
+
+export async function getPendingFriends(username: string) {
+	return (username ? await useApi(`/users/${username}/friend?pending=true`) : null);
+}

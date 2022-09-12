@@ -6,7 +6,7 @@
 	<div>
 		<div class="all" v-for="user in friends">
 			<Suspense>
-				<userpageListItem :username="user.username" :isFriend="true" />
+				<userpageListItem :username="user.username" :isFriend="true" :pendingFriend="false" />
 			</Suspense>
 		</div>
 	</div>

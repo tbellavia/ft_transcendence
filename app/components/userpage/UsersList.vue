@@ -1,18 +1,22 @@
 <script setup lang="ts">
-let friends = ref(true);
+let users = ref('friends');
 </script>
 
 <template>
 <div class="all">
 	<div class="friends-buttons">
-		<button @click="friends = true"> Friends </button>
-		<button @click="friends = false"> All Users </button>
+		<button @click="users = 'friends'"> Friends </button>
+		<button @click="users = 'all'"> All Users </button>
+		<button @click="users = 'pending'"> Pending </button>
 	</div>
-	<Suspense v-if="friends">
+	<Suspense v-if="users === 'friends'">
 		<userpageListFriends />
 	</Suspense>
-	<Suspense v-else>
+	<Suspense v-else-if="users == 'all'">
 		<userpageListUsers />
+	</Suspense>
+	<Suspense v-else>
+		<userpageListPending />
 	</Suspense>
 </div>
 </template>
