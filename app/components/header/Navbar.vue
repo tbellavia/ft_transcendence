@@ -2,7 +2,7 @@
   <nav class="navbar">
     <!-- TODO User name  -->
   <div class="link">
-    <NuxtLink v-for="link in links" :to="`/${user.username}/${link.link}`">{{ link.name }}</NuxtLink>
+    <NuxtLink v-for="link in links" :to="`/${username}/${link.link}`">{{ link.name }}</NuxtLink>
   </div>
 
     <div class="navbar-right">
@@ -19,6 +19,7 @@
     {name: 'MATCH HISTORY', link: 'matchHistory'}
   ]);
   const user = await useGetUser();
+  const username = user.value ? user.value.username : 'Default';
 </script>
 
 <style scoped>
