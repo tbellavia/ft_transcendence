@@ -1,7 +1,6 @@
 <template>
   <div class="chat-page">
-    <ChatDialog class="chat-box" target="bbellavi"/>
-    <ChatDialog class="chat-box" target="lperson-"/>
+    CHAT
   </div>
 </template>
 

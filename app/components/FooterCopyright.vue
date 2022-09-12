@@ -2,10 +2,10 @@
   <div class="copyrights">
     <div>
       > 42 Project Transcendence made by
-      <a href="https://github.com/Cardiox12">bbellavi</a>,
-      <a href="https://github.com/Lylian-Nail">lperson-</a>,
-      <a href="https://github.com/fullife32">eassouli</a>,
-      <a href="https://github.com/lvirgini">lvirgini</a>&nbsp;<span class="blink">&nbsp;</span>
+      <a target="_blank" href="https://github.com/Cardiox12" >bbellavi</a>,
+      <a target="_blank" href="https://github.com/Lylian-Nail">lperson-</a>,
+      <a target="_blank" href="https://github.com/fullife32">eassouli</a>,
+      <a target="_blank" href="https://github.com/lvirgini">lvirgini</a>&nbsp;<span class="blink">&nbsp;</span>
     </div>
   </div>
 </template>
