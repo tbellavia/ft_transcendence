@@ -20,7 +20,15 @@
 
 <script setup lang="ts">
 
-const layout = await useLayout();
+const { $eventBus } = useNuxtApp();
+
+let layout = ref('default');
+$eventBus.$on('connect', async () => {
+   layout.value = 'home'
+});
+$eventBus.$on('disconnect', async () => {
+   layout.value = 'default'
+});
 
 // async function changeLayout() {
 //   const { $apiFetch } = useNuxtApp();

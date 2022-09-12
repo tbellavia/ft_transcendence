@@ -26,11 +26,21 @@ async function redirectIfConnected(page: string, otherPage: string) {
 }
 
 onMounted(async () => {
-  await redirectIfConnected('/homePage', '/');
+  useRefreshUser();
+  const user = await useGetUser();
+  if (user.value?.username)
+    await redirectIfConnected('/' + user.value.username, '/');
 })
 
 const { $eventBus } = useNuxtApp();
-$eventBus.$on('connect', () => redirectIfConnected('/homePage', '/'));
+$eventBus.$on('connect', async () => {
+  for (let tries = 3; tries; tries--) {
+    useRefreshUser();
+    const user = await useGetUser();
+    if (user.value?.username)
+      await redirectIfConnected('/' + user.value.username, '/')
+  }
+});
 </script>
 
 <style>
