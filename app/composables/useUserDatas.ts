@@ -5,10 +5,9 @@ interface UserDatas {
   creation_data: Date;
 }
 
-export function useUserDatas() {
-  const user = useState('userDatas', async () => {
-    return await useApiFetch<UserDatas>('/users/user/me');
-  });
-  console.log(user.value);
-  return user;
+export async function useUserDatas() {
+  return await useState('userDatas', async () => {
+    const { data } = await useApiFetch<UserDatas>('/users/user/me');
+    return data;
+  }).value;
 }
