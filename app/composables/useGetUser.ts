@@ -12,7 +12,6 @@ export async function useGetUser() {
     });
     return user;
   } catch(error) {
-    console.warn(error);
     return undefined;
   }
 }
