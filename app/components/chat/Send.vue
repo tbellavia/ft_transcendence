@@ -38,8 +38,8 @@ function sendMessage() {
     },
     (username: string) => {
       emits('messageSend', {
-        message: message.value,
-        from: username
+        content: message.value,
+        author: username
       });
       message.value = '';
     });
