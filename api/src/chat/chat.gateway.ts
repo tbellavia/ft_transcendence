@@ -79,11 +79,13 @@ export class ChatGateway implements OnGatewayConnection {
     @ConnectedSocket() socket: Socket,
     @MessageBody() from: GetAllMessagesDTO
   ) {
-    const target = await this.socketService.getUserFromSocket(socket);
+    const author = await this.socketService.getUserFromSocket(socket);
     try {
-      const author = await this.userService.findOneByName(from.target);
-      const messages = await this.chatService.getAllMessageFromAuthorToTarget(author, target);
-      return messages;
+      const target = await this.userService.findOneByName(from.target);
+      console.log('From', author.username, 'To', target.username);
+      const messagesSent = await this.chatService.getAllMessageFromAuthorToTarget(author, target);
+      console.log('Messages: ', messagesSent);
+      return messagesSent;
     }
     catch(error) {
       if (error instanceof UserNotFoundException)
