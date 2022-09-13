@@ -65,6 +65,12 @@ export class UsersService {
     return user.avatar;
   }
 
+  async getAvatarByUserId(user_id: string) {
+    const user = await this.findOneById(user_id);
+
+    return user.avatar;
+  }
+
   /**
    * Update two factor secret shared by applications
    * @param two_factor_secret the new secret
