@@ -53,10 +53,10 @@ export class ChatGateway implements OnGatewayConnection {
     try {
       const target = await this.userService.findOneByName(message.target);
       //TODO: check if user's target blocked author (or when we fetch messages)
-      this.chatService.saveMessage({
+      await this.chatService.saveMessage({
         author,
         target,
-        content: message.message
+        content: message.message,
       });
     } catch (error) {
       if (error instanceof UserNotFoundException) {
@@ -82,10 +82,7 @@ export class ChatGateway implements OnGatewayConnection {
     const author = await this.socketService.getUserFromSocket(socket);
     try {
       const target = await this.userService.findOneByName(from.target);
-      console.log('From', author.username, 'To', target.username);
-      const messagesSent = await this.chatService.getAllMessageFromAuthorToTarget(author, target);
-      console.log('Messages: ', messagesSent);
-      return messagesSent;
+      return await this.chatService.getAllDirectMessages(author, target);
     }
     catch(error) {
       if (error instanceof UserNotFoundException)

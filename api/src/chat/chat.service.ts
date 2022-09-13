@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { AuthorizationError } from "passport-oauth2";
 import { UserEntity } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
 import { MessageEntity } from "./entities/message.entity";
@@ -16,16 +17,27 @@ export class ChatService {
     await this.messageRepository.save(newMessage);
   }
 
-  async getAllMessageFromAuthorToTarget(author: UserEntity, target: UserEntity) {
+  async getAllDirectMessages(user1: UserEntity, user2: UserEntity) {
     return await this.messageRepository.find({
-      where: {
+      where: [{
         author: {
-          username: author.username
+          username: user1.username
         },
         target: {
-          username: target.username
+          username: user2.username
         }
       },
-    });
+      {
+        author: {
+          username: user2.username
+        },
+        target: {
+          username: user1.username
+        }
+      }],
+      order: {
+        creation_date: "ASC"
+      }
+    })
   }
 }
