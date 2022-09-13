@@ -15,11 +15,11 @@
 	 }
 	
 	 .Profile:hover {
-		 border: solid;
-		 border-color: currentColor;
+		border: solid;
+		border-color: currentColor;
 		border-width: 1px;
 	
-		   background-color: var(--main-color-op-30);
+		background-color: var(--main-color-op-30);
 	  color: var(--main-color-light);
 	 }
 	
@@ -47,7 +47,14 @@
 		align-self: right;
 	}
 
-	.OptionProfile_sub {
+	.OptionsProfile_sub {
 		display: flex;
 		align-self: right;
+		text-align: left;
+	}
+
+	.OptionsProfile_sub > a {
+		display: block;
+		width: 100%;
+		text-decoration: none;
 	}
