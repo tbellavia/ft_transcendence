@@ -56,8 +56,9 @@ export class ChatGateway implements OnGatewayConnection {
     try {
       const target = await this.userService.findOneByName(message.target);
       //TODO: check if user's target blocked author (or when we fetch messages)
-      if (this.blockedService.exists(author.username, target.username))
+      if ((await this.blockedService.exists(author.username, target.username))) {
         throw new WsBlockedByUserException(author.username, target.username);
+      }
       await this.chatService.saveMessage({
         author,
         target,
