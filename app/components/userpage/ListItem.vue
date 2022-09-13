@@ -10,7 +10,9 @@
 		<div class="OptionProfile">
 			<button v-if="pendingFriend" class="OptionsProfile_sub" @click="setAcceptFriends('lvirgini', user.username)"> accept friend </button>
 			<button v-else-if="!isFriend" class="OptionsProfile_sub" @click="setFriends('lvirgini', user.username)"> add friend </button>
-			<button class="OptionsProfile_sub">  message </button>
+			<div class="OptionsProfile_sub">
+				<a href="#">message</a>
+			</div>
 			<button class="OptionsProfile_sub">  suggest a match </button>
 			<button class="OptionsProfile_sub">  see Profile Page </button>
 		</div> 
