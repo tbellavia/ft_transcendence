@@ -39,7 +39,9 @@ onMounted(() => {
   socket.value.emit(
     'get_all_messages', 
     {...props},
-    (response: ChatMessage[]) => messages.value.concat(response)
+    (response: ChatMessage[]) => {
+      messages.value = messages.value.concat(response)
+    }
   );
 })
 
