@@ -59,9 +59,10 @@ export class FriendsService {
             opts.take = getFriendsQueryDto.limit;
         if ( getFriendsQueryDto.skip )
             opts.skip = getFriendsQueryDto.skip;
-        if ( getFriendsQueryDto.pending ){
+        if ( getFriendsQueryDto.pending !== undefined ){
             whereOpts.pending = getFriendsQueryDto.pending;
         }
+        opts.where = whereOpts;
         return await this.friendRepository.find(opts);
     }
 
