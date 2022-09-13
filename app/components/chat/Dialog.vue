@@ -54,9 +54,17 @@ function messageSend(message: ChatMessage) {
 </script>
 
 <style scoped>
+  .dialog-box {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+  }
+
   ul {
-    width: 25vw;
-    height: 80vh;
+    flex-grow: 2;
+
     color: var(--main-color);
     border: solid var(--background-line-color);
     background-color: var(--main-color-darker);
