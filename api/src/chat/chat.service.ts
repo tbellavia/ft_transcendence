@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { AuthorizationError } from "passport-oauth2";
 import { UserEntity } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
 import { MessageEntity } from "./entities/message.entity";
@@ -9,7 +8,7 @@ import { MessageEntity } from "./entities/message.entity";
 export class ChatService {
   constructor(
     @InjectRepository(MessageEntity)
-    private messageRepository: Repository<MessageEntity>
+    private messageRepository: Repository<MessageEntity>,
   ) {}
 
   async saveMessage(message: MessageEntity) {

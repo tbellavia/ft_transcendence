@@ -9,6 +9,8 @@ import { GetAllMessagesDTO } from "./dto/getAllMessages.dto";
 import { SendMessageDTO } from "./dto/sendMessage.dto";
 import { WsInternalError } from "./exceptions/wsInternalError";
 import { WsUserNotFoundException } from "./exceptions/wsUserNotFound";
+import { BlockedService } from "src/blocked/blocked.service";
+import { WsBlockedByUserException } from "./exceptions/wsBlockedByUser.exception";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
@@ -28,7 +30,8 @@ export class ChatGateway implements OnGatewayConnection {
   constructor(
     private readonly socketService: SocketService,
     private readonly userService: UsersService,
-    private readonly chatService: ChatService
+    private readonly chatService: ChatService,
+    private blockedService: BlockedService
   ) {}
 
   //Be aware filters does not works on handleConnection !
@@ -53,6 +56,8 @@ export class ChatGateway implements OnGatewayConnection {
     try {
       const target = await this.userService.findOneByName(message.target);
       //TODO: check if user's target blocked author (or when we fetch messages)
+      if (this.blockedService.exists(author.username, target.username))
+        throw new WsBlockedByUserException(author.username, target.username);
       await this.chatService.saveMessage({
         author,
         target,
@@ -62,7 +67,7 @@ export class ChatGateway implements OnGatewayConnection {
       if (error instanceof UserNotFoundException) {
         throw new WsUserNotFoundException(message.target);
       }
-      throw new WsInternalError();
+      throw error;
     }
     
     this.server

@@ -9,6 +9,7 @@ import { Public } from '../common/decorators/public.decorator';
 @Module({
   imports: [TypeOrmModule.forFeature([BlockedEntity, UserEntity])],
   controllers: [BlockedController],
-  providers: [BlockedService]
+  providers: [BlockedService],
+  exports: [BlockedService]
 })
 export class BlockedModule { }
