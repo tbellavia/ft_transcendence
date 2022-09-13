@@ -11,7 +11,7 @@
 			<button v-if="pendingFriend" class="OptionsProfile_sub" @click="setAcceptFriends('lvirgini', user.username)"> accept friend </button>
 			<button v-else-if="!isFriend" class="OptionsProfile_sub" @click="setFriends('lvirgini', user.username)"> add friend </button>
 			<div class="OptionsProfile_sub">
-				<a href="#">message</a>
+				<a :href="messageLink">message</a>
 			</div>
 			<button class="OptionsProfile_sub">  suggest a match </button>
 			<button class="OptionsProfile_sub">  see Profile Page </button>
@@ -23,15 +23,15 @@
 
 const props = defineProps({
 	username: {
+		required: true,
 		type: String,
 	},
-	isFriend : {
-		type: Boolean,
-	},
-	pendingFriend: {
-		type: Boolean
-	}
+	isFriend: Boolean,
+	pendingFriend: Boolean
 })
+
+const authUsername = (await useGetUser()).value.username;
+const messageLink = `/${authUsername}/chat/${props.username}`;
 
 let user = ref( await getUserInfos(props.username));
 let stat = ref( await getUserStats(props.username));
