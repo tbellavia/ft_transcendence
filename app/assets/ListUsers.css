@@ -40,14 +40,14 @@
 		justify-content: center;
 	}
 	
-	.OptionProfile {
+	.OptionsProfile {
 		width: 20%;
 		display: flex;
 		flex-direction: column;
 		align-self: right;
 	}
 
-	.OptionProfile_sub {
+	.OptionsProfile_sub {
 		display: flex;
 		align-self: right;
 	}

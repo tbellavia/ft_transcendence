@@ -1,13 +1,14 @@
 <script setup lang="ts">
 	const userApi = await useUserApi();
-	const friends = await userApi.getPendingFriends();
+	const pendingFriends = await userApi.getPendingFriends();
+	console.log(pendingFriends);
 </script>
 	
 	<template>
 	<div>
-    <div class="all" v-for="user in friends">
+    <div class="all" v-for="user in pendingFriends">
 			<Suspense>
-				<userpageListItem :username="user.user_2.username" :isFriend="false" :pendingFriend="true" />
+				<userpageListItem v-if="user.user_2.pending" :username="user.user_2.username" :isFriend="false" :pendingFriend="true" />
 			</Suspense>
 		</div>
 	</div>

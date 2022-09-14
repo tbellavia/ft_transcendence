@@ -1,5 +1,4 @@
 <template>
-	<!-- TODO if username != this user -->
 	<div v-if="props.username" class=Profile > 
 		<div class="userDatas">
 			<!-- <div class="userImage"> <img src="data:avatar'.base64_encode($blob).'"/> </div> -->

@@ -15,11 +15,13 @@ class UserApi {
 
 	async getFriends() {
 		const { data: friendUsers } = await useApiFetch(`/users/${this.user}/friends`);
+		console.log("friends:", friendUsers);
 		return friendUsers;
 	}
 
 	async getPendingFriends() {
-		const { data: pendingFriends } = await useApiFetch(`/users/${this.user}?friends=true`);
+		const { data: pendingFriends } = await useApiFetch(`/users/${this.user}?pending=true`);
+		console.log(pendingFriends.value);
 		return pendingFriends;
 	}
 	
