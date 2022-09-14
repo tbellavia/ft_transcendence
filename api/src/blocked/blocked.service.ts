@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationQueryDto } from 'src/common/dto/pagination.query-dto';
+import { FriendsService } from 'src/friends/friends.service';
 import { selectUserOption } from 'src/users/options/user-select.option';
 import { UsersService } from 'src/users/users.service';
 import { FindManyOptions, Repository } from 'typeorm';
@@ -13,6 +14,7 @@ import { UserBlockHimselfException } from './exceptions/userBlockHimself.excepti
 export class BlockedService {
     constructor(
         private readonly userService: UsersService,
+        private friendsService: FriendsService,
         @InjectRepository(BlockedEntity)
         private blockedRepository: Repository<BlockedEntity>
     ) { }
@@ -34,6 +36,12 @@ export class BlockedService {
         blocked.user_1 = user1;
         blocked.user_2 = user2;
         await blocked.save();
+
+        // Delete friendship if existing and user blocked
+        const friendship = await this.friendsService.exists(username1, username2);
+        if (friendship)
+            this.friendsService.delete(username1, username2);
+
         return await this.findOne(username1, username2);
     }
 

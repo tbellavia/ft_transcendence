@@ -4,10 +4,10 @@ import { BlockedController } from './blocked.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BlockedEntity } from './entity/blocked.entity';
 import { FriendsModule } from 'src/friends/friends.module';
-import { UsersService } from 'src/users/users.service';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BlockedEntity]), FriendsModule, UsersService],
+  imports: [TypeOrmModule.forFeature([BlockedEntity]), FriendsModule, UsersModule],
   controllers: [BlockedController],
   providers: [BlockedService],
   exports: [BlockedService]
