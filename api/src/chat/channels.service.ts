@@ -20,15 +20,16 @@ export class ChannelsService {
     try {
       const newChannel = this.channelRepository.create({
         creator,
-        name,
-        users: [creator]
+        name
       })
       await this.channelRepository.save(newChannel);
-      return newChannel;
+      return await this.getChannel(name);
     }
     catch (error) {
+      console.log(error);
       if (error?.code == PostgresErrorCode.UniqueViolation)
         throw new WsException(`channel ${name} already exists`);
+      throw error;
     }
   }
 

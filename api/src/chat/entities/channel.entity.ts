@@ -19,12 +19,12 @@ export class ChannelEntity {
   })
   creator: UserEntity;
 
-  @ManyToMany(() => UserEntity, moderators => moderators.channels_moderated, {
-    eager: true
+  @ManyToMany(() => UserEntity, moderator => moderator.channels_moderated, {
+    eager: true,
   })
   moderators: UserEntity[]
 
-  @ManyToOne(() => UserEntity, users => users.channels_joined, {
+  @ManyToOne(() => UserEntity, user => user.channels_joined, {
     eager: true
   })
   users: UserEntity[];

@@ -72,12 +72,14 @@ export class ChatGateway implements OnGatewayConnection {
   @SubscribeMessage('create_channel')
   async createChannel(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() channel_name: string
+    @MessageBody() channelName: string
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
 
-    const channel = await this.channelService.createChannel(author, channel_name);
-    socket.join(channel.name);
+    console.log(`Try to create: ${channelName}`);
+    const channel = await this.channelService.createChannel(author, channelName);
+    console.log(channel);
+    // socket.join(channel.name);
     return channel;
   }
 

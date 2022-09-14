@@ -6,7 +6,6 @@ import { MatchEntity } from "src/matches/entity/match.entity";
 import { Expose } from "class-transformer";
 import { MessageEntity } from "src/chat/entities/message.entity";
 import { ChannelEntity } from "src/chat/entities/channel.entity";
-import { channel } from "diagnostics_channel";
 
 @Entity("users")
 export class UserEntity extends BaseEntity {
@@ -75,12 +74,12 @@ export class UserEntity extends BaseEntity {
     messages_target: MessageEntity[];
 
     // Channels created, joined, moderated
-    @OneToMany(() => ChannelEntity, (channel) => channel.creator, { cascade: true })
+    @OneToMany(() => ChannelEntity, channel => channel.creator, { cascade: true })
     channels_created: ChannelEntity[];
 
     @ManyToMany(() => ChannelEntity, channel => channel.moderators)
     channels_moderated: ChannelEntity[];
 
-    @ManyToMany(() => ChannelEntity, channels_joined => channels_joined.users)
+    @ManyToMany(() => ChannelEntity, channel_joined => channel_joined.users)
     channels_joined: ChannelEntity[];
 }
