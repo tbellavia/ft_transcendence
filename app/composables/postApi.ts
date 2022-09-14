@@ -1,6 +1,6 @@
 import apiFetch from "~~/plugins/apiFetch";
 
-export async function postApi(URLendpoint: string, data: any) {
+export async function postApi(URLendpoint: string, data?: any) {
 	const { $apiFetch } = useNuxtApp();
 
 	await $apiFetch(URLendpoint, {

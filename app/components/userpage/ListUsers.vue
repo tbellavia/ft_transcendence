@@ -6,8 +6,12 @@
 	<template>
 	<div>
 		<div class="all" v-for="user in users">
-			<Suspense>
-				<userpageListItem :username="user.username" :isFriend="false" />
+			<Suspense  v-if="userApi.user !== user.username">
+				<userpageListItem 
+				:currentUser="userApi.user"				
+				:username="user.username"
+				:isFriend="false"
+				:pendingFriend="false" />
 			</Suspense>
 		</div>
 	</div>
