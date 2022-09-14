@@ -46,6 +46,14 @@ export class UsersService {
     return user;
   }
 
+  async addAvatarById(user_id: string, avatar: Buffer) {
+    const user = await this.findOneById(user_id);
+
+    user.avatar = avatar;
+    await user.save();
+    return user;
+  }
+
   /**
    * Return the avatar byte buffer
    * @param username username of user
@@ -53,6 +61,12 @@ export class UsersService {
    */
   async getAvatar(username: string) {
     const user = await this.findOneByName(username);
+
+    return user.avatar;
+  }
+
+  async getAvatarByUserId(user_id: string) {
+    const user = await this.findOneById(user_id);
 
     return user.avatar;
   }
