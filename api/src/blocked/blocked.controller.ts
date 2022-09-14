@@ -1,35 +1,37 @@
-import { Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Query, Req } from '@nestjs/common';
+import { RequestWithUser } from 'src/auth/interfaces/requestWithUser.interface';
 import { PaginationQueryDto } from '../common/dto/pagination.query-dto';
 import { BlockedService } from './blocked.service';
 
-@Controller('users')
+// This block interfaces routes works only for auth user
+@Controller('/users/blocked/me')
 export class BlockedController {
   constructor(private readonly blockedService: BlockedService) {}
 
-  @Post(":username1/blocked/:username2")
+  @Post(':target')
   async create(
-    @Param("username1") username1: string,
-    @Param("username2") username2: string
+    @Req() request: RequestWithUser,
+    @Param('target') username2: string
   )
   {
-    return this.blockedService.create(username1, username2);
+    return this.blockedService.create(request.user.username, username2);
   }
 
-  @Get(":username/blocked")
+  @Get()
   async findAll(
-    @Param("username") username: string,
+    @Req() request: RequestWithUser,
     @Query() paginationQueryDto: PaginationQueryDto
   ) 
   {
-    return this.blockedService.findAll(username, paginationQueryDto);
+    return this.blockedService.findAll(request.user.username, paginationQueryDto);
   }
 
-  @Delete(":username1/blocked/:username2")
+  @Delete(':target')
   async delete(
-    @Param("username1") username1: string,
-    @Param("username2") username2: string
+    @Req() request: RequestWithUser,
+    @Param('target') target: string
   )
   {
-    return this.blockedService.delete(username1, username2);
+    return this.blockedService.delete(request.user.username, target);
   }
 }
