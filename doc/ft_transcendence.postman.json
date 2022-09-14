@@ -1,10 +1,77 @@
 {
 	"info": {
-		"_postman_id": "0f492b32-100b-445a-9aa4-8086d6e5afce",
+		"_postman_id": "19b9d521-b6cf-4df2-ad57-3bfda50fab34",
 		"name": "ft_transcendence",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User with password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"bbellavi\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Connect User with password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"bbellavi\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/auth/connect",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"connect"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "Users",
 			"item": [
@@ -206,7 +273,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/stats",
+							"raw": "http://localhost:3000/api/v1/users/stats/me",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -216,20 +283,20 @@
 								"api",
 								"v1",
 								"users",
-								"bbellavi",
-								"stats"
+								"stats",
+								"me"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get stat by user",
+					"name": "Get stat of user",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/stats",
+							"raw": "http://localhost:3000/api/v1/users/stats/me",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -239,20 +306,20 @@
 								"api",
 								"v1",
 								"users",
-								"bbellavi",
-								"stats"
+								"stats",
+								"me"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete stat of a user",
+					"name": "Get stat of other user",
 					"request": {
-						"method": "DELETE",
+						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/stats",
+							"raw": "http://localhost:3000/api/v1/users/:target/stats",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -262,8 +329,37 @@
 								"api",
 								"v1",
 								"users",
-								"bbellavi",
+								":target",
 								"stats"
+							],
+							"variable": [
+								{
+									"key": "target",
+									"value": "lperson-"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete stat of user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/stats/me ",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"stats",
+								"me "
 							]
 						}
 					},
@@ -284,7 +380,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/stats",
+							"raw": "http://localhost:3000/api/v1/users/stats/me",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -294,8 +390,8 @@
 								"api",
 								"v1",
 								"users",
-								"bbellavi",
-								"stats"
+								"stats",
+								"me"
 							]
 						}
 					},
@@ -312,7 +408,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/friends/lperson-",
+							"raw": "http://localhost:3000/api/v1/users/friends/me/:target",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -322,9 +418,15 @@
 								"api",
 								"v1",
 								"users",
-								"bbellavi",
 								"friends",
-								"lperson-"
+								"me",
+								":target"
+							],
+							"variable": [
+								{
+									"key": "target",
+									"value": "lperson-"
+								}
 							]
 						}
 					},
@@ -336,7 +438,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/friends",
+							"raw": "http://localhost:3000/api/v1/users/friends/me",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -346,8 +448,25 @@
 								"api",
 								"v1",
 								"users",
-								"bbellavi",
-								"friends"
+								"friends",
+								"me"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "pending",
+									"value": null,
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -360,7 +479,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"pending\": false\n}",
+							"raw": "{\n    \"pending\": true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -368,7 +487,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/friends/mvo-van-",
+							"raw": "http://localhost:3000/api/v1/users/friends/me/:target",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -378,57 +497,46 @@
 								"api",
 								"v1",
 								"users",
-								"bbellavi",
 								"friends",
-								"mvo-van-"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get a friendship",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/friends/mvo-van-",
-							"protocol": "http",
-							"host": [
-								"localhost"
+								"me",
+								":target"
 							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"users",
-								"bbellavi",
-								"friends",
-								"mvo-van-"
+							"variable": [
+								{
+									"key": "target",
+									"value": "bbellavi"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete a friendsip between two user",
+					"name": "Delete a friendsip",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/friends/lperson-",
+							"raw": "http://localhost:3000//api/v1/users/friends/me/:target",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
+								"",
 								"api",
 								"v1",
 								"users",
-								"bbellavi",
 								"friends",
-								"lperson-"
+								"me",
+								":target"
+							],
+							"variable": [
+								{
+									"key": "target",
+									"value": "lperson-"
+								}
 							]
 						}
 					},
@@ -445,7 +553,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/blocked/lperson-",
+							"raw": "http://localhost:3000/api/v1/users/blocked/me/:target",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -455,9 +563,15 @@
 								"api",
 								"v1",
 								"users",
-								"bbellavi",
 								"blocked",
-								"lperson-"
+								"me",
+								":target"
+							],
+							"variable": [
+								{
+									"key": "target",
+									"value": "lperson-"
+								}
 							]
 						}
 					},
@@ -469,7 +583,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/blocked/lperson-",
+							"raw": "http://localhost:3000/api/v1/users/blocked/me/:target",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -479,9 +593,15 @@
 								"api",
 								"v1",
 								"users",
-								"bbellavi",
 								"blocked",
-								"lperson-"
+								"me",
+								":target"
+							],
+							"variable": [
+								{
+									"key": "target",
+									"value": "lperson-"
+								}
 							]
 						}
 					},
@@ -493,7 +613,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/blocked",
+							"raw": "http://localhost:3000/api/v1/users/blocked/me/",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -503,8 +623,26 @@
 								"api",
 								"v1",
 								"users",
-								"bbellavi",
-								"blocked"
+								"blocked",
+								"me",
+								""
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "<int>",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "<int>",
+									"disabled": true
+								},
+								{
+									"key": "pending",
+									"value": "<bool>",
+									"disabled": true
+								}
 							]
 						}
 					},
