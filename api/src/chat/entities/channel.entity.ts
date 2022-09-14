@@ -27,11 +27,11 @@ export class ChannelEntity {
   @ManyToOne(() => UserEntity, users => users.channels_joined, {
     eager: true
   })
-  users: UserEntity;
+  users: UserEntity[];
 
   // Messages relations
   @OneToMany(() => MessageEntity, message => message.channel_target, {
     eager: true,
   })
-  messages: MessageEntity;
+  messages: MessageEntity[];
 }

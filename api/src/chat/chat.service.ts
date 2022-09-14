@@ -4,6 +4,7 @@ import { BlockedService } from "src/blocked/blocked.service";
 import { SocketService } from "src/socket/socket.service";
 import { UserEntity } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
+import { ChannelsService } from "./channels.service";
 import { ReceiveMessage } from "./classes/receiveMessage.class";
 import { GetAllMessagesDTO } from "./dto/getAllMessages.dto";
 import { SendMessageDTO } from "./dto/sendMessage.dto";
@@ -17,9 +18,10 @@ export class ChatService {
     @InjectRepository(MessageEntity)
     private messageRepository: Repository<MessageEntity>,
     private readonly socketService: SocketService,
-    private readonly blockedService: BlockedService
+    private readonly blockedService: BlockedService,
   ) {}
 
+  // Send Messages
   async sendMessage(author: UserEntity, message: SendMessageDTO) {
     if (!message.isChannel)
       return await this.sendPrivateMessage(author, message);
@@ -50,6 +52,7 @@ export class ChatService {
     await this.messageRepository.save(newMessage);
   }
 
+  // Get Messages
   async getAllMessages(author: UserEntity, targets: GetAllMessagesDTO) {
     if (!targets.isChannel) {
       const targetedUser = await this.socketService.getUserByName(targets.target);

@@ -2,15 +2,12 @@ import { ClassSerializerInterceptor, SerializeOptions, UseInterceptors } from "@
 import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from 'socket.io';
 import { SocketService } from "src/socket/socket.service";
-import { UserNotFoundException } from "src/users/exceptions/userNotFound.exception";
-import { UsersService } from "src/users/users.service";
 import { ChatService } from "./chat.service";
 import { GetAllMessagesDTO } from "./dto/getAllMessages.dto";
 import { SendMessageDTO } from "./dto/sendMessage.dto";
-import { WsInternalError } from "./exceptions/wsInternalError";
-import { WsUserNotFoundException } from "./exceptions/wsUserNotFound";
-import { BlockedService } from "src/blocked/blocked.service";
-import { WsBlockedByUserException } from "./exceptions/wsBlockedByUser.exception";
+import { JoinChannelDTO } from "./dto/joinChannel.dto";
+import { ChannelsService } from "./channels.service";
+import { channel } from "diagnostics_channel";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
@@ -29,9 +26,8 @@ export class ChatGateway implements OnGatewayConnection {
 
   constructor(
     private readonly socketService: SocketService,
-    private readonly userService: UsersService,
     private readonly chatService: ChatService,
-    private blockedService: BlockedService
+    private readonly channelService: ChannelsService
   ) {}
 
   //Be aware filters does not works on handleConnection !
@@ -47,6 +43,7 @@ export class ChatGateway implements OnGatewayConnection {
     }
   }
 
+  // Message handling
   @SubscribeMessage('send_message')
   async handleMessage(
     @ConnectedSocket() socket: Socket,
@@ -68,5 +65,31 @@ export class ChatGateway implements OnGatewayConnection {
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
     return this.chatService.getAllMessages(author, getAllMessages);
+  }
+
+  // Channel handling
+
+  @SubscribeMessage('create_channel')
+  async createChannel(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() channel_name: string
+  ) {
+    const author = await this.socketService.getUserFromSocket(socket);
+
+    const channel = await this.channelService.createChannel(author, channel_name);
+    socket.join(channel.name);
+    return channel;
+  }
+
+  @SubscribeMessage('join_channel')
+  async joinChannel(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() joinChannelDto: JoinChannelDTO
+  ) {
+    const author = await this.socketService.getUserFromSocket(socket);
+
+    const channel = await this.channelService.joinChannel(author, joinChannelDto);
+    socket.join(channel.name);
+    return channel;
   }
 }
