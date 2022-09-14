@@ -21,6 +21,12 @@ export class ChatService {
   ) {}
 
   async sendMessage(author: UserEntity, message: SendMessageDTO) {
+    if (!message.isChannel)
+      return await this.sendPrivateMessage(author, message);
+    return new ReceiveMessage('', '');
+  }
+
+  private async sendPrivateMessage(author: UserEntity, message: SendMessageDTO) {
     const target = await this.socketService.getUserByName(message.target);
     // Check if target doesn't blocked user
     if (await this.blockedService.exists(target.username, author.username))
@@ -29,7 +35,7 @@ export class ChatService {
     try {
       await this.saveMessage({
         author,
-        target,
+        user_target: target,
         content: message.message
       });
     } catch (error) {
@@ -62,7 +68,7 @@ export class ChatService {
         author: {
           username: user1.username
         },
-        target: {
+        user_target: {
           username: user2.username
         }
       },
@@ -70,7 +76,7 @@ export class ChatService {
         author: {
           username: user2.username
         },
-        target: {
+        user_target: {
           username: user1.username
         }
       }],

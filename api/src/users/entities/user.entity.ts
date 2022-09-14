@@ -1,10 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, JoinColumn, BaseEntity, OneToMany, ManyToOne } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, OneToOne, JoinColumn, BaseEntity, OneToMany, ManyToOne, ManyToMany } from "typeorm";
 import { StatEntity } from "../../stats/entities/stat.entity";
 import { BlockedEntity } from "../../blocked/entity/blocked.entity";
 import { FriendEntity } from "../../friends/entity/friend.entity";
 import { MatchEntity } from "src/matches/entity/match.entity";
 import { Expose } from "class-transformer";
 import { MessageEntity } from "src/chat/entities/message.entity";
+import { ChannelEntity } from "src/chat/entities/channel.entity";
+import { channel } from "diagnostics_channel";
 
 @Entity("users")
 export class UserEntity extends BaseEntity {
@@ -69,6 +71,16 @@ export class UserEntity extends BaseEntity {
     @OneToMany(() => MessageEntity, (message) => message.author, { cascade: true })
     messages_author: MessageEntity[];
 
-    @OneToMany(() => MessageEntity, (message) => message.target, { cascade: true })
+    @OneToMany(() => MessageEntity, (message) => message.user_target, { cascade: true })
     messages_target: MessageEntity[];
+
+    // Channels created, joined, moderated
+    @OneToMany(() => ChannelEntity, (channel) => channel.creator, { cascade: true })
+    channels_created: ChannelEntity[];
+
+    @ManyToMany(() => ChannelEntity, channel => channel.moderators)
+    channels_moderated: ChannelEntity[];
+
+    @ManyToMany(() => ChannelEntity, channels_joined => channels_joined.users)
+    channels_joined: ChannelEntity[];
 }
