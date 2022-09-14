@@ -53,47 +53,20 @@ export class ChatGateway implements OnGatewayConnection {
     @MessageBody() message: SendMessageDTO
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
-    try {
-      const target = await this.userService.findOneByName(message.target);
-      //TODO: check if user's target blocked author (or when we fetch messages)
-      if ((await this.blockedService.exists(author.username, target.username))) {
-        throw new WsBlockedByUserException(author.username, target.username);
-      }
-      await this.chatService.saveMessage({
-        author,
-        target,
-        content: message.message,
-      });
-    } catch (error) {
-      if (error instanceof UserNotFoundException) {
-        throw new WsUserNotFoundException(message.target);
-      }
-      throw error;
-    }
+    const receiveMessage = await this.chatService.sendMessage(author, message);
     
     this.server
       .to(message.target)
-      .emit('receive_message', {
-        content: message.message,
-        author: author.username
-      });
+      .emit('receive_message', receiveMessage);
     return author.username;
   }
 
   @SubscribeMessage('get_all_messages')
   async getAllMessagesOfAuthor(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() from: GetAllMessagesDTO
+    @MessageBody() getAllMessages: GetAllMessagesDTO
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
-    try {
-      const target = await this.userService.findOneByName(from.target);
-      return await this.chatService.getAllDirectMessages(author, target);
-    }
-    catch(error) {
-      if (error instanceof UserNotFoundException)
-        throw new WsUserNotFoundException(from.target);
-      throw new WsInternalError();
-    }
+    return this.chatService.getAllMessages(author, getAllMessages);
   }
 }
