@@ -273,7 +273,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/stats",
+							"raw": "http://localhost:3000/api/v1/users/stats/me",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -283,20 +283,20 @@
 								"api",
 								"v1",
 								"users",
-								"bbellavi",
-								"stats"
+								"stats",
+								"me"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get stat by user",
+					"name": "Get stat of user",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/stats",
+							"raw": "http://localhost:3000/api/v1/users/stats/me",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -306,20 +306,20 @@
 								"api",
 								"v1",
 								"users",
-								"bbellavi",
-								"stats"
+								"stats",
+								"me"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete stat of a user",
+					"name": "Get stat of other user",
 					"request": {
-						"method": "DELETE",
+						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/stats",
+							"raw": "http://localhost:3000/api/v1/users/:target/stats",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -329,8 +329,37 @@
 								"api",
 								"v1",
 								"users",
-								"bbellavi",
+								":target",
 								"stats"
+							],
+							"variable": [
+								{
+									"key": "target",
+									"value": "lperson-"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete stat of user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/users/stats/me ",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"stats",
+								"me "
 							]
 						}
 					},
@@ -351,7 +380,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/api/v1/users/bbellavi/stats",
+							"raw": "http://localhost:3000/api/v1/users/stats/me",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -361,8 +390,8 @@
 								"api",
 								"v1",
 								"users",
-								"bbellavi",
-								"stats"
+								"stats",
+								"me"
 							]
 						}
 					},
