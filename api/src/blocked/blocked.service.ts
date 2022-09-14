@@ -1,41 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationQueryDto } from 'src/common/dto/pagination.query-dto';
-import { UserNotFoundException } from 'src/users/exceptions/userNotFound.exception';
+import { FriendsService } from 'src/friends/friends.service';
 import { selectUserOption } from 'src/users/options/user-select.option';
+import { UsersService } from 'src/users/users.service';
 import { FindManyOptions, Repository } from 'typeorm';
-import { UserEntity } from '../users/entities/user.entity';
 import { BlockedEntity } from './entity/blocked.entity';
+import { BlockRelationNotFoundException } from './exceptions/blockRelationNotFound.exception';
+import { UserAlreadyBlockedException } from './exceptions/userAlreadyBlocked.exception';
+import { UserBlockHimselfException } from './exceptions/userBlockHimself.exception';
 
 @Injectable()
 export class BlockedService {
     constructor(
-        @InjectRepository(UserEntity)
-        private userRepository: Repository<UserEntity>,
+        private readonly userService: UsersService,
+        private friendsService: FriendsService,
         @InjectRepository(BlockedEntity)
         private blockedRepository: Repository<BlockedEntity>
     ) { }
 
-    // TODO: Check if user already block the other user ?
     async create(username1: string, username2: string) {
         const exists = await this.exists(username1, username2);
         if ( exists ) {
-            return { msg: "User already blocked!" };
+            throw new UserAlreadyBlockedException(username2);
         }
         if ( username1 === username2 ){
-            return { msg: "User cannot block himself" };
+            throw new UserBlockHimselfException();
         }
-        const user1 = await this.userRepository.findOneBy({ username: username1 });
-        const user2 = await this.userRepository.findOneBy({ username: username2 });
+        
+        const user1 = await this.userService.findOneByName(username1);
+        const user2 = await this.userService.findOneByName(username2);
 
-        if ( !user1 || !user2 ){
-            throw new UserNotFoundException(user1.user_id)
-        }
         const blocked = BlockedEntity.create();
 
         blocked.user_1 = user1;
         blocked.user_2 = user2;
         await blocked.save();
+
+        // Delete friendship if existing and user blocked
+        const friendship = await this.friendsService.exists(username1, username2);
+        if (friendship)
+            this.friendsService.delete(username1, username2);
+
         return await this.findOne(username1, username2);
     }
 
@@ -62,11 +68,8 @@ export class BlockedService {
     }
 
     async findAll(username: string, paginationQueryDto: PaginationQueryDto){
-        const user = await this.userRepository.findOneBy({ username });
+        await this.userService.findOneByName(username);
 
-        if ( !user ){
-            return { msg: "User not found!" };
-        }
         const opts: FindManyOptions<BlockedEntity> = paginationQueryDto.getConfig<BlockedEntity>(
             { user_1: { username } },
             { user_2: true },
@@ -79,7 +82,7 @@ export class BlockedService {
         const blocked = await this.findOne(username1, username2);
 
         if ( blocked == null ){
-            return { msg: `Blocked relationship does not exist between user id ${username1} and ${username2}` };
+            throw new BlockRelationNotFoundException();
         }
         await blocked.remove();
         return { msg: "Delete block relationship successful" };
