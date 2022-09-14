@@ -1,6 +1,5 @@
 import { Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { PaginationQueryDto } from '../common/dto/pagination.query-dto';
-import { Public } from '../common/decorators/public.decorator';
 import { BlockedService } from './blocked.service';
 
 @Controller('users')

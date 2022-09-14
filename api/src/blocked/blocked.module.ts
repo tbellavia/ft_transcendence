@@ -1,13 +1,13 @@
-import { Module, Param, Post } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { BlockedService } from './blocked.service';
 import { BlockedController } from './blocked.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from '../users/entities/user.entity';
 import { BlockedEntity } from './entity/blocked.entity';
-import { Public } from '../common/decorators/public.decorator';
+import { FriendsModule } from 'src/friends/friends.module';
+import { UsersService } from 'src/users/users.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BlockedEntity, UserEntity])],
+  imports: [TypeOrmModule.forFeature([BlockedEntity]), FriendsModule, UsersService],
   controllers: [BlockedController],
   providers: [BlockedService],
   exports: [BlockedService]
