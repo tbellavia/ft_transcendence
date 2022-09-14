@@ -8,19 +8,36 @@ class UserApi {
 		this.user = user;
 	}
 
-	async isBlocked(target: string) {
-		const { data: blockedUsers } = await useApiFetch(`/users/${this.user}/blocked/${target}`);
-		return blockedUsers;
+	async isBlocked(target: string) { // TODO
+		// const { data: blockedUsers } = await useApiFetch(`/users/blocked/me`);
+		// console.log("BLOCKED", blockedUsers)
+		return false;
+	}
+
+	async addFriend(username: string) {
+		return await postApi(`/users/friends/me/${username}`)
+	}
+
+	async acceptFriend(username: string) {
+		return await putApi(`/users/friends/me/${username}`,  { "pending": false })
+	}
+
+	async block(username: string) {
+		return await postApi(`users/blocked/me/${username}`);
+	}
+
+	async unblock(username: string) {
+		return await deleteApi(`users/blocked/me/${username}`);
 	}
 
 	async getFriends() {
-		const { data: friendUsers } = await useApiFetch(`/users/${this.user}/friends`);
+		const { data: friendUsers } = await useApiFetch(`/users/friends/me`);
 		console.log("friends:", friendUsers);
 		return friendUsers;
 	}
 
 	async getPendingFriends() {
-		const { data: pendingFriends } = await useApiFetch(`/users/${this.user}?pending=true`);
+		const { data: pendingFriends } = await useApiFetch(`/users/friends/me?pending=true`);
 		console.log(pendingFriends.value);
 		return pendingFriends;
 	}
@@ -32,7 +49,7 @@ class UserApi {
 	}
 
 	async getStat() {
-		const { data: userStats } = await useApiFetch(`/users/${this.user}/stats`);
+		const { data: userStats } = await useApiFetch(`/users/stats/me`);
 		return userStats;
 	}
 	
