@@ -4,12 +4,12 @@
 		<div class="userDatas">
 			<!-- <div class="userImage"> <img src="data:avatar'.base64_encode($blob).'"/> </div> -->
 			<!-- <div class="userImage"> <img :src="avatar"/> </div> -->
-			<div class="userName"> {{ user.username }}</div>
+			<div class="userName"> {{ props.username }}</div>
 		</div> 
 		<div class="rank"> rank </div>
 		<div class="OptionProfile">
-			<button v-if="pendingFriend" class="OptionsProfile_sub" @click="setAcceptFriends('lvirgini', user.username)"> accept friend </button>
-			<button v-else-if="!isFriend" class="OptionsProfile_sub" @click="setFriends('lvirgini', user.username)"> add friend </button>
+			<button v-if="pendingFriend" class="OptionsProfile_sub" @click=""> accept friend </button>
+			<button v-else-if="!isFriend" class="OptionsProfile_sub" @click=""> add friend </button>
 			<div class="OptionsProfile_sub">
 				<a :href="messageLink">message</a>
 			</div>
@@ -33,8 +33,8 @@ const props = defineProps({
 const authUsername = (await useGetUser()).value.username;
 const messageLink = `/${authUsername}/chat/${props.username}`;
 
-let user = ref( await getUserInfos(props.username));
-let stat = ref( await getUserStats(props.username));
-let avatar = ref( await getUserAvatar(props.username));
+const userApi = await useUserApi(props.username);
+
+let avatar = await userApi.getAvatar();
 
 </script>

@@ -1,5 +1,7 @@
 <script setup lang="ts">
-	const friends = ref(await getUserFriends("lvirgini")); // TODO change for this user
+	const userApi = await useUserApi();
+
+	const friends = await userApi.getFriends(); // TODO change for this user
 </script>
 	
 	<template>

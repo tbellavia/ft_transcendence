@@ -5,10 +5,9 @@ import { FindManyOptions, Repository } from "typeorm";
 import { CreateUserDTO } from "./dto/create-user.dto";
 import { UpdateUserDTO } from "./dto/update-user.dto";
 import { UserEntity } from "./entities/user.entity";
-import { selectUserOption } from "./options/user-select.option";
 import { UserNotFoundException } from "./exceptions/userNotFound.exception";
+import { readFileSync } from "fs";
 import * as path from "path";
-import { readFile, readFileSync } from "fs";
 
 const STATIC_DIR = path.join(path.resolve(__dirname, ".."), "static"); 
 
