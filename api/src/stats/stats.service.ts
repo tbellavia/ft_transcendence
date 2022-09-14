@@ -1,25 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { UpdateStatDto } from './dto/stats.dto';
 import { StatEntity } from './entities/stat.entity';
+import { StatsNotFoundException } from './exceptions/statsNotFound.exception';
 
 @Injectable()
 export class StatsService {
     constructor(
-        @InjectRepository(UserEntity)
-        private userRepository: Repository<UserEntity>,
         @InjectRepository(StatEntity)
-        private statRepository: Repository<StatEntity>
+        private statRepository: Repository<StatEntity>,
+        private readonly userService: UsersService
     ) { }
 
     async create(username: string) {
-        const user = await this.userRepository.findOne({ where: { username } });
-
-        if ( user == null ){
-            return { msg: "User not found!" };
-        }
+        const user = await this.userService.findOneByName(username);
+        //TODO: send an error when StatEntity already exists for user ?
         const stat = StatEntity.create();
         
         stat.user = user;
@@ -30,9 +28,6 @@ export class StatsService {
     async update(username: string, updateStatDto: UpdateStatDto) {
         const stat = await this.findOne(username);
 
-        if ( !stat ){
-            return { msg: "Not found!" };
-        }
         const { game_total, game_won, game_abandonned, rank } = updateStatDto;
 
         if ( game_total !== undefined )
@@ -48,23 +43,22 @@ export class StatsService {
     }
 
     async findOne(username: string) {
-        const user = await this.userRepository.findOne({ where: { username } });
+        const user = await this.userService.findOneByName(username);
 
-        if ( user == null ){
-            return null;
-        }
-        return await this.statRepository.findOne({ 
+        const stat = await this.statRepository.findOne({ 
             where: {
                 user: { username }
             }
         });
+        if (!stat) {
+            throw new StatsNotFoundException(username);
+        }
+        return stat;
     }
 
     async remove(username: string) {
         const stat = await this.findOne(username);
 
-        if ( stat == null )
-            return { msg: "Stat not found!" };
         await stat.remove();
         return { msg: "Stat successfuly removed!" };
     }

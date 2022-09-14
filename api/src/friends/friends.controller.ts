@@ -1,56 +1,50 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
+import { Req, Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
+import { RequestWithUser } from "src/auth/interfaces/requestWithUser.interface";
 import { GetFriendsQueryDTO } from "./dto/get-friends.query.dto";
 import { UpdatePendingDto } from "./dto/update-pending.dto";
 import { FriendsService } from "./friends.service";
 
-@Controller("users")
+// This controller routes works only for authentified user
+@Controller('/users/friends/me')
 export class FriendsController {
     constructor(
         private friendsService: FriendsService
     ) {}
 
-    @Post(":username1/friends/:username2")
+    @Post(':target')
     async create(
-        @Param("username1") username1: string,
-        @Param("username2") username2: string
+        @Req() request: RequestWithUser,
+        @Param("username2") target: string
     ) 
     {
-        return this.friendsService.create(username1, username2);
+        return this.friendsService.create(request.user.username, target);
     }
 
-    @Get(":username/friends")
+    @Get()
     async findAll(
-        @Param("username") username: string,
-        @Query() getFriendsQueryDto: GetFriendsQueryDTO) 
+        @Req() request: RequestWithUser,
+        @Query() getFriendsQueryDto: GetFriendsQueryDTO
+    ) 
     {
-        return this.friendsService.findAll(username, getFriendsQueryDto);
+        return this.friendsService.findAll(request.user.username, getFriendsQueryDto);
     }
 
-    @Get(":username1/friends/:username2")
-    async findOne(
-        @Param("username1") username1: string,
-        @Param("username2") username2: string
-    )
-    {
-        return this.friendsService.findOne(username1, username2);
-    }
-
-    @Put(":username1/friends/:username2")
+    @Put(':target')
     async update(
-        @Param("username1") username1: string,
-        @Param("username2") username2: string,
+        @Req() request: RequestWithUser,
+        @Param('target') target: string,
         @Body() updatePendingDto: UpdatePendingDto
     )
     {
-        return await this.friendsService.update(username1, username2, updatePendingDto);
+        return await this.friendsService.update(request.user.username, target, updatePendingDto);
     }
 
-    @Delete(":username1/friends/:username2")
+    @Delete(':target')
     async delete(
-        @Param("username1") username1: string,
-        @Param("username2") username2: string,
+        @Req() request: RequestWithUser,
+        @Param('target') target: string
     )
     {
-        return this.friendsService.delete(username1, username2);
+        return this.friendsService.delete(request.user.username, target);
     }
 }

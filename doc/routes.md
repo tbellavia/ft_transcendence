@@ -36,8 +36,8 @@ Friends :
 Stats :
     - POST      /api/v1/users/stats/me 
     - GET       /api/v1/users/:username/stats
-    - PUT       /api/v1/users/stats/me
     - GET       /api/v1/users/stats/me
+    - PUT       /api/v1/users/stats/me
         - Body
         {
             game_total: int,
