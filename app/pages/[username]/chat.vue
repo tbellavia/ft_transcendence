@@ -1,13 +1,29 @@
 <template>
   <div class="chat-page">
-    CHAT
+    <ChatLists class="chat-lists" />
+    <div class="page">
+      <NuxtPage />
+    </div>
   </div>
 </template>
 
 <style scoped>
+
   .chat-page {
     display: flex;
-    justify-content: space-evenly;
+    width: 100%;
+    height: 100%;
+  }
+
+  .page {
+    width: 100%;
+    height: 100%;
+  }
+
+  .chat-list {
+    max-width: 20%;
+    min-width: 10%;
+    display: flex;
   }
 
   .chat-box {

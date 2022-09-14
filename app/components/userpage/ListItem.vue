@@ -8,9 +8,11 @@
 		</div> 
 		<div class="rank"> rank </div>
 		<div class="OptionProfile">
-			<button v-if="pendingFriend" class="OptionsProfile_sub" @click="setAcceptFriends('lvirgini', props.username)"> accept friend </button>
-			<button v-else-if="!isFriend" class="OptionsProfile_sub" @click="setFriends('lvirgini', props.username)"> add friend </button>
-			<button class="OptionsProfile_sub">  message </button>
+			<button v-if="pendingFriend" class="OptionsProfile_sub" @click=""> accept friend </button>
+			<button v-else-if="!isFriend" class="OptionsProfile_sub" @click=""> add friend </button>
+			<div class="OptionsProfile_sub">
+				<a :href="messageLink">message</a>
+			</div>
 			<button class="OptionsProfile_sub">  suggest a match </button>
 			<button class="OptionsProfile_sub">  see Profile Page </button>
 		</div> 
@@ -21,15 +23,15 @@
 
 const props = defineProps({
 	username: {
+		required: true,
 		type: String,
 	},
-	isFriend : {
-		type: Boolean,
-	},
-	pendingFriend: {
-		type: Boolean
-	}
+	isFriend: Boolean,
+	pendingFriend: Boolean
 })
+
+const authUsername = (await useGetUser()).value.username;
+const messageLink = `/${authUsername}/chat/${props.username}`;
 
 const userApi = await useUserApi(props.username);
 

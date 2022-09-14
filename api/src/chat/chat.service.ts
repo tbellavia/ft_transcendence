@@ -8,7 +8,7 @@ import { MessageEntity } from "./entities/message.entity";
 export class ChatService {
   constructor(
     @InjectRepository(MessageEntity)
-    private messageRepository: Repository<MessageEntity>
+    private messageRepository: Repository<MessageEntity>,
   ) {}
 
   async saveMessage(message: MessageEntity) {
@@ -16,16 +16,27 @@ export class ChatService {
     await this.messageRepository.save(newMessage);
   }
 
-  async getAllMessageFromAuthorToTarget(author: UserEntity, target: UserEntity) {
+  async getAllDirectMessages(user1: UserEntity, user2: UserEntity) {
     return await this.messageRepository.find({
-      where: {
+      where: [{
         author: {
-          username: author.username
+          username: user1.username
         },
         target: {
-          username: target.username
+          username: user2.username
         }
       },
-    });
+      {
+        author: {
+          username: user2.username
+        },
+        target: {
+          username: user1.username
+        }
+      }],
+      order: {
+        creation_date: "ASC"
+      }
+    })
   }
 }

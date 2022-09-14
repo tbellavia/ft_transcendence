@@ -56,6 +56,7 @@ export class BlockedService {
         });
     }
 
+    // Can be used to check if user is blocked
     async exists(username1: string, username2: string) {
         return await this.findOne(username1, username2) !== null;
     }
