@@ -1,8 +1,8 @@
 <template>
 	<div v-if="props.username" class=Profile > 
 		<div class="userDatas">
-			<!-- <div class="userImage"> <img src="data:avatar'.base64_encode($blob).'"/> </div> -->
-			<!-- <div class="userImage"> <img :src="avatar"/> </div> -->
+			
+			<div class="userImage"> <img :src="urlAvatar"/> </div>
 			<div class="userName"> {{ props.username }}</div>
 			<div class="rank"> rank </div>
 		</div> 
@@ -38,11 +38,11 @@ const props = defineProps({
 	isFriend: Boolean,
 	pendingFriend: Boolean,
 })
+
 const authUsername = (await useGetUser()).value.username;
 const messageLink = `/${authUsername}/chat/${props.username}`;
 
 const userApi = await useUserApi(props.username);
-let avatar = await userApi.getAvatar();
 
 function acceptFriend() {
 	userApi.acceptFriend(props.username);
@@ -64,6 +64,11 @@ function isblocked() {
 	let value = userApi.isBlocked(props.username);
 	return value;
 }
+
+
+let avatar = await getAvatar(props.username);
+const urlAvatar = ref('');
+urlAvatar.value = URL.createObjectURL(avatar.value);
 
 
 </script>

@@ -28,7 +28,7 @@
 	}
 	.userImage{
 		display: flex;
-		margin: 5%;
+		/* margin: 5%; */
 		border: solid;
 		border-radius: 5%;
 		height: 100px;

@@ -59,10 +59,10 @@ class UserApi {
 		return allUsers;
 	}
 
-	async getAvatar() {
-		const { data: avatar } = await useApiFetch(`/users/${this.user}/avatar`);
-		return avatar;
-	}
+	// async getAvatar() {
+	// 	const { data: avatar } = await useApiFetch(`/users/${this.user}/avatar`);
+	// 	return avatar;
+	// }
 }
 
 export async function useUserApi(target?: string) {
@@ -70,4 +70,11 @@ export async function useUserApi(target?: string) {
 		target = (await useGetUser()).value.username;
 
 	return new UserApi(target);
+}
+
+export async function getAvatar(username: string) {
+	if (username) {
+		const { data: avatar } = await useApiFetch(`users/${username}/avatar`);
+		return avatar;
+	}
 }

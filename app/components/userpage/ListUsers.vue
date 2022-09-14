@@ -8,7 +8,6 @@
 		<div class="all" v-for="user in users">
 			<Suspense  v-if="userApi.user !== user.username">
 				<userpageListItem 
-				:currentUser="userApi.user"				
 				:username="user.username"
 				:isFriend="false"
 				:pendingFriend="false" />
