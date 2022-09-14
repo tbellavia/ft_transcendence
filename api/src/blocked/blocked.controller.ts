@@ -11,10 +11,10 @@ export class BlockedController {
   @Post(':target')
   async create(
     @Req() request: RequestWithUser,
-    @Param('target') username2: string
+    @Param('target') target: string
   )
   {
-    return this.blockedService.create(request.user.username, username2);
+    return this.blockedService.create(request.user.username, target);
   }
 
   @Get()
