@@ -1,10 +1,12 @@
 
-export async function isBlocked(username: string, username2 : string) {
-	return useApiFetch(`/users/${username}/blocked/${username2}`)
+export async function isBlocked(username2 : string) {
+	let result = useApiFetch(`/users/me/blocked/${username2}`)
+	console.log(result);
+	return (result);
 }
 
 export async function  getUserFriends(username: string) {
-		return (username ? await useApi(`/users/${username}/friends`) : null);
+		return (username ? await useApi(`/users/friends/me`) : null);
 }
 
 export async function  getAllUsers() {
@@ -25,5 +27,5 @@ export async function  getUserAvatar(username: string) {
 }
 
 export async function getPendingFriends(username: string) {
-	return (username ? await useApi(`/users/${username}/friends?pending=true`) : null);
+	return (username ? await useApi(`/users/me/friends?pending=true`) : null);
 }

@@ -19,25 +19,25 @@ Users :
     - DELETE    /api/v1/users/:username
 
 Blocked :
-    - POST      /api/v1/users/:username1/blocked/:username2
-    - GET       /api/v1/users/:username/blocked?limit=<int>&skip=<int>
-    - DELETE    /api/v1/users/:username1/blocked/:username2
+    - POST      /api/v1/users/blocked/me/:target
+    - GET       /api/v1/users/blocked/me?limit=<int>&skip=<int>
+    - DELETE    /api/v1/users/blocked/me/:target
 
 Friends :
-    - POST      /api/v1/users/:username1/friends/:username2
-    - GET       /api/v1/users/:username1/friends?limit=<int>&skip=<int>&pending=<bool>
-    - GET       /api/v1/users/:username1/friends/:username2
-    - PUT       /api/v1/users/:username1/friends/:username2
+    - POST      /api/v1/users/friends/me/:target
+    - GET       /api/v1/users/friends/me?limit=<int>&skip=<int>&pending=<bool>
+    - PUT       /api/v1/users/friends/me/:target
         - Body
         {
             pending: bool
         }
-    - DELETE    /api/v1/users/:username1/friends/:username2
+    - DELETE    /api/v1/users/friends/me/:target
 
 Stats :
-    - POST      /api/v1/users/:username/stats
+    - POST      /api/v1/users/stats/me 
     - GET       /api/v1/users/:username/stats
-    - PUT       /api/v1/users/:username/stats
+    - PUT       /api/v1/users/stats/me
+    - GET       /api/v1/users/stats/me
         - Body
         {
             game_total: int,
@@ -45,10 +45,9 @@ Stats :
             game_abandonned: int,
             rank: RankEnum(GOLD, SILVER, BRONZE, WOOD),
         }
-    - DELETE    /api/v1/users/:username/stats
+    - DELETE    /api/v1/users/stats/me
 
 Matches :
-    - POST      /api/v1/users/:username1/matches/:username2
     - GET       /api/v1/users/matches/all?limit=<int>&skip=<int>
     - GET       /api/v1/users/matches/:match_id
     - GET       /api/v1/users/:username/matches?limit=<int>&skip=<int>&date=<date>
