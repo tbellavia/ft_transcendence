@@ -16,24 +16,16 @@ const channelPassword = ref('');
 const socket = useSocketChat();
 
 function joinOrCreateChannel() {
-  const isJoining = event.value == 'join_channel';
-
-  if (isJoining) {
-    socket.value.emit(event.value, channelName, channel => {
-      console.log(`Joined ${channel}`);
-    })
-    console.log('Try joining');
-  }
-  else {
-    socket.value.emit(
-      event.value, {
-        name: channelName,
-        channelPassword: channelPassword ? channelPassword : undefined
-      },
-      channel => console.log(`Create ${channel}`)
-    );
-    console.log('Try creating');
-  }
+  socket.value.emit(
+    event.value,
+    {
+      name: channelName.value,
+      password: channelPassword.value ? channelPassword.value : undefined
+    },
+    channel => {
+      channelError.value = '';
+    }
+  );
 }
 
 // Captures errors on exception and display them

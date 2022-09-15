@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { WsException } from "@nestjs/websockets";
+import Joi from "joi";
 import { PostgresErrorCode } from "src/database/postgresErrorCode.enum";
 import { UserEntity } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
@@ -16,19 +17,19 @@ export class ChannelsService {
     private channelRepository: Repository<ChannelEntity>
   ) {}
 
-  async createChannel(creator: UserEntity, name: string) {
+  async createChannel(creator: UserEntity, channelRegister: JoinChannelDTO) {
     try {
       const newChannel = this.channelRepository.create({
+        ...channelRegister,
         creator,
-        name
+        users: [creator]
       })
       await this.channelRepository.save(newChannel);
-      return await this.getChannel(name);
+      return await this.getChannel(channelRegister.name);
     }
     catch (error) {
-      console.log(error);
-      if (error?.code == PostgresErrorCode.UniqueViolation)
-        throw new WsException(`channel ${name} already exists`);
+      if (error?.code === PostgresErrorCode.UniqueViolation)
+        throw new WsException(`channel ${channelRegister.name} already exists`);
       throw error;
     }
   }

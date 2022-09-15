@@ -1,6 +1,6 @@
-import { Expose } from "class-transformer";
+import { Expose, Transform, Type } from "class-transformer";
 import { UserEntity } from "src/users/entities/user.entity";
-import { Column, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { MessageEntity } from "./message.entity";
 
 @Entity()
@@ -14,24 +14,34 @@ export class ChannelEntity {
   name: string;
 
   // Users relations
+  @Expose()
+  @Transform(({ value }) => value.username )
   @ManyToOne(() => UserEntity, (creator => creator.channels_created), {
     eager: true
   })
   creator: UserEntity;
 
+  @Expose()
+  @Type(() => UserEntity)
+  @Transform(({ value }) => value.map(user => user.username))
   @ManyToMany(() => UserEntity, moderator => moderator.channels_moderated, {
-    eager: true,
-  })
-  moderators: UserEntity[]
-
-  @ManyToOne(() => UserEntity, user => user.channels_joined, {
     eager: true
   })
+  @JoinTable()
+  moderators?: UserEntity[]
+
+  @Expose()
+  @Type(() => UserEntity)
+  @Transform(({ value }) => value.map(user => user.username))
+  @ManyToMany(() => UserEntity, user => user.channels_joined, {
+    eager: true
+  })
+  @JoinTable()
   users: UserEntity[];
 
   // Messages relations
   @OneToMany(() => MessageEntity, message => message.channel_target, {
     eager: true,
   })
-  messages: MessageEntity[];
+  messages?: MessageEntity[];
 }

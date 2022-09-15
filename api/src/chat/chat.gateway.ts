@@ -8,10 +8,13 @@ import { SendMessageDTO } from "./dto/sendMessage.dto";
 import { JoinChannelDTO } from "./dto/joinChannel.dto";
 import { ChannelsService } from "./channels.service";
 import { channel } from "diagnostics_channel";
+import Joi from "joi";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
-  strategy: 'excludeAll'
+  strategy: 'excludeAll',
+  exposeUnsetFields: false,
+  excludeExtraneousValues: true
 })
 @WebSocketGateway({
   namespace: 'chat',
@@ -72,14 +75,13 @@ export class ChatGateway implements OnGatewayConnection {
   @SubscribeMessage('create_channel')
   async createChannel(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() channelName: string
+    @MessageBody() channelAuth: JoinChannelDTO
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
 
-    console.log(`Try to create: ${channelName}`);
-    const channel = await this.channelService.createChannel(author, channelName);
-    console.log(channel);
-    // socket.join(channel.name);
+    const channel = await this.channelService.createChannel(author, channelAuth);
+    socket.to(author.username).socketsJoin(channel.name)
+    socket.to(channel.name).emit('receive_create_channel', channel);
     return channel;
   }
 
@@ -91,7 +93,8 @@ export class ChatGateway implements OnGatewayConnection {
     const author = await this.socketService.getUserFromSocket(socket);
 
     const channel = await this.channelService.joinChannel(author, joinChannelDto);
-    socket.join(channel.name);
+    socket.to(author.username).socketsJoin(channel.name);
+    socket.to(channel.name).emit('receive_join_channel', author.username);
     return channel;
   }
 }
