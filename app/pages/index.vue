@@ -13,17 +13,6 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
-/**
- * Check if user is connected using api endpoints
- * if connected redirect to page
- * @param page the page to redirect user
- */
-async function redirectIfConnected(page: string, otherPage: string) {
-  const { $apiFetch } = useNuxtApp();
-  await $apiFetch("/auth/isConnected")
-    .then(async () => await navigateTo(page))
-    .catch(async () => await navigateTo(otherPage));
-}
 
 onMounted(async () => {
   useRefreshUser();
@@ -38,7 +27,14 @@ $eventBus.$on('connect', async () => {
     useRefreshUser();
     const user = await useGetUser();
     if (user.value?.username)
-      await redirectIfConnected('/' + user.value.username, '/')
+    {
+      console.log(user.value);
+      console.log("double auth: ", user.value.is_two_factor_auth_enabled);
+      if (user.value.is_two_factor_auth_enabled === true)
+        await navigateTo('/doubleAuth', '/')
+      else
+        await redirectIfConnected('/' + user.value.username, '/')
+    }
   }
 });
 </script>
