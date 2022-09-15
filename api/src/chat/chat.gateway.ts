@@ -7,8 +7,7 @@ import { GetAllMessagesDTO } from "./dto/getAllMessages.dto";
 import { SendMessageDTO } from "./dto/sendMessage.dto";
 import { JoinChannelDTO } from "./dto/joinChannel.dto";
 import { ChannelsService } from "./channels.service";
-import { channel } from "diagnostics_channel";
-import Joi from "joi";
+import { instanceToPlain } from "class-transformer";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
@@ -80,9 +79,14 @@ export class ChatGateway implements OnGatewayConnection {
     const author = await this.socketService.getUserFromSocket(socket);
 
     const channel = await this.channelService.createChannel(author, channelAuth);
-    socket.to(author.username).socketsJoin(channel.name)
-    socket.to(channel.name).emit('receive_create_channel', channel);
-    return channel;
+    this.server.to(author.username).socketsJoin(channel.name)
+    this.server
+      .to(channel.name)
+      .emit('receive_create_channel', instanceToPlain(channel, {
+        strategy: 'excludeAll',
+        exposeUnsetFields: false,
+        excludeExtraneousValues: true
+      }));
   }
 
   @SubscribeMessage('join_channel')
@@ -93,8 +97,18 @@ export class ChatGateway implements OnGatewayConnection {
     const author = await this.socketService.getUserFromSocket(socket);
 
     const channel = await this.channelService.joinChannel(author, joinChannelDto);
-    socket.to(author.username).socketsJoin(channel.name);
-    socket.to(channel.name).emit('receive_join_channel', author.username);
-    return channel;
+    this.server.to(author.username).socketsJoin(channel.name);
+    this.server.to(author.username).emit('receive_join_channel', {
+      user: instanceToPlain(author, { strategy: 'excludeAll' }),
+      channel: instanceToPlain(channel, {
+        strategy: 'excludeAll',
+        exposeUnsetFields: false,
+        excludeExtraneousValues: true
+      })
+    })// For all client sockets
+    this.server.to(channel.name).emit('receive_join_channel', {
+      user: author.username,
+      channel: channel.name
+    });
   }
 }

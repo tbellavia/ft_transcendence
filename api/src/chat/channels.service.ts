@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { WsException } from "@nestjs/websockets";
-import Joi from "joi";
 import { PostgresErrorCode } from "src/database/postgresErrorCode.enum";
 import { UserEntity } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
@@ -37,7 +36,7 @@ export class ChannelsService {
   async joinChannel(user: UserEntity, joinChannelDto: JoinChannelDTO) {
     const channel = await this.getChannel(joinChannelDto.name);
 
-    if (channel.users.findIndex(chanUser => user.username == chanUser.username) == -1)
+    if (channel.users.findIndex(chanUser => user.username == chanUser.username) != -1)
       throw new WsUserAlreadyInChannelException(user.username, joinChannelDto.name);
 
     channel.users.push(user);
