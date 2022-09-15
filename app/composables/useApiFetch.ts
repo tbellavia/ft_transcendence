@@ -5,7 +5,7 @@ export async function useApiFetch<DataT>(urlEndpoint: string, options?: UseFetch
   return await useAsyncData(
     async () => {
       const datas = await $apiFetch(urlEndpoint, options);
-      console.log('request: ', urlEndpoint);
+      console.log('request useApiFetch: ', urlEndpoint);
       return datas;
     },
     {

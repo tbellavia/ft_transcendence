@@ -100,16 +100,13 @@ watch(userChoice, (newUserChoice) => {
 	
 	
 <style scoped>
-
 .card-title {
   display: flex;
   justify-content: space-between;
-
 } 
 
 .card-title-sub {
   display: flex;
-
 }
 
 .xmark, .xmark:hover {
@@ -118,7 +115,6 @@ watch(userChoice, (newUserChoice) => {
   background-color: transparent !important;
   display: flex;
   align-self: center;
-  
 }
 
 .line {
@@ -130,6 +126,4 @@ span.line-sub, switch.line-sub {
   align-self: center;
 }
 
-/* div#QrCode {
-} */
 </style>

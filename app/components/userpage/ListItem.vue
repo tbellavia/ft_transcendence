@@ -61,16 +61,16 @@ function unblock() {
 }
 
 function isblocked() {
-	let value = userApi.isBlocked(props.username);
-	return value;
+	return (userApi.isBlocked(props.username));
 }
 
+async function displayAvatar() {
+	let avatar = await getAvatar(props.username);
+	console.log("avatar", avatar)
+	return URL.createObjectURL(avatar);
+}
 
-let avatar = await getAvatar(props.username);
-const urlAvatar = ref('');
-urlAvatar.value = URL.createObjectURL(avatar.value);
-
-
+const urlAvatar = ref(await displayAvatar());
 </script>
 
 <style scoped>

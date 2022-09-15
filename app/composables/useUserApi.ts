@@ -31,38 +31,33 @@ class UserApi {
 	}
 
 	async getFriends() {
-		const { data: friendUsers } = await useApiFetch(`/users/friends/me`);
+		const friendUsers = await useApi(`/users/friends/me`);
 		console.log("friends:", friendUsers);
 		return friendUsers;
 	}
 
 	async getPendingFriends() {
-		const { data: pendingFriends } = await useApiFetch(`/users/friends/me?pending=true`);
-		console.log(pendingFriends.value);
+		const pendingFriends = await useApi(`/users/friends/me?pending=true`);
+		console.log(pendingFriends);
 		return pendingFriends;
 	}
 	
 	async getInfo() {
 		const userAuth = await useGetUser();
-		if (userAuth.value.username === this.user)
+		if (userAuth.username === this.user)
 			return userAuth;
 	}
 
 	async getStat() {
-		const { data: userStats } = await useApiFetch(`/users/stats/me`);
+		const userStats = await useApi(`/users/stats/me`);
 		return userStats;
 	}
 	
 	async getAllUsers() {
-		const { data: allUsers } = await useApiFetch(`/users/`);
-		console.log('All users: ', allUsers.value);
+		const allUsers = await useApi(`/users/`);
+		console.log('All users: ', allUsers);
 		return allUsers;
 	}
-
-	// async getAvatar() {
-	// 	const { data: avatar } = await useApiFetch(`/users/${this.user}/avatar`);
-	// 	return avatar;
-	// }
 }
 
 export async function useUserApi(target?: string) {
@@ -74,7 +69,7 @@ export async function useUserApi(target?: string) {
 
 export async function getAvatar(username: string) {
 	if (username) {
-		const { data: avatar } = await useApiFetch(`users/${username}/avatar`);
+		const avatar = await useApi(`users/${username}/avatar`);
 		return avatar;
 	}
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 	const userApi = await useUserApi();
-	const friends = await userApi.getFriends();
+	const friends = ref(await userApi.getFriends());
 </script>
 	
 	<template>
