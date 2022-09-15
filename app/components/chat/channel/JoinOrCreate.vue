@@ -22,7 +22,7 @@ function joinOrCreateChannel() {
       name: channelName.value,
       password: channelPassword.value ? channelPassword.value : undefined
     },
-    channel => {
+    () => {
       channelError.value = '';
     }
   );
