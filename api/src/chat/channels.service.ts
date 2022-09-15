@@ -44,6 +44,14 @@ export class ChannelsService {
     return channel;
   }
 
+  async getAllChannels(user: UserEntity) {
+    const channels = await this.channelRepository
+      .createQueryBuilder('channel')
+      .leftJoinAndSelect('channel.users', 'users')
+      .getMany();
+    return channels;
+  }
+
   private async getChannel(name: string) {
     const channel = await this.channelRepository.findOneBy({ name });
     if (!channel)

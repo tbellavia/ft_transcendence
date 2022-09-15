@@ -111,4 +111,15 @@ export class ChatGateway implements OnGatewayConnection {
       channel: channel.name
     });
   }
+
+  @SubscribeMessage('get_all_channels')
+  async getAllChannels(
+    @ConnectedSocket() socket
+  ) {
+    const author = await this.socketService.getUserFromSocket(socket);
+
+    const channels = await this.channelService.getAllChannels(author);
+    console.log(channels);
+    return channels;
+  }
 }
