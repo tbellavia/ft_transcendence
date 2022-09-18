@@ -15,12 +15,9 @@
 </template>
 
 <script setup lang="ts">
-	let input = ref([]);
+let input = ref([]);
 
 function clickEvent(current_id: string, next_id: string, event) {
-
-	console.log(input.value[Number(current_id)]);
-	console.log(input.value);
 	
 	// event.key we don't want to pass to another input
 	if (event.key === "Shift" || event.key === "Tab" || event.key === "Backspace") {
@@ -31,10 +28,8 @@ function clickEvent(current_id: string, next_id: string, event) {
 		}
 		return;
 	}
-
 	else if (event.key === "Enter")
 		checkKey();
-
 	// pass to next_id input only if input is a number else reset value
 	else if ( (event.keyCode >= 97 && event.keyCode <= 105) 
 	|| (event.keyCode >= 48 && event.keyCode <= 57) 
@@ -44,6 +39,7 @@ function clickEvent(current_id: string, next_id: string, event) {
 	else
 		input.value[Number(current_id)] = '';
 }
+
 
 const emit = defineEmits({
 DoubleAuthValidate: null,
@@ -65,52 +61,31 @@ function checkKey() {
 		document.getElementById('0').focus();
 	}
 }
-	
-
 </script>
-
-
-
-
-
 
 <style scoped>
 .digit-group input {
-		width: 30px;
-		height: 40px;
-		border: solid;
-		line-height: 50px;
-		text-align: center;
-		font-size: 24px;
-		font-weight: 200;
-		margin: 0 2px;
-	}
-
-	.splitter {
-		padding: 0 5px;
-		color: white;
-		font-size: 24px;
-	}
-
-.prompt {
-	margin-bottom: 20px;
-	font-size: 20px;
-	color: white;
+	width: 30px;
+	height: 40px;
+	border: solid;
+	line-height: 50px;
+	text-align: center;
+	font-size: 24px;
+	font-weight: 200;
+	margin: 0 2px;
 }
 
-	.form {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		flex-direction: column;
-		width: 100%;
-	}
-	.form * {
-		display: flex;
-		align-self: center;
-
-	}
-	
+.form {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-direction: column;
+	width: 100%;
+}
+.form * {
+	display: flex;
+	align-self: center;
+}
 </style>
 
 
