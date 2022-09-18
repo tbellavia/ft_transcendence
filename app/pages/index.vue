@@ -1,4 +1,5 @@
 <template>
+  <nuxtLayout>
     <div class="index-page">
       <div class="auth-pages-btns">
         <NuxtLink to="password">Login With Password</NuxtLink>
@@ -8,6 +9,7 @@
         <NuxtPage />
       </div>
     </div>
+  </nuxtLayout>
 </template>
 
 <!-- -------------------------------------------------------------- -->
