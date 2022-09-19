@@ -8,6 +8,7 @@ import { SendMessageDTO } from "./dto/sendMessage.dto";
 import { JoinChannelDTO } from "./dto/joinChannel.dto";
 import { ChannelsService } from "./channels.service";
 import { instanceToPlain } from "class-transformer";
+import { userInfo } from "os";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
@@ -53,7 +54,7 @@ export class ChatGateway implements OnGatewayConnection {
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
     const receiveMessage = await this.chatService.sendMessage(author, message);
-    
+
     this.server
       .to(message.target)
       .emit('receive_message', receiveMessage);
@@ -70,7 +71,6 @@ export class ChatGateway implements OnGatewayConnection {
   }
 
   // Channel handling
-
   @SubscribeMessage('create_channel')
   async createChannel(
     @ConnectedSocket() socket: Socket,
@@ -79,7 +79,7 @@ export class ChatGateway implements OnGatewayConnection {
     const author = await this.socketService.getUserFromSocket(socket);
 
     const channel = await this.channelService.createChannel(author, channelAuth);
-    this.server.to(author.username).socketsJoin(channel.name)
+    this.server.to(author.username).socketsJoin(channel.name);
     this.server
       .to(channel.name)
       .emit('receive_create_channel', instanceToPlain(channel, {

@@ -86,6 +86,8 @@ export class ChatService {
       }
     }
     const channel = await this.channelService.getChannel(targets.target);
+    if (channel.users.findIndex(user => user.username == author.username) == -1)
+      throw new WsUserNotInChannelException(author.username, channel.name);
     return await this.getAllChannelMessages(channel);
   }
 
