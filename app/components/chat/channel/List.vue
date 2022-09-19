@@ -3,9 +3,9 @@
   <hr />
   <ul class="list-channels">
     <li v-for="channel in channels">
-      <a href="#">
+      <NuxtLink :to="channel.name">
         <h2>{{ channel.name }}</h2>
-      </a>
+      </NuxtLink>
     </li>
   </ul>
 </template>
@@ -24,7 +24,7 @@ const socket = useSocketChat();
 
 //fetch all existing channels
 socket.value.emit('get_all_channels', {}, (channelsFetched: Channel[]) => {
-  channels.value.concat(channelsFetched);
+  channels.value = channels.value.concat(channelsFetched);
 })
 
 //watch joining or creating channel events
