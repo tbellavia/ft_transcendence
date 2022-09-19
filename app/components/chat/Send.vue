@@ -8,8 +8,6 @@
 </template>
 
 <script lang="ts" setup>
-const emits = defineEmits(['messageSend']);
-
 // Target is the name of the discussion (username or channel)
 // isChannel control if the name target a channel discussion
 const props = defineProps({
@@ -36,13 +34,8 @@ function sendMessage() {
       message: message.value,
       ...props
     },
-    (username: string) => {
-      emits('messageSend', {
-        content: message.value,
-        author: username
-      });
-      message.value = '';
-    });
+    () => message.value = ''
+  );
 }
 
 // Captures errors on exception and display them

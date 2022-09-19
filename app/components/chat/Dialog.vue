@@ -10,7 +10,7 @@
         </p>
       </li>
     </ul>
-    <ChatSend @messageSend="messageSend" :target="target" :isChannel="isChannel" />
+    <ChatSend :target="target" :isChannel="isChannel" />
   </div>
 </template>
 
@@ -49,10 +49,6 @@ onMounted(() => {
 socket.value.on('receive_message', chatMessage => {
   messages.value.push(chatMessage);
 })
-// Event handling when client send message for updating the dialog view
-function messageSend(message: ChatMessage) {
-  messages.value.push(message);
-}
 </script>
 
 <style scoped>
