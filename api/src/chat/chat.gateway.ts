@@ -62,12 +62,16 @@ export class ChatGateway implements OnGatewayConnection {
   }
 
   @SubscribeMessage('get_all_messages')
-  async getAllMessagesOfAuthor(
+  async getAllMessages(
     @ConnectedSocket() socket: Socket,
     @MessageBody() getAllMessages: GetAllMessagesDTO
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
-    return this.chatService.getAllMessages(author, getAllMessages);
+    const messages = await this.chatService.getAllMessages(author, getAllMessages);
+    // Connect socket to channel's room
+    if (getAllMessages.isChannel)
+      this.server.to(author.username).socketsJoin(getAllMessages.target);
+    return messages;
   }
 
   // Channel handling
@@ -97,7 +101,6 @@ export class ChatGateway implements OnGatewayConnection {
     const author = await this.socketService.getUserFromSocket(socket);
 
     const channel = await this.channelService.joinChannel(author, joinChannelDto);
-    this.server.to(author.username).socketsJoin(channel.name);
     this.server.to(author.username).emit('receive_join_channel', {
       user: instanceToPlain(author, { strategy: 'excludeAll' }),
       channel: instanceToPlain(channel, {
@@ -105,7 +108,7 @@ export class ChatGateway implements OnGatewayConnection {
         exposeUnsetFields: false,
         excludeExtraneousValues: true
       })
-    })// For all client sockets
+    });// For all client sockets
     this.server.to(channel.name).emit('receive_join_channel', {
       user: author.username,
       channel: channel.name
