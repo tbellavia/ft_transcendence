@@ -8,7 +8,6 @@
   let isChannel = ref(false);
 
   username.value = String(route.params.username);
-  console.log('Route query:',route.query);
-  if (route.query?.isChannel)
+  if ('isChannel' in route.query)
     isChannel.value = true;
 </script>
