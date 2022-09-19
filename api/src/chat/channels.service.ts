@@ -51,10 +51,9 @@ export class ChannelsService {
       .createQueryBuilder('channel')
       .leftJoinAndSelect(
         'channel.users', 
-        'users', 
-        'users.user_id = :user_id',
-        { user_id: user.user_id }
+        'users',
       )
+      .where('users.user_id = :user_id', { user_id: user.user_id })
       .leftJoinAndSelect('channel.moderators', 'moderators')
       .leftJoinAndSelect('channel.creator', 'creator')
       .getMany();
