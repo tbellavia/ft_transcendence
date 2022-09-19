@@ -66,7 +66,6 @@ export class ChatGateway implements OnGatewayConnection {
     @MessageBody() getAllMessages: GetAllMessagesDTO
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
-    console.log('Get All Messages:', getAllMessages)
     return this.chatService.getAllMessages(author, getAllMessages);
   }
 

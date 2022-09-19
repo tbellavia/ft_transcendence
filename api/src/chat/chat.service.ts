@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { channel } from "diagnostics_channel";
 import { BlockedService } from "src/blocked/blocked.service";
 import { SocketService } from "src/socket/socket.service";
 import { UserEntity } from "src/users/entities/user.entity";
@@ -8,6 +9,7 @@ import { ChannelsService } from "./channels.service";
 import { ReceiveMessage } from "./classes/receiveMessage.class";
 import { GetAllMessagesDTO } from "./dto/getAllMessages.dto";
 import { SendMessageDTO } from "./dto/sendMessage.dto";
+import { ChannelEntity } from "./entities/channel.entity";
 import { MessageEntity } from "./entities/message.entity";
 import { WsBlockedByUserException } from "./exceptions/wsBlockedByUser.exception";
 import { WsInternalError } from "./exceptions/wsInternalError";
@@ -19,6 +21,7 @@ export class ChatService {
     private messageRepository: Repository<MessageEntity>,
     private readonly socketService: SocketService,
     private readonly blockedService: BlockedService,
+    private channelService: ChannelsService
   ) {}
 
   // Send Messages
@@ -62,7 +65,8 @@ export class ChatService {
         throw new WsInternalError();
       }
     }
-    return [];
+    const channel = await this.channelService.getChannel(targets.target);
+    return await this.getAllChannelMessages(channel);
   }
 
   private async getAllDirectMessages(user1: UserEntity, user2: UserEntity) {
@@ -87,5 +91,10 @@ export class ChatService {
         creation_date: "ASC"
       }
     })
+  }
+
+  private async getAllChannelMessages(channel: ChannelEntity) {
+    const messages = channel.messages;
+    return messages;
   }
 }

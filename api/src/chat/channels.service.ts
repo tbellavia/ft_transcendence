@@ -61,7 +61,7 @@ export class ChannelsService {
     return channels;
   }
 
-  private async getChannel(name: string) {
+  async getChannel(name: string) {
     const channel = await this.channelRepository.findOneBy({ name });
     if (!channel)
       throw new WsChannelNotFoundException(name);
