@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { channel } from "diagnostics_channel";
 import { BlockedService } from "src/blocked/blocked.service";
 import { SocketService } from "src/socket/socket.service";
 import { UserEntity } from "src/users/entities/user.entity";
@@ -13,6 +12,7 @@ import { ChannelEntity } from "./entities/channel.entity";
 import { MessageEntity } from "./entities/message.entity";
 import { WsBlockedByUserException } from "./exceptions/wsBlockedByUser.exception";
 import { WsInternalError } from "./exceptions/wsInternalError";
+import { WsUserNotInChannelException } from "./exceptions/channel/wsUserNotInChannel.exception"
 
 @Injectable()
 export class ChatService {
@@ -28,7 +28,7 @@ export class ChatService {
   async sendMessage(author: UserEntity, message: SendMessageDTO) {
     if (!message.isChannel)
       return await this.sendPrivateMessage(author, message);
-    return new ReceiveMessage('', '');
+    return this.sendChannelMessage(author, message);
   }
 
   private async sendPrivateMessage(author: UserEntity, message: SendMessageDTO) {
@@ -48,6 +48,26 @@ export class ChatService {
     }
 
     return new ReceiveMessage(message.message, author.username);
+  }
+
+  private async sendChannelMessage(author: UserEntity, message: SendMessageDTO) {
+    const channel = await this.channelService.getChannel(message.target);
+
+    // Check if user is in channel and allowed to speak
+    if (channel.users.findIndex(user => user.username == author.username) == -1)
+      throw new WsUserNotInChannelException(author.username, channel.name);
+    
+      try {
+        await this.saveMessage({
+          author,
+          channel_target: channel,
+          content: message.message
+        });
+      } catch (error) {
+        throw new WsInternalError();
+      }
+
+      return new ReceiveMessage(message.message, author.username);
   }
 
   private async saveMessage(message: MessageEntity) {
