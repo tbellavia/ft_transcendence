@@ -12,9 +12,7 @@
 
 <template>
    <v-app>
-      <nuxtLayout :name="layout">
          <NuxtPage />
-      </nuxtLayout>
   </v-app>
 </template>
 

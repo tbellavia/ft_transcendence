@@ -8,41 +8,55 @@ class UserApi {
 		this.user = user;
 	}
 
-	async isBlocked(target: string) {
-		const { data: blockedUsers } = await useApiFetch(`/users/${this.user}/blocked/${target}`);
-		return blockedUsers;
+	async isBlocked(target: string) { // TODO
+		// const { data: blockedUsers } = await useApiFetch(`/users/blocked/me`);
+		// console.log("BLOCKED", blockedUsers)
+		return false;
+	}
+
+	async addFriend(username: string) {
+		return await postApi(`/users/friends/me/${username}`)
+	}
+
+	async acceptFriend(username: string) {
+		return await putApi(`/users/friends/me/${username}`,  { "pending": false })
+	}
+
+	async block(username: string) {
+		return await postApi(`users/blocked/me/${username}`);
+	}
+
+	async unblock(username: string) {
+		return await deleteApi(`users/blocked/me/${username}`);
 	}
 
 	async getFriends() {
-		const { data: friendUsers } = await useApiFetch(`/users/${this.user}/friends`);
+		const friendUsers = await useApi(`/users/friends/me`);
+		console.log("friends:", friendUsers);
 		return friendUsers;
 	}
 
 	async getPendingFriends() {
-		const { data: pendingFriends } = await useApiFetch(`/users/${this.user}?friends=true`);
+		const pendingFriends = await useApi(`/users/friends/me?pending=true`);
+		console.log(pendingFriends);
 		return pendingFriends;
 	}
 	
 	async getInfo() {
 		const userAuth = await useGetUser();
-		if (userAuth.value.username === this.user)
+		if (userAuth.username === this.user)
 			return userAuth;
 	}
 
 	async getStat() {
-		const { data: userStats } = await useApiFetch(`/users/${this.user}/stats`);
+		const userStats = await useApi(`/users/stats/me`);
 		return userStats;
 	}
 	
 	async getAllUsers() {
-		const { data: allUsers } = await useApiFetch(`/users/`);
-		console.log('All users: ', allUsers.value);
+		const allUsers = await useApi(`/users/`);
+		console.log('All users: ', allUsers);
 		return allUsers;
-	}
-
-	async getAvatar() {
-		const { data: avatar } = await useApiFetch(`/users/${this.user}/avatar`);
-		return avatar;
 	}
 }
 
@@ -51,4 +65,11 @@ export async function useUserApi(target?: string) {
 		target = (await useGetUser()).value.username;
 
 	return new UserApi(target);
+}
+
+export async function getAvatar(username: string) {
+	if (username) {
+		const avatar = await useApi(`users/${username}/avatar`);
+		return avatar;
+	}
 }

@@ -14,7 +14,7 @@ export class FriendsController {
     @Post(':target')
     async create(
         @Req() request: RequestWithUser,
-        @Param("username2") target: string
+        @Param("target") target: string
     ) 
     {
         return this.friendsService.create(request.user.username, target);

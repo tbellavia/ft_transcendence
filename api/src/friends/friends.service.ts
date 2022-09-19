@@ -73,7 +73,7 @@ export class FriendsService {
     }
 
     async update(username1: string, username2: string, updatePendingDto: UpdatePendingDto) {
-        const friendship = await this.findOne(username1, username2);
+        const friendship = await this.findOne(username2, username1);
         friendship.pending = updatePendingDto.pending;
         await friendship.save();
         return friendship;
