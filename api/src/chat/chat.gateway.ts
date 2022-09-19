@@ -55,6 +55,11 @@ export class ChatGateway implements OnGatewayConnection {
     const author = await this.socketService.getUserFromSocket(socket);
     const receiveMessage = await this.chatService.sendMessage(author, message);
 
+    // Notify every connected sockets of author that he has send message
+    if (!message.isChannel)
+      this.server
+        .to(author.username)
+        .emit('receive_message', receiveMessage);
     this.server
       .to(message.target)
       .emit('receive_message', receiveMessage);
