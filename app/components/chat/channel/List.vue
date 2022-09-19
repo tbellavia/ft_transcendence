@@ -3,7 +3,7 @@
   <hr />
   <ul class="list-channels">
     <li v-for="channel in channels">
-      <NuxtLink :to="channel.name">
+      <NuxtLink :to="`${channel.name}?isChannel`">
         <h2>{{ channel.name }}</h2>
       </NuxtLink>
     </li>
@@ -28,11 +28,10 @@ socket.value.emit('get_all_channels', {}, (channelsFetched: Channel[]) => {
 })
 
 //watch joining or creating channel events
-socket.value.on('receive_create_channel', channel => {
+socket.value.on('receive_create_channel', (channel: Channel) => {
   channels.value.push(channel);
-  console.log('Channel created!');
 });
-socket.value.on('receive_join_channel', ({ user, channel }) => {
+socket.value.on('receive_join_channel', ({ user, channel }: {user: any, channel: Channel}) => {
   if (user.username === authUser.value.username)
     channels.value.push(channel)
 });

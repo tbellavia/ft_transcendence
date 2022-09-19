@@ -119,7 +119,6 @@ export class ChatGateway implements OnGatewayConnection {
     const author = await this.socketService.getUserFromSocket(socket);
 
     const channels = await this.channelService.getAllChannels(author);
-    console.log('Channels:', channels);
     return channels;
   }
 }
