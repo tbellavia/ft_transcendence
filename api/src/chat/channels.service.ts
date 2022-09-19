@@ -13,7 +13,9 @@ import { WsUserAlreadyInChannelException } from "./exceptions/channel/wsUserAlre
 export class ChannelsService {
   constructor(
     @InjectRepository(ChannelEntity)
-    private channelRepository: Repository<ChannelEntity>
+    private channelRepository: Repository<ChannelEntity>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>
   ) {}
 
   async createChannel(creator: UserEntity, channelRegister: JoinChannelDTO) {
@@ -47,7 +49,14 @@ export class ChannelsService {
   async getAllChannels(user: UserEntity) {
     const channels = await this.channelRepository
       .createQueryBuilder('channel')
-      .leftJoinAndSelect('channel.users', 'users')
+      .leftJoinAndSelect(
+        'channel.users', 
+        'users', 
+        'users.user_id = :user_id',
+        { user_id: user.user_id }
+      )
+      .leftJoinAndSelect('channel.moderators', 'moderators')
+      .leftJoinAndSelect('channel.creator', 'creator')
       .getMany();
     return channels;
   }
