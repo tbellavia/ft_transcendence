@@ -1,5 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { PaginationQueryDto } from "src/common/dto/pagination.query-dto";
+import { UserEntity } from "src/users/entities/user.entity";
 import { UsersService } from "src/users/users.service";
 import { FindManyOptions, FindOptionsWhere, Repository } from "typeorm";
 import { GetFriendsQueryDTO } from "./dto/get-friends.query.dto";
@@ -36,11 +38,14 @@ export class FriendsService {
     async findAll(username: string, getFriendsQueryDto: GetFriendsQueryDTO) {
         const user = await this.userService.findOneByName(username);
 
-        const whereOpts: FindOptionsWhere<FriendEntity> = {
-            user_1: { username }
-        };
+        const whereOpts = [
+            { user_1: { username } },
+            { user_2: { username } }
+        ]
+        
         const opts: FindManyOptions<FriendEntity> = {
             relations: {
+                user_1: true,
                 user_2: true
             }
         }
@@ -49,9 +54,25 @@ export class FriendsService {
         if ( getFriendsQueryDto.skip )
             opts.skip = getFriendsQueryDto.skip;
         if ( getFriendsQueryDto.pending !== undefined ){
-            whereOpts.pending = getFriendsQueryDto.pending;
+            whereOpts[0]["pending"] = getFriendsQueryDto.pending;
+            whereOpts[1]["pending"] = getFriendsQueryDto.pending;
         }
         opts.where = whereOpts;
+        return await this.friendRepository.find(opts);
+    }
+
+    async findFriendsRequests(username: string, paginationQueryDto: PaginationQueryDto) {
+        const user = await this.userService.findOneByName(username);
+
+        const opts: FindManyOptions<FriendEntity> = paginationQueryDto.getConfig<FriendEntity>(
+            {
+                user_2 : { username },
+                pending: true
+            },
+            {
+                user_1: true
+            }
+        )
         return await this.friendRepository.find(opts);
     }
 

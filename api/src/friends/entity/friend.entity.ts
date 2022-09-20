@@ -8,6 +8,7 @@ export class FriendEntity extends BaseEntity {
     @PrimaryGeneratedColumn("uuid")
     friend_id: string;
 
+    @Expose()
     @ManyToOne(() => UserEntity, (user) => user.friends)
     @JoinColumn({ name: "user_1" })
     user_1: UserEntity;
