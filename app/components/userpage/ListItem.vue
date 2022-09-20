@@ -25,7 +25,7 @@
 			</div>
 			<button class="OptionsProfile_sub">  suggest a match </button>
 			<button class="OptionsProfile_sub">  see Profile Page </button>
-			<button v-if="isblocked() === true" class="OptionsProfile_sub"
+			<button v-if="isBlockedUser === true" class="OptionsProfile_sub"
 				@click="unblock()"> unblock
 			</button>
 			<button v-else class="OptionsProfile_sub" 
@@ -89,16 +89,18 @@ async function unblock() {
 	})
 }
 
-async function isblocked() {
-	return (await userApi.isBlocked(props.username));
+
+async function isBlocked() {
+	return await userApi.isBlocked(props.username)
 }
 
 async function displayAvatar() {
 	let avatar = await getAvatar(props.username);
-	console.log("avatar", avatar)
 	return URL.createObjectURL(avatar);
 }
 
+const isBlockedUser = ref(await isBlocked());
+console.log("isBlocked: ", isBlockedUser.value);
 const urlAvatar = ref(await displayAvatar());
 </script>
 

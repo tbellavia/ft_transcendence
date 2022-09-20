@@ -39,9 +39,7 @@ class UserApi {
 	/* -------------------------------------------------------------- */
 
 	async isBlocked(target: string) { // TODO
-		// const { data: blockedUsers } = await useApiFetch(`/users/blocked/me`);
-		// console.log("BLOCKED", blockedUsers)
-		return false;
+		return await useApi(`/users/blocked/me/${target}`);
 	}
 
 	async block(username: string) {
