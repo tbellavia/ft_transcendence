@@ -11,7 +11,7 @@
 					@click="acceptFriend()"> accept friend
 				</button>
 				<button class="OptionsProfile_sub" 
-					@click="deleteFriend()"> arefuse friend
+					@click="deleteFriend()"> refuse friend
 				</button>
 			</div>
 			<button v-else-if="props.isFriend === false" class="OptionsProfile_sub"
@@ -52,29 +52,45 @@ const authUsername = (await useGetUser()).value.username;
 const messageLink = `/${authUsername}/chat/${props.username}`;
 
 const userApi = await useUserApi(props.username);
+const emit = defineEmits(['refreshList']);
 
-function acceptFriend() {
-	userApi.acceptFriend(props.username);
+async function acceptFriend() {
+	await userApi.acceptFriend(props.username)
+	.then (() => {
+		emit('refreshList')
+	})
 }
 
-function deleteFriend() {
-	userApi.deleteFriend(props.username);
+async function deleteFriend() {
+	await userApi.deleteFriend(props.username)
+	.then (() => {
+		emit('refreshList')
+	})
 }
 
-function addFriend() {
-	userApi.addFriend(props.username);
+async function addFriend() {
+	await userApi.addFriend(props.username)
+	.then (() => {
+		emit('refreshList')
+	})
 }
 
-function block() {
-	userApi.block(props.username);
+async function block() {
+	await userApi.block(props.username)
+	.then (() => {
+		emit('refreshList')
+	})
 }
 
-function unblock() {
-	userApi.unblock(props.username);
+async function unblock() {
+	await userApi.unblock(props.username)
+	.then (() => {
+		emit('refreshList')
+	})
 }
 
-function isblocked() {
-	return (userApi.isBlocked(props.username));
+async function isblocked() {
+	return (await userApi.isBlocked(props.username));
 }
 
 async function displayAvatar() {

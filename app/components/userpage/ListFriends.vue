@@ -1,21 +1,31 @@
 <script setup lang="ts">
 	const userApi = await useUserApi();
-	const friends = ref(await userApi.getFriends());
+	let friends = ref(await userApi.getFriends());
+
+	async function refreshList() {
+		friends.value = await userApi.getFriends();
+	}
 
 	function getFriendName(user: any) {
-		if (user.user_1.username === userApi.user)
-			return user.user_2.username
-		return user.user_1.username
+		if (user) {
+			if (user.user_1.username === userApi.user)
+				return user.user_2.username
+			return user.user_1.username
+		}
+		return undefined;
 	}
+
+	
 </script>
 	
 <!-- -------------------------------------------------------------- -->
 
 <template>
-<div>
+<div >
 	<div class="all" v-for="user in friends">
-		<Suspense >
-			<userpageListItem
+		<Suspense v-if="user" >
+			<userpageListItem 
+			@refreshList="refreshList"
 			:username="getFriendName(user)"
 			:isFriend="true"
 			:pendingFriend="false" />
