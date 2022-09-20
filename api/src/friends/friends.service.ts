@@ -24,6 +24,9 @@ export class FriendsService {
         if ( await this.exists(username1, username2) ){
             throw new BadRequestException('friendship already exists');
         }
+        if ( await this.exists(username2, username1) ){
+            throw new BadRequestException('friendship already exists');
+        }
         if ( username1 == username2 ){
             throw new BadRequestException('User can not be friend with himself');
         }
