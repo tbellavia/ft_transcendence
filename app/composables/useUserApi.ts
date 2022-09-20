@@ -31,13 +31,13 @@ class UserApi {
 	}
 
 	async getFriends() {
-		const friendUsers = await useApi(`/users/friends/me`);
+		const friendUsers = await useApi(`/users/friends/me?pending=false`);
 		console.log("friends:", friendUsers);
 		return friendUsers;
 	}
 
 	async getPendingFriends() {
-		const pendingFriends = await useApi(`/users/friends/me?pending=true`);
+		const pendingFriends = await useApi(`/users/friends/me/request`);
 		console.log(pendingFriends);
 		return pendingFriends;
 	}
@@ -62,7 +62,7 @@ class UserApi {
 
 export async function useUserApi(target?: string) {
 	if (!target)
-		target = (await useGetUser()).value.username;
+		target = (await useGetUser())?.value?.username;
 
 	return new UserApi(target);
 }
