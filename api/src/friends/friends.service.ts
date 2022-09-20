@@ -90,7 +90,6 @@ export class FriendsService {
             },
             select: selectFriendOptions
         });
-
         if (!friendship)
             throw new NotFoundException('Friendship relation not found');
         return friendship;
@@ -104,7 +103,13 @@ export class FriendsService {
     }
 
     async delete(username1: string, username2: string) {
-        const friendship = await this.findOne(username1, username2);
+        let friendship;
+        try {
+            friendship = await this.findOne(username1, username2);
+        }
+        catch {
+            friendship = await this.findOne(username2, username1);
+        }
         await friendship.remove();
         return { msg: "Relation deleted successfuly" };
     }

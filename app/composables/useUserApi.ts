@@ -8,11 +8,8 @@ class UserApi {
 		this.user = user;
 	}
 
-	async isBlocked(target: string) { // TODO
-		// const { data: blockedUsers } = await useApiFetch(`/users/blocked/me`);
-		// console.log("BLOCKED", blockedUsers)
-		return false;
-	}
+	/* Relation Friendship */			
+	/* -------------------------------------------------------------- */
 
 	async addFriend(username: string) {
 		return await postApi(`/users/friends/me/${username}`)
@@ -22,12 +19,8 @@ class UserApi {
 		return await putApi(`/users/friends/me/${username}`,  { "pending": false })
 	}
 
-	async block(username: string) {
-		return await postApi(`users/blocked/me/${username}`);
-	}
-
-	async unblock(username: string) {
-		return await deleteApi(`users/blocked/me/${username}`);
+	async deleteFriend(username: string) {
+		return await deleteApi(`/users/friends/me/${username}`)
 	}
 
 	async getFriends() {
@@ -41,7 +34,27 @@ class UserApi {
 		console.log(pendingFriends);
 		return pendingFriends;
 	}
+
+	/* blocked users */
+	/* -------------------------------------------------------------- */
+
+	async isBlocked(target: string) { // TODO
+		// const { data: blockedUsers } = await useApiFetch(`/users/blocked/me`);
+		// console.log("BLOCKED", blockedUsers)
+		return false;
+	}
+
+	async block(username: string) {
+		return await postApi(`users/blocked/me/${username}`);
+	}
+
+	async unblock(username: string) {
+		return await deleteApi(`users/blocked/me/${username}`);
+	}
 	
+	/* Stats and infos of All users */
+	/* -------------------------------------------------------------- */
+
 	async getInfo() {
 		const userAuth = await useGetUser();
 		if (userAuth.username === this.user)
@@ -58,7 +71,9 @@ class UserApi {
 		console.log('All users: ', allUsers);
 		return allUsers;
 	}
-}
+} // end of class user
+
+/* -------------------------------------------------------------- */
 
 export async function useUserApi(target?: string) {
 	if (!target)

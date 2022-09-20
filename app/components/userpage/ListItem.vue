@@ -1,19 +1,26 @@
 <template>
 	<div v-if="props.username" class=Profile > 
 		<div class="userDatas">
-			
 			<div class="userImage"> <img :src="urlAvatar"/> </div>
 			<div class="userName"> {{ props.username }}</div>
 			<div class="rank"> rank </div>
 		</div> 
 		<div class="OptionProfile">
-			<button v-if="props.pendingFriend" class="OptionsProfile_sub" 
-				@click="acceptFriend()"> accept friend
-			</button>
+			<div v-if="props.pendingFriend">
+				<button class="OptionsProfile_sub" 
+					@click="acceptFriend()"> accept friend
+				</button>
+				<button class="OptionsProfile_sub" 
+					@click="deleteFriend()"> arefuse friend
+				</button>
+			</div>
 			<button v-else-if="props.isFriend === false" class="OptionsProfile_sub"
 				@click="addFriend()"> add friend
 			</button>
-			 	<div class="OptionsProfile_sub">
+			<button v-else-if="props.isFriend === true" class="OptionsProfile_sub"
+				@click="deleteFriend()"> remove friend
+			</button>
+			<div class="OptionsProfile_sub">
 				<a :href="messageLink">message</a>
 			</div>
 			<button class="OptionsProfile_sub">  suggest a match </button>
@@ -27,6 +34,8 @@
 		</div> 
 	</div>
 </template>
+
+<!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
 
@@ -46,6 +55,10 @@ const userApi = await useUserApi(props.username);
 
 function acceptFriend() {
 	userApi.acceptFriend(props.username);
+}
+
+function deleteFriend() {
+	userApi.deleteFriend(props.username);
 }
 
 function addFriend() {
@@ -72,6 +85,8 @@ async function displayAvatar() {
 
 const urlAvatar = ref(await displayAvatar());
 </script>
+
+<!-- -------------------------------------------------------------- -->
 
 <style scoped>
 	button, a {
