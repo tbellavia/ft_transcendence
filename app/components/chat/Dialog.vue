@@ -2,8 +2,8 @@
   <div class="chat-page">
     <div class="dialog-box">
       <!-- Displaying chat messages area -->
+      <h2>{{ target }}</h2>
       <ul>
-        <h2>{{ target }}</h2>
         <li v-for="message in messages">
           <p>
             <span class="author">{{ message.author }}:</span>
@@ -11,9 +11,8 @@
           </p>
         </li>
       </ul>
-      <ChatSend :target="target" :isChannel="isChannel" />
+      <ChatSend class="chat-input" :target="target" :isChannel="isChannel" />
     </div>
-    <ChatChannelParameters v-if="isChannel" :target="target" />
   </div>
 </template>
 
@@ -56,22 +55,14 @@ socket.value.on('receive_message', chatMessage => {
 
 <style scoped>
 
-  .chat-page {
-    display: flex;
-    height: 100%;
-  }
   .dialog-box {
     display: flex;
     flex-direction: column;
 
-    flex: 2;
-    width: 100%;
     height: 100%;
   }
 
   ul {
-    flex-grow: 2;
-
     color: var(--main-color);
     border: solid var(--background-line-color);
     background-color: var(--main-color-darker);

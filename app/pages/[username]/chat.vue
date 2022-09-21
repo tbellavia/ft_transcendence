@@ -11,19 +11,24 @@
 
   .chat-page {
     display: flex;
+    flex-direction: row;
+
     width: 100%;
     height: 100%;
   }
 
   .page {
+    flex: 2 1;
+
     width: 100%;
     height: 100%;
   }
 
   .chat-list {
+    flex: 1 2;
+
     max-width: 20%;
     min-width: 10%;
-    display: flex;
   }
 
   .chat-box {
