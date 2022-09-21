@@ -42,6 +42,7 @@ export class ChannelEntity {
   // Messages relations
   @OneToMany(() => MessageEntity, message => message.channel_target, {
     eager: true,
+    onDelete: 'CASCADE'
   })
-  messages?: MessageEntity[];
+  messages: MessageEntity[];
 }

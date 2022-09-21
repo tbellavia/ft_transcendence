@@ -53,25 +53,24 @@ export class ChannelsService {
 
   async leaveChannel(user: UserEntity, channel_name: string) {
     let channel = await this.getChannel(channel_name);
-    
+
+    // Check if user is in the channel, remove him from the user's list.
+    const index = channel.users.findIndex(channelUser => channelUser.username == user.username);
+    if (index == -1)
+      throw new WsUserNotInChannelException(user.username, channel_name);
+    channel.users.splice(index, 1);
+    // Check if user is owner of the channel, and if is the last user of it
     if (channel.creator.username == user.username) {
-      //If user is creator transfer ownership if not the last user
-      if (channel.users.length != 1)
+      //Transfer ownership if other users are presents
+      if (channel.users.length) {
         this.transferOwnership(user, channel);
-      //Or if last user destroy the channel
-      else {
+      } else {
         await this.destroyChannel(channel);
         return new LeaveChannel(user.username, channel);
       }
     }
 
-    // Remove user from the list of users
-    if (channel.users.findIndex(channelUser => channelUser.username == user.username) == -1)
-      throw new WsUserNotInChannelException(user.username, channel_name);
-      
-    channel.users = channel.users.filter(channelUser => channelUser.username != user.username);
     await this.channelRepository.save(channel);
-
     return new LeaveChannel(user.username, channel);
   }
 
