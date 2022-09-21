@@ -1,13 +1,15 @@
 <template>
-  <ChatChannelJoinOrCreate />
-  <hr />
-  <ul class="list-channels">
-    <li v-for="channel in channels">
-      <NuxtLink :to="`/${authUser.username}/chat/${channel.name}?isChannel`">
-        <h2>{{ channel.name }}</h2>
-      </NuxtLink>
-    </li>
-  </ul>
+  <div>
+    <ChatChannelJoinOrCreate />
+    <hr />
+    <ul class="list-channels">
+      <li v-for="channel in channels">
+        <NuxtLink :to="`/${authUser.username}/chat/${channel.name}?isChannel`">
+          <h2>{{ channel.name }}</h2>
+        </NuxtLink>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script setup lang="ts">

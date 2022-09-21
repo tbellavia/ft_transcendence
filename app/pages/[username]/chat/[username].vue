@@ -24,11 +24,11 @@
   }
 
   .chat-dialog {
-    flex: 10 1;
+    flex-grow: 2;
   }
 
   .chat-channel-parameters {
-    flex: 1 10;
+    min-width: max-content;
   }
 
 </style>

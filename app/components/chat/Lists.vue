@@ -24,13 +24,12 @@ let listSelector = ref('friends');
 <style>
   .list-box {
     border: 0.2rem solid var(--main-color-darker);
-    min-width: 15%;
-    max-width: 20%;
   }
 
   .list-selectors {
     display: flex;
     justify-content: space-around;
+    flex-wrap: wrap;
 
     background-color: var(--background-line-color);
   }

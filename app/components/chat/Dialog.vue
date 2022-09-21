@@ -67,6 +67,9 @@ socket.value.on('receive_message', chatMessage => {
   .dialog-box > ul {
     flex-grow: 10;
 
+    overflow-wrap: break-word;
+    overflow-y: auto;
+
     color: var(--main-color);
     border: solid var(--background-line-color);
     background-color: var(--main-color-darker);
