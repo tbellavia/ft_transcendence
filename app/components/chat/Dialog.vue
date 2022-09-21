@@ -1,18 +1,16 @@
 <template>
-  <div class="chat-page">
-    <div class="dialog-box">
-      <!-- Displaying chat messages area -->
-      <h2>{{ target }}</h2>
-      <ul>
-        <li v-for="message in messages">
-          <p>
-            <span class="author">{{ message.author }}:</span>
-            {{ message.content }}
-          </p>
-        </li>
-      </ul>
-      <ChatSend class="chat-input" :target="target" :isChannel="isChannel" />
-    </div>
+  <div class="dialog-box">
+    <!-- Displaying chat messages area -->
+    <h2>{{ target }}</h2>
+    <ul>
+      <li v-for="message in messages">
+        <p>
+          <span class="author">{{ message.author }}:</span>
+          {{ message.content }}
+        </p>
+      </li>
+    </ul>
+    <ChatSend class="chat-input" :target="target" :isChannel="isChannel" />
   </div>
 </template>
 
@@ -62,10 +60,20 @@ socket.value.on('receive_message', chatMessage => {
     height: 100%;
   }
 
-  ul {
+  .dialog-box > h2 {
+    /*  */
+  }
+
+  .dialog-box > ul {
+    flex-grow: 10;
+
     color: var(--main-color);
     border: solid var(--background-line-color);
     background-color: var(--main-color-darker);
+  }
+
+  .dialog-box > .chat-input {
+    /*  */
   }
 
   input::placeholder {

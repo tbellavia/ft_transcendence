@@ -19,6 +19,8 @@
   .chat-target-page {
     display: flex;
     flex-direction: row;
+
+    height: 100%;
   }
 
   .chat-dialog {
