@@ -1,8 +1,8 @@
 <template>
-  <div class="list-box">
+  <div id="chat" class="list-box">
     <div class="list-selectors">
       <button @click="listSelector = 'friends'"> Friends </button>
-      <button @click="listSelector = 'all'"> All Users </button>
+      <button @click="listSelector = 'all'"> Users </button>
       <button @click="listSelector = 'channels'">Channels</button>
     </div>
     <Suspense v-if="listSelector == 'friends'">
@@ -26,6 +26,8 @@ let listSelector = ref('friends');
     border: 0.2rem solid var(--main-color-darker);
     min-width: 15%;
     max-width: 20%;
+
+    font-size: 14px;
   }
 
   .list-selectors {
@@ -34,4 +36,9 @@ let listSelector = ref('friends');
 
     background-color: var(--background-line-color);
   }
+
+  .list-selectors button {
+    width: 100%;
+  }
+  
 </style>

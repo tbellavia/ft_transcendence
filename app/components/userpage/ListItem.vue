@@ -1,17 +1,16 @@
 <template>
 	<div v-if="props.username" class=Profile > 
+		
+		<!--  AVATAR and NAME -->
 		<div class="userDatas">
 			<div class="userImage"> <img :src="urlAvatar"/> </div>
 			<div class="userName"> {{ props.username }}</div>
-			<div class="rank"> rank </div>
-			<!-- <button class="OptionsProfile_sub" 
-				@click="block()"> block
-			</button>
-			<button class="OptionsProfile_sub"
-				@click="unblock()"> unblock
-			</button> -->
 		</div> 
-		<div class="OptionProfile">
+
+		<!-- Buttons of all options -->
+		<div class="OptionsProfile">
+
+			<!-- PENDING FRIENDS: accept or refuse friendship -->
 			<div v-if="props.pendingFriend">
 				<button class="OptionsProfile_sub" 
 					@click="acceptFriend()"> accept friend
@@ -20,17 +19,27 @@
 					@click="deleteFriend()"> refuse friend
 				</button>
 			</div>
+
+			<!-- ADD or REMOVE FRIENDSHIP -->
 			<button v-else-if="props.isFriend === false" class="OptionsProfile_sub"
 				@click="addFriend()"> add friend
 			</button>
 			<button v-else-if="props.isFriend === true" class="OptionsProfile_sub"
 				@click="deleteFriend()"> remove friend
 			</button>
+
+			<!-- SEND MESSAGE -->
 			<div class="OptionsProfile_sub">
 				<a :href="messageLink">message</a>
 			</div>
+
+			<!-- SUGGEST MATCH -->
 			<button class="OptionsProfile_sub">  suggest a match </button>
+
+			<!-- SEE PROFILE PAGE -->
 			<button class="OptionsProfile_sub">  see Profile Page </button>
+
+			<!-- BLOCK or UNBLOCK USER -->
 			<button v-if="isBlockedUser" class="OptionsProfile_sub"
 				@click="unblock()"> unblock
 			</button>
