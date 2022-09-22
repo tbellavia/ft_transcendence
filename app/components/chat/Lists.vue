@@ -5,6 +5,7 @@
       <button @click="listSelector = 'all'"> All Users </button>
       <button @click="listSelector = 'channels'">Channels</button>
     </div>
+
     <Suspense v-if="listSelector == 'friends'">
       <userpageListFriends />
     </Suspense>
@@ -26,10 +27,11 @@ let listSelector = ref('friends');
     border: 0.2rem solid var(--main-color-darker);
   }
 
+  /* Layout of list items */
+
   .list-selectors {
     display: flex;
     justify-content: space-around;
-    flex-wrap: wrap;
 
     background-color: var(--background-line-color);
   }

@@ -38,7 +38,6 @@ socket.value.on('receive_join_channel', ({ user, channel }: {user: any, channel:
     channels.value.push(channel)
 });
 
-
 </script>
 
 <style>

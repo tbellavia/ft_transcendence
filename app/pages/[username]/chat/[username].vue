@@ -16,15 +16,14 @@
 </script>
 
 <style scoped>
+  /* Layout of the target page (channel or user dialog) */
   .chat-target-page {
     display: flex;
-    flex-direction: row;
-
     height: 100%;
   }
 
   .chat-dialog {
-    flex-grow: 2;
+    flex: 1;
   }
 
   .chat-channel-parameters {

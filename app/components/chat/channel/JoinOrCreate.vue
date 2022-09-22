@@ -37,6 +37,7 @@ socket.value.on('exception', ({ message }) => {
 
 <style scoped>
   input {
+    display: block;
     padding: 0.2rem;
     width: 100%;
     color: var(--main-color);

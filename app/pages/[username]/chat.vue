@@ -18,12 +18,11 @@
   }
 
   .chat-list {
-    flex-grow: 2;
+    width: 15%;
+    min-width: max-content;
   }
   .chat-target-page {
-    flex-grow: 2;
-
-    width: 100%;
+    width: 85%;
     height: 100%;
   }
 

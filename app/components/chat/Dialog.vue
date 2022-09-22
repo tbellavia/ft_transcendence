@@ -53,6 +53,7 @@ socket.value.on('receive_message', chatMessage => {
 
 <style scoped>
 
+  /* Layout of the dialog box */
   .dialog-box {
     display: flex;
     flex-direction: column;
@@ -65,9 +66,9 @@ socket.value.on('receive_message', chatMessage => {
   }
 
   .dialog-box > ul {
-    flex-grow: 10;
+    flex: 1;
 
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
     overflow-y: auto;
 
     color: var(--main-color);
@@ -78,6 +79,8 @@ socket.value.on('receive_message', chatMessage => {
   .dialog-box > .chat-input {
     /*  */
   }
+
+  /* Details */
 
   input::placeholder {
     color: var(--main-color);
