@@ -38,9 +38,10 @@ export class BlockedService {
         await blocked.save();
 
         // Delete friendship if existing and user blocked
-        const friendship = await this.friendsService.exists(username1, username2);
-        if (friendship)
+        if (await this.friendsService.exists(username1, username2))
             this.friendsService.delete(username1, username2);
+        else if (await this.friendsService.exists(username2, username1))
+            this.friendsService.delete(username2, username1);
 
         return await this.findOne(username1, username2);
     }
