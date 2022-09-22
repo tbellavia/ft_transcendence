@@ -48,6 +48,7 @@ socket.value.on('exception', ({ message }) => {
 <style scoped>
   .error {
     color: red;
+    padding-left: 0.2rem;
   }
 
   .send-chat {
@@ -55,12 +56,9 @@ socket.value.on('exception', ({ message }) => {
   }
 
   input {
-    padding: 0.2rem;
     width: 100%;
-    color: var(--main-color);
+    color: var(--main-color-dark);
+    border-color: var();
   }
 
-  input::placeholder {
-    text-align: center;
-  }
 </style>

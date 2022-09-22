@@ -73,8 +73,8 @@ socket.value.on('receive_message', chatMessage => {
     flex-grow: 2;
 
     color: var(--main-color);
-    border: solid var(--background-line-color);
-    background-color: var(--main-color-darker);
+    /* border: solid var(--background-line-color); */
+    background-color: var(--main-color-op-30);
   }
 
   input::placeholder {

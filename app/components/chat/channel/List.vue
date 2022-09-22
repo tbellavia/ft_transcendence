@@ -1,13 +1,15 @@
 <template>
+  <div class="channels-component">
   <ChatChannelJoinOrCreate />
   <hr />
   <ul class="list-channels">
     <li v-for="channel in channels">
       <NuxtLink :to="`/${authUser.username}/chat/${channel.name}?isChannel`">
-        <h2>{{ channel.name }}</h2>
+        <div class="channel-item">{{ channel.name }}</div>
       </NuxtLink>
     </li>
   </ul>
+</div>
 </template>
 
 <script setup lang="ts">
@@ -40,4 +42,19 @@ socket.value.on('receive_join_channel', ({ user, channel }: {user: any, channel:
 </script>
 
 <style>
+  .channels-component {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .list-channels {
+    font-size: 14px;
+  }
+
+  .list-channels a {
+    text-decoration: none;
+  }
+
+
 </style>

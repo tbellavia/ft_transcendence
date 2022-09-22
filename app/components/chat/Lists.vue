@@ -5,15 +5,17 @@
       <button @click="listSelector = 'all'"> Users </button>
       <button @click="listSelector = 'channels'">Channels</button>
     </div>
-    <Suspense v-if="listSelector == 'friends'">
-      <userpageListFriends />
-    </Suspense>
-    <Suspense v-else-if="listSelector == 'all'">
-      <userpageListUsers />
-    </Suspense>
-    <Suspense v-else-if="listSelector == 'channels'">
-      <ChatChannelList />
-    </Suspense>
+    <div class="list-chat-users">
+      <Suspense v-if="listSelector == 'friends'">
+        <userpageListFriends style="width: 100%"/>
+      </Suspense>
+      <Suspense v-else-if="listSelector == 'all'">
+        <userpageListUsers style="width: 100%"/>
+      </Suspense>
+      <Suspense v-else-if="listSelector == 'channels'">
+        <ChatChannelList style="width: 100%" />
+      </Suspense>
+    </div>
   </div>
 </template>
 
@@ -22,6 +24,17 @@ let listSelector = ref('friends');
 </script>
 
 <style>
+
+  .list-chat-users {
+    display: flex;
+	width: 100%;
+	height: 100%;
+	padding-top: 10%;
+	padding-bottom: 10%;
+  height: 95%;
+	overflow: scroll;
+
+  }
   .list-box {
     border: 0.2rem solid var(--main-color-darker);
     min-width: 15%;
