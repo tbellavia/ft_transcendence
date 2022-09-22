@@ -1,16 +1,19 @@
 <template>
-  <div class="dialog-box">
-    <!-- Displaying chat messages area -->
-    <ul>
-      <h2>{{ target }}</h2>
-      <li v-for="message in messages">
-        <p>
-          <span class="author">{{ message.author }}:</span>
-          {{ message.content }}
-        </p>
-      </li>
-    </ul>
-    <ChatSend :target="target" :isChannel="isChannel" />
+  <div class="chat-page">
+    <div class="dialog-box">
+      <!-- Displaying chat messages area -->
+      <ul>
+        <h2>{{ target }}</h2>
+        <li v-for="message in messages">
+          <p>
+            <span class="author">{{ message.author }}:</span>
+            {{ message.content }}
+          </p>
+        </li>
+      </ul>
+      <ChatSend :target="target" :isChannel="isChannel" />
+    </div>
+    <ChatChannelParameters v-if="isChannel" :target="target" />
   </div>
 </template>
 
@@ -52,10 +55,16 @@ socket.value.on('receive_message', chatMessage => {
 </script>
 
 <style scoped>
+
+  .chat-page {
+    display: flex;
+    height: 100%;
+  }
   .dialog-box {
     display: flex;
     flex-direction: column;
 
+    flex: 2;
     width: 100%;
     height: 100%;
   }
