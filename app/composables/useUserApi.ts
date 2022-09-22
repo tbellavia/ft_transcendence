@@ -25,13 +25,11 @@ class UserApi {
 
 	async getFriends() {
 		const friendUsers = await useApi(`/users/friends/me?pending=false`);
-		console.log("friends:", friendUsers);
 		return friendUsers;
 	}
 
 	async getPendingFriends() {
 		const pendingFriends = await useApi(`/users/friends/me/request`);
-		console.log(pendingFriends);
 		return pendingFriends;
 	}
 
@@ -39,7 +37,10 @@ class UserApi {
 	/* -------------------------------------------------------------- */
 
 	async isBlocked(target: string) { // TODO
-		return await useApi(`/users/blocked/me/${target}`);
+		let booleanString = await useApi(`/users/blocked/me/${target}`);
+		if (booleanString === "true")
+			return true;
+		return false;
 	}
 
 	async block(username: string) {
@@ -66,8 +67,17 @@ class UserApi {
 	
 	async getAllUsers() {
 		const allUsers = await useApi(`/users/`);
-		console.log('All users: ', allUsers);
 		return allUsers;
+	}
+// relation friendship: THIS can be the user_1 OR user_2
+// return the good username
+	async getUsernameFromFriendship(user: any) {
+		if (user) {
+			if (user.user_1.username === this.user)
+				return user.user_2.username
+			return user.user_1.username
+		}
+		return undefined;
 	}
 } // end of class user
 
