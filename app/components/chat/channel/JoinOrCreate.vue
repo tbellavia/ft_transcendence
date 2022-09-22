@@ -16,6 +16,7 @@ const channelPassword = ref('');
 const socket = useSocketChat();
 
 function joinOrCreateChannel() {
+  channelError.value = '';
   socket.value.emit(
     event.value,
     {
@@ -23,7 +24,7 @@ function joinOrCreateChannel() {
       password: channelPassword.value ? channelPassword.value : undefined
     },
     () => {
-      channelError.value = '';
+      //TODO: redirect to the newly created or joined chat
     }
   );
 }

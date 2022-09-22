@@ -1,6 +1,3 @@
-import { Ref } from 'vue';
-import { User } from '../interfaces/user.interface';
-
 class UserApi {
 	public user: string;
 
@@ -44,7 +41,7 @@ class UserApi {
 	
 	async getInfo() {
 		const userAuth = await useGetUser();
-		if (userAuth.username === this.user)
+		if (userAuth.value.username === this.user)
 			return userAuth;
 	}
 
@@ -58,6 +55,10 @@ class UserApi {
 		console.log('All users: ', allUsers);
 		return allUsers;
 	}
+
+	async getAvatar() {
+		return await getAvatar(this.user);
+	}
 }
 
 export async function useUserApi(target?: string) {
@@ -70,6 +71,6 @@ export async function useUserApi(target?: string) {
 export async function getAvatar(username: string) {
 	if (username) {
 		const avatar = await useApi(`users/${username}/avatar`);
-		return avatar;
+		return URL.createObjectURL(avatar);
 	}
 }
