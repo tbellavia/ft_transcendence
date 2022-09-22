@@ -4,6 +4,12 @@
 			<div class="userImage"> <img :src="urlAvatar"/> </div>
 			<div class="userName"> {{ props.username }}</div>
 			<div class="rank"> rank </div>
+			<!-- <button class="OptionsProfile_sub" 
+				@click="block()"> block
+			</button>
+			<button class="OptionsProfile_sub"
+				@click="unblock()"> unblock
+			</button> -->
 		</div> 
 		<div class="OptionProfile">
 			<div v-if="props.pendingFriend">
@@ -25,7 +31,7 @@
 			</div>
 			<button class="OptionsProfile_sub">  suggest a match </button>
 			<button class="OptionsProfile_sub">  see Profile Page </button>
-			<button v-if="isBlockedUser === true" class="OptionsProfile_sub"
+			<button v-if="isBlockedUser" class="OptionsProfile_sub"
 				@click="unblock()"> unblock
 			</button>
 			<button v-else class="OptionsProfile_sub" 
@@ -45,6 +51,7 @@ const props = defineProps({
 		type: String,
 	},
 	isFriend: Boolean,
+	isBlocked: Boolean,
 	pendingFriend: Boolean,
 })
 
@@ -79,28 +86,31 @@ async function block() {
 	await userApi.block(props.username)
 	.then (() => {
 		emit('refreshList')
-	})
+		isBlockedUser.value = true;
+	}).catch( (error) => console.warn(error))
 }
 
 async function unblock() {
 	await userApi.unblock(props.username)
 	.then (() => {
 		emit('refreshList')
-	})
+		isBlockedUser.value = false;
+	}).catch( (error) => console.warn(error))
 }
 
 
 async function isBlocked() {
-	return await userApi.isBlocked(props.username)
+	return await userApi.isBlocked(props.username);
 }
+
+const isBlockedUser = ref(await isBlocked());
+console.log("isBlocked: ", typeof(isBlockedUser.value));
 
 async function displayAvatar() {
 	let avatar = await getAvatar(props.username);
 	return URL.createObjectURL(avatar);
 }
 
-const isBlockedUser = ref(await isBlocked());
-console.log("isBlocked: ", isBlockedUser.value);
 const urlAvatar = ref(await displayAvatar());
 </script>
 
