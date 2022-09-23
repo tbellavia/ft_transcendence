@@ -23,6 +23,15 @@ export class UserAuthentified extends User {
     super(username, fetchingMethod);
   }
 
+  /* Overload method */
+  public async fetchAll() {
+    await super.fetchAll();
+    this.pendingFriends.forEach(friend => friend.fetchAll());
+    this.friends.forEach(friend => friend.fetchAll());
+    this.blockedUsers.forEach(user => user.fetchAll());
+    return this;
+  }
+
   /* USER INTERFACE */
   public async updateAvatar() {}
 
