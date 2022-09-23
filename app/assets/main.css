@@ -9,6 +9,9 @@
   --grey-color-light: #333;
   --grey-color-lighter: #444;
   --background-color: #000;
+
+  --background-error-color: #ff000028;
+  --error-color: #da0000;
 }
 
 /* fonts and animations text */

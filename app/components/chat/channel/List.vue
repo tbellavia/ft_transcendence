@@ -1,7 +1,6 @@
 <template>
   <div class="channels-component">
   <ChatChannelJoinOrCreate />
-  <hr />
   <ul class="list-channels">
     <li v-for="channel in channels">
       <NuxtLink :to="`/${authUser.username}/chat/${channel.name}?isChannel`">
@@ -56,5 +55,21 @@ socket.value.on('receive_join_channel', ({ user, channel }: {user: any, channel:
     text-decoration: none;
   }
 
+  .channel-item {
+    width: 100%;
+    overflow-wrap: anywhere;
+    border: thin solid var(--main-color-op-30);
+    padding-left: 0.2rem;
+  }
+
+  .channel-item:hover {
+    background-color: var(--main-color-op-10);
+    color: var(--main-color-light);
+    border-color: var(--main-color);
+  }
+
+  input:hover {
+    background-color: var(--main-color-op-10);
+  }
 
 </style>

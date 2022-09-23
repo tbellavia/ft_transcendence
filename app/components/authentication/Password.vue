@@ -26,7 +26,7 @@
         </div>
       </fieldset>
     </form>
-    <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
+    <p v-if="errorMessage" style="color: var(--error-color);">{{ errorMessage }}</p>
   </div>
 </template>
 
@@ -82,6 +82,9 @@ async function authenticateApi() {
 
   fieldset {
     margin: 0 auto;
+    height: 10%;
+    background-color: var(--background-op-10);
+
   }
 
   label {

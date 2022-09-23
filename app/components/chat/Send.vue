@@ -47,7 +47,8 @@ socket.value.on('exception', ({ message }) => {
 
 <style scoped>
   .error {
-    color: red;
+    color: var(--error-color);
+    background-color: var(--background-error-color);
     padding-left: 0.2rem;
   }
 

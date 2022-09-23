@@ -63,6 +63,7 @@ socket.value.on('receive_message', chatMessage => {
   .dialog-box {
     display: flex;
     flex-direction: column;
+    overflow-wrap: anywhere;
 
     flex: 2;
     width: 100%;

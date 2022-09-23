@@ -29,14 +29,12 @@ let listSelector = ref('friends');
     display: flex;
 	width: 100%;
 	height: 100%;
-	padding-top: 10%;
 	padding-bottom: 10%;
   height: 95%;
 	overflow: scroll;
 
   }
   .list-box {
-    border: 0.2rem solid var(--main-color-darker);
     min-width: 15%;
     max-width: 20%;
 
@@ -47,7 +45,9 @@ let listSelector = ref('friends');
     display: flex;
     justify-content: space-around;
 
-    background-color: var(--background-line-color);
+    background-color: var(--main-color-op-10);
+    border: thin solid;
+    height: 10%;
   }
 
   .list-selectors button {
