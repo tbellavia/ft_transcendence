@@ -7,6 +7,7 @@
 @import "~/assets/buttonSlider.css";
 @import "~/assets/ListUsers.css";
 @import "~/assets/ListUsersChat.css";
+@import "~/assets/profilePage.css";
 </style>
 
 <!-- -------------------------------------------------------------- -->

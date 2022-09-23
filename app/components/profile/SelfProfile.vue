@@ -1,13 +1,20 @@
 <template>
-	<div class="user_parameters">
+	<Suspense>
+	<profilePublic :username="Lylian" />
+	<!-- <div class="user_parameters">
 	  <div class="user-parameters-sub"><authenticationDoubleAuthentication /></div>
 	  <div class="user-parameters-sub"> </div>
 	  <div class="user-parameters-sub"></div>
 	  <div class="user-parameters-sub"></div>
-	</div>
+	</div> -->
+</Suspense>
 	</template>
 	
-	
+	<script setup lang="ts">
+
+	</script>
+
+
 	<style scoped>
 	  div.user_parameters {
 		width: 100%;

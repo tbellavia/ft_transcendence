@@ -1,6 +1,4 @@
 <template>
-	<div>
-		USER PARAMETERS
-		<profileSelfProfile />
-	</div>
+		<profilePublic :username="Lylian" />
+		<!-- <profileSelfProfile /> -->
 </template>

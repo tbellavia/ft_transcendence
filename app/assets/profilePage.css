@@ -1,0 +1,27 @@
+.profile-page {
+	width: 100%;
+	height: 100%;
+}
+
+.profile-header {
+	border: solid;  /*TODO */
+
+	display: flex;
+	justify-content: space-between;
+	height: 50%;
+
+}
+
+.profile-header {
+
+}
+
+
+
+.profile-match {
+	border: solid;  /*TODO */
+
+	display: flex;
+	width: 100%;
+	height: 50%;
+}
