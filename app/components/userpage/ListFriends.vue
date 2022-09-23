@@ -1,9 +1,8 @@
 <script setup lang="ts">
-	const userApi = await useUserApi();
-	let friends = ref(await userApi.getFriends());
-
+	const userAuthentified = await useUserAuthentified();
 	async function refreshList() {
-		friends.value = await userApi.getFriends();
+		await userAuthentified.value.fetchFriends();
+		
 	}
 
 	function getFriendName(user: any) {

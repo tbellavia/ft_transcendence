@@ -1,9 +1,9 @@
-import { use } from "h3";
 import { $Fetch } from "ohmyfetch";
 import { User, UserInfos } from "./User.class";
 
 interface FriendRelation {
   friend_id: string;
+  user_1: UserInfos;
   user_2: UserInfos;
   pending: boolean;
 }
@@ -66,14 +66,17 @@ export class UserAuthentified extends User {
     const id = this.pendingFriends.findIndex(pendingFriend => pendingFriend.username == username);
     if (id != -1) {
       this.pendingFriends.splice(id, 1);
-      this.friends.push(new User(relation.user_2.username, this.fetchingMethod));
+      this.friends.push(new User(this.extractFriend(relation), this.fetchingMethod));
     }
   }
 
   // Fetch friends or pending friends
   public async fetchFriends(pending: boolean = false) {
     const friends: FriendRelation[] = await this.fetchingMethod(`/friends/me?pending=${pending}`);
-    const friendsUser = friends.map(friend => new User(friend.user_2.username, this.fetchingMethod));
+    const friendsUser = friends.map(friend => {
+      return new User(this.extractFriend(friend), this.fetchingMethod);
+    });
+    friendsUser.forEach(friend => friend.fetchAll());
   
     if (pending)
       this.pendingFriends = friendsUser;
@@ -131,6 +134,11 @@ export class UserAuthentified extends User {
   // Extract username if User
   private extractUsername(target: User | string) {
     return typeof(target) == 'string' ? target : target.username;
+  }
+
+  private extractFriend(relation: FriendRelation) {
+    const username = relation.user_2.username != this.username ? relation.user_2.username : relation.user_1.username;
+    return username;
   }
 
   private deleteFriend(username: string) {

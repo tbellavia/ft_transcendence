@@ -13,6 +13,6 @@ export async function useUserAuthentified(): Promise<Ref<UserAuthentified>> {
   const { $apiFetch } = useNuxtApp();
   const { username } = await getUserAuthentifiedInfos();
   const user = useState(username, () => new UserAuthentified(username, $apiFetch));
-   await user.value.fetchAll();
-   return user;
+  await user.value.fetchAll();
+  return user;
 }
