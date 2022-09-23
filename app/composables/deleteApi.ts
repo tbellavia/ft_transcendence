@@ -5,5 +5,5 @@ export async function deleteApi(URLendpoint: string) {
 		method: 'DELETE',
 	})
 	.then ( async () => console.log("DELETE OK"))
-	.then ( async (error) => console.warn(error))
+	.catch ( async (error) => console.warn(error))
 }

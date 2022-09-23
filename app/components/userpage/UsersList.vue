@@ -3,26 +3,43 @@ let users = ref('friends');
 </script>
 
 <template>
-<div class="all">
+<div class="userListComponent">
 	<div class="friends-buttons">
 		<button @click="users = 'friends'"> Friends </button>
 		<button @click="users = 'all'"> All Users </button>
 		<button @click="users = 'pending'"> Pending </button>
 	</div>
-	<Suspense v-if="users === 'friends'">
-		<userpageListFriends />
-	</Suspense>
-	<Suspense v-else-if="users === 'all'">
-		<userpageListUsers />
-	</Suspense>
-	<Suspense v-else>
-		<userpageListPending />
-	</Suspense>
+	<div class="userLists">
+		<Suspense v-if="users === 'friends'">
+			<userpageListFriends class="all"/>
+		</Suspense>
+		<Suspense v-else-if="users === 'all'">
+			<userpageListUsers class="all"/>
+		</Suspense>
+		<Suspense v-else>
+			<userpageListPending class="all"/>
+		</Suspense>
+	</div>
 </div>
 </template>
 
 <style scoped>
 
+.userListComponent {
+	display: block;
+	width: 100%;
+	height: 100%;
+	padding-bottom: 5%;
+
+
+}
+.userLists {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	padding: 5%;
+	overflow: scroll;
+}
 .friends-buttons {
 	display: flex;
 	align-items: center;

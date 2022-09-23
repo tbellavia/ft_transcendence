@@ -5,11 +5,8 @@ class UserApi {
 		this.user = user;
 	}
 
-	async isBlocked(target: string) { // TODO
-		// const { data: blockedUsers } = await useApiFetch(`/users/blocked/me`);
-		// console.log("BLOCKED", blockedUsers)
-		return false;
-	}
+	/* Relation Friendship */			
+	/* -------------------------------------------------------------- */
 
 	async addFriend(username: string) {
 		return await postApi(`/users/friends/me/${username}`)
@@ -19,6 +16,30 @@ class UserApi {
 		return await putApi(`/users/friends/me/${username}`,  { "pending": false })
 	}
 
+	async deleteFriend(username: string) {
+		return await deleteApi(`/users/friends/me/${username}`)
+	}
+
+	async getFriends() {
+		const friendUsers = await useApi(`/users/friends/me?pending=false`);
+		return friendUsers;
+	}
+
+	async getPendingFriends() {
+		const pendingFriends = await useApi(`/users/friends/me/request`);
+		return pendingFriends;
+	}
+
+	/* blocked users */
+	/* -------------------------------------------------------------- */
+
+	async isBlocked(target: string) { // TODO
+		let booleanString = await useApi(`/users/blocked/me/${target}`);
+		if (booleanString === "true")
+			return true;
+		return false;
+	}
+
 	async block(username: string) {
 		return await postApi(`users/blocked/me/${username}`);
 	}
@@ -26,19 +47,10 @@ class UserApi {
 	async unblock(username: string) {
 		return await deleteApi(`users/blocked/me/${username}`);
 	}
-
-	async getFriends() {
-		const friendUsers = await useApi(`/users/friends/me`);
-		console.log("friends:", friendUsers);
-		return friendUsers;
-	}
-
-	async getPendingFriends() {
-		const pendingFriends = await useApi(`/users/friends/me?pending=true`);
-		console.log(pendingFriends);
-		return pendingFriends;
-	}
 	
+	/* Stats and infos of All users */
+	/* -------------------------------------------------------------- */
+
 	async getInfo() {
 		const userAuth = await useGetUser();
 		if (userAuth.value.username === this.user)
@@ -52,18 +64,29 @@ class UserApi {
 	
 	async getAllUsers() {
 		const allUsers = await useApi(`/users/`);
-		console.log('All users: ', allUsers);
 		return allUsers;
 	}
 
 	async getAvatar() {
 		return await getAvatar(this.user);
 	}
-}
+// relation friendship: THIS can be the user_1 OR user_2
+// return the good username
+	async getUsernameFromFriendship(user: any) {
+		if (user) {
+			if (user.user_1.username === this.user)
+				return user.user_2.username
+			return user.user_1.username
+		}
+		return undefined;
+	}
+} // end of class user
+
+/* -------------------------------------------------------------- */
 
 export async function useUserApi(target?: string) {
 	if (!target)
-		target = (await useGetUser()).value.username;
+		target = (await useGetUser())?.value?.username;
 
 	return new UserApi(target);
 }

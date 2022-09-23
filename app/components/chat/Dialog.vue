@@ -57,6 +57,7 @@ socket.value.on('receive_message', chatMessage => {
   .dialog-box {
     display: flex;
     flex-direction: column;
+    overflow-wrap: anywhere;
 
     height: 100%;
   }
@@ -72,8 +73,8 @@ socket.value.on('receive_message', chatMessage => {
     overflow-y: auto;
 
     color: var(--main-color);
-    border: solid var(--background-line-color);
-    background-color: var(--main-color-darker);
+    /* border: solid var(--background-line-color); */
+    background-color: var(--main-color-op-30);
   }
 
   .dialog-box > .chat-input {
