@@ -1,24 +1,47 @@
 <template>
 	<div v-if="props.username" class=Profile > 
+		
+		<!--  AVATAR and NAME -->
 		<div class="userDatas">
 			
 			<div class="userImage"> <img :src="targetedUser.avatar_url"/> </div>
 			<div class="userName"> {{ props.username }}</div>
-			<div class="rank"> rank </div>
 		</div> 
-		<div class="OptionProfile">
-			<button v-if="props.pendingFriend" class="OptionsProfile_sub" 
-				@click="acceptFriend()"> accept friend
-			</button>
+
+		<!-- Buttons of all options -->
+		<div class="OptionsProfile">
+
+			<!-- PENDING FRIENDS: accept or refuse friendship -->
+			<div v-if="props.pendingFriend">
+				<button class="OptionsProfile_sub" 
+					@click="acceptFriend()"> accept friend
+				</button>
+				<button class="OptionsProfile_sub" 
+					@click="deleteFriend()"> refuse friend
+				</button>
+			</div>
+
+			<!-- ADD or REMOVE FRIENDSHIP -->
 			<button v-else-if="props.isFriend === false" class="OptionsProfile_sub"
 				@click="addFriend()"> add friend
 			</button>
-			 	<div class="OptionsProfile_sub">
+			<button v-else-if="props.isFriend === true" class="OptionsProfile_sub"
+				@click="deleteFriend()"> remove friend
+			</button>
+
+			<!-- SEND MESSAGE -->
+			<div class="OptionsProfile_sub">
 				<a :href="messageLink">message</a>
 			</div>
+
+			<!-- SUGGEST MATCH -->
 			<button class="OptionsProfile_sub">  suggest a match </button>
+
+			<!-- SEE PROFILE PAGE -->
 			<button class="OptionsProfile_sub">  see Profile Page </button>
-			<button v-if="isblocked() === true" class="OptionsProfile_sub"
+
+			<!-- BLOCK or UNBLOCK USER -->
+			<button v-if="isBlockedUser" class="OptionsProfile_sub"
 				@click="unblock()"> unblock
 			</button>
 			<button v-else class="OptionsProfile_sub" 
@@ -27,6 +50,8 @@
 		</div> 
 	</div>
 </template>
+
+<!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
 import { useUserAuthentified } from '~~/composables/useUserAuthentified';
@@ -38,35 +63,70 @@ const props = defineProps({
 		type: String,
 	},
 	isFriend: Boolean,
+	isBlocked: Boolean,
 	pendingFriend: Boolean,
 })
 
 const userAuthentified = await useUserAuthentified();
 const targetedUser = await useUser(props.username);
 
-const messageLink = `/${userAuthentified.value.username}/chat/${targetedUser.value.username}`;
+const userApi = await useUserApi(props.username);
+const emit = defineEmits(['refreshList']);
 
-function acceptFriend() {
-	userAuthentified.value.acceptFriend(targetedUser.value);
+async function acceptFriend() {
+	await userApi.acceptFriend(props.username)
+	.then (() => {
+		emit('refreshList')
+	})
 }
 
-function addFriend() {
-	userAuthentified.value.addFriend(targetedUser.value);
+async function deleteFriend() {
+	await userApi.deleteFriend(props.username)
+	.then (() => {
+		emit('refreshList')
+	})
 }
 
-function block() {
-	userAuthentified.value.blockUser(targetedUser.value);
+async function addFriend() {
+	await userApi.addFriend(props.username)
+	.then (() => {
+		emit('refreshList')
+	})
 }
 
-function unblock() {
-	userAuthentified.value.unblockUser(targetedUser.value);
+async function block() {
+	await userApi.block(props.username)
+	.then (() => {
+		emit('refreshList')
+		isBlockedUser.value = true;
+	}).catch( (error) => console.warn(error))
 }
 
-function isblocked() {
-	return userAuthentified.value.isBlocked(targetedUser.value);
+async function unblock() {
+	await userApi.unblock(props.username)
+	.then (() => {
+		emit('refreshList')
+		isBlockedUser.value = false;
+	}).catch( (error) => console.warn(error))
 }
 
+
+async function isBlocked() {
+	return await userApi.isBlocked(props.username);
+}
+
+const isBlockedUser = ref(await isBlocked());
+console.log("isBlocked: ", typeof(isBlockedUser.value));
+
+async function displayAvatar() {
+	let avatar = await getAvatar(props.username);
+	return URL.createObjectURL(avatar);
+}
+
+const urlAvatar = ref(await displayAvatar());
 </script>
+
+<!-- -------------------------------------------------------------- -->
 
 <style scoped>
 	button, a {

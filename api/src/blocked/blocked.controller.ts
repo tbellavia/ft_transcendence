@@ -26,6 +26,15 @@ export class BlockedController {
     return this.blockedService.findAll(request.user.username, paginationQueryDto);
   }
 
+  @Get(":target")
+  async isBlocked(
+    @Req() request: RequestWithUser,
+    @Param('target') target: string
+  ) 
+  {
+    return this.blockedService.exists(request.user.username, target);
+  }
+
   @Delete(':target')
   async delete(
     @Req() request: RequestWithUser,

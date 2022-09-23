@@ -1,5 +1,6 @@
 import { Req, Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { RequestWithUser } from "src/auth/interfaces/requestWithUser.interface";
+import { PaginationQueryDto } from "src/common/dto/pagination.query-dto";
 import { GetFriendsQueryDTO } from "./dto/get-friends.query.dto";
 import { UpdatePendingDto } from "./dto/update-pending.dto";
 import { FriendsService } from "./friends.service";
@@ -27,6 +28,15 @@ export class FriendsController {
     ) 
     {
         return this.friendsService.findAll(request.user.username, getFriendsQueryDto);
+    }
+
+    @Get("request")
+    async findFriendsRequests(
+        @Req() request: RequestWithUser,
+        @Query() paginationQueryDto: PaginationQueryDto
+    )
+    {
+        return await this.friendsService.findFriendsRequests(request.user.username, paginationQueryDto);
     }
 
     @Put(':target')

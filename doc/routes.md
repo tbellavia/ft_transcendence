@@ -26,6 +26,7 @@ Blocked :
 Friends :
     - POST      /api/v1/users/friends/me/:target
     - GET       /api/v1/users/friends/me?limit=<int>&skip=<int>&pending=<bool>
+    - GET       /api/v1/users/friends/me/request?limit=<int>&skip=<int>
     - PUT       /api/v1/users/friends/me/:target
         - Body
         {

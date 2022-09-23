@@ -92,7 +92,7 @@ export class ChatService {
   }
 
   private async getAllDirectMessages(user1: UserEntity, user2: UserEntity) {
-    return await this.messageRepository.find({
+    const messages = await this.messageRepository.find({
       where: [{
         author: {
           username: user1.username
@@ -113,6 +113,18 @@ export class ChatService {
         creation_date: "ASC"
       }
     })
+
+    // If the author that requests messages has blocked the target
+    if (await this.blockedService.exists(user1.username, user2.username)) {
+      // We replace the message by other content
+      messages
+        .filter(messages => messages.author.username == user2.username)
+        .forEach(message => {
+          // message.author.username = 'Author blocked';
+          message.content = `is blocked and you can not see its messages`;
+        });
+    }
+    return messages;
   }
 
   private async getAllChannelMessages(channel: ChannelEntity) {

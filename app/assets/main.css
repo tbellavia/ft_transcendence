@@ -9,6 +9,9 @@
   --grey-color-light: #333;
   --grey-color-lighter: #444;
   --background-color: #000;
+
+  --background-error-color: #ff000028;
+  --error-color: #da0000;
 }
 
 /* fonts and animations text */
@@ -167,9 +170,27 @@ li {
 
 input {
   background-color: transparent;
-  border-color: var(--main-color);
+  border-color: var(--main-color-dark);
   color: var(--main-color);
   border: solid;
+  padding: 0.2rem;
+
+}
+
+input:hover {
+  border-color: var(--main-color-light);
+}
+
+form:focus-visible,
+input:focus-visible,
+form:-moz-focusring,
+input:-moz-focusring {
+  outline: none;
+  border-color: var(--main-color);
+}
+
+input::placeholder {
+  text-align: center;
 }
 
 /* --------------------------------------------------------------  */

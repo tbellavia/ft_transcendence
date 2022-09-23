@@ -1,11 +1,13 @@
 <template>
   <form @submit.prevent="joinOrCreateChannel" class="channel-join-or-create">
-    <input type="text" placeholder="channel name" v-model=channelName />
-    <input type="password" placeholder="channel password" v-model=channelPassword />
-    <input type="submit" value="Join" @click="event = 'join_channel'"/>
-    <input type="submit" value="Create" @click="event = 'create_channel'"/>
+    <input class="channel-create" type="text" placeholder="channel name" v-model=channelName />
+    <input class="channel-create" type="password" placeholder="channel password" v-model=channelPassword />
+    <input class="channel-validate-create" type="submit" value="Join" @click="event = 'join_channel'"/>
+    <input class="channel-validate-create" type="submit" value="Create" @click="event = 'create_channel'"/>
   </form>
-  <p v-if="channelError" style="color: red;">{{ channelError }}</p>
+  <div class="channel-create-error">
+    <p v-if="channelError" style="color: var(--error-color); background-color: var(--background-error-color);">{{ channelError }}</p>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -37,12 +39,26 @@ socket.value.on('exception', ({ message }) => {
 
 <style scoped>
   input {
-    padding: 0.2rem;
+    padding-left: 0.8rem;
     width: 100%;
     color: var(--main-color);
+    border: none;
   }
 
   input::placeholder {
-    text-align: center;
+    text-align: left;
+    padding-left: 0.4rem;
   }
+
+  .channel-validate-create {
+
+  }
+
+  .channel-create {
+  }
+
+  .channel-create-error {
+    border: thin solid var(--main-color-dark);
+  }
+
 </style>

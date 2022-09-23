@@ -6,6 +6,7 @@
 @import "~/assets/dropLeft.css";
 @import "~/assets/buttonSlider.css";
 @import "~/assets/ListUsers.css";
+@import "~/assets/ListUsersChat.css";
 </style>
 
 <!-- -------------------------------------------------------------- -->

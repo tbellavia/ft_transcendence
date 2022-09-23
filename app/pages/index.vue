@@ -30,10 +30,8 @@ $eventBus.$on('connect', async () => {
     const user = await useGetUser();
     if (user.value?.username)
     {
-      console.log(user.value);
-      console.log("double auth: ", user.value.is_two_factor_auth_enabled);
       if (user.value.is_two_factor_auth_enabled === true)
-        await navigateTo('/doubleAuth', '/')
+        await navigateTo('/doubleAuth') // TODO
       else
         await redirectIfConnected('/' + user.value.username, '/')
     }

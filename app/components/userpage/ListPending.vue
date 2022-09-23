@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { useUserAuthentified } from '~~/composables/useUserAuthentified';
+	const userApi = await useUserApi();
+	let pendingFriends = ref(await userApi.getPendingFriends());
 
-	const userAuthentified = await useUserAuthentified();
+	async function refreshList() {
+		pendingFriends.value = await userApi.getPendingFriends();
+	}
 </script>
 	
 	<template>
 	<div>
-    <div class="all" v-for="user in userAuthentified.pendingFriends">
-			<Suspense v-if="userAuthentified.username !== user.username">
-				<userpageListItem
-					:username="user.username"
+    <div class="all" v-for="user in pendingFriends">
+			<Suspense v-if="userApi.username !== user.user_1.username">
+				<userpageListItem 
+					@refreshList="refreshList"
+					:username="user.user_1.username"
 					:isFriend="false"
 					:pendingFriend="true" />
 			</Suspense>

@@ -118,6 +118,17 @@ export class ChatGateway implements OnGatewayConnection {
     });
   }
 
+  @SubscribeMessage('leave_channel')
+  async leaveChannel(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() channel: string
+  ) {
+    const author = await this.socketService.getUserFromSocket(socket);
+    const response = await this.channelService.leaveChannel(author, channel);
+    this.server.to(channel).emit('receive_leave_channel', response);
+    this.server.to(author.username).socketsLeave(channel);
+  }
+
   @SubscribeMessage('get_all_channels')
   async getAllChannels(
     @ConnectedSocket() socket

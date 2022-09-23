@@ -1,60 +1,62 @@
 
-	.all {
-		width: 100%;
-	}
-	 
-	 .Profile {
-		font-size: 14px;
-		display: flex;
-		align-content: center;
-		justify-content: space-between;
-		border: solid;
-		border-width: 1px;
-		border-color: var(--main-color-op-30);
-		width: 100%;
-	 }
+.all {
+	width: 100%;
+}
 	
-	 .Profile:hover {
-		border: solid;
-		border-color: currentColor;
-		border-width: 1px;
-	
-		background-color: var(--main-color-op-30);
-	  color: var(--main-color-light);
-	 }
-	
-	.userName {
-		font-size: 18px;
-	}
-	.userImage{
-		display: flex;
-		/* margin: 5%; */
-		border: solid;
-		border-radius: 5%;
-		height: 100px;
-		width: 100px;
-	}
-	
-	.userDatas {
-		display: flex;
-		justify-content: center;
-	}
-	
-	.OptionsProfile {
-		width: 20%;
-		display: flex;
-		flex-direction: column;
-		align-self: right;
-	}
+.Profile {
+	font-size: 14px;
+	display: flex;
+	align-content: center;
+	justify-content: space-between;
+	border: solid;
+	border-width: 1px;
+	border-color: var(--main-color-op-30);
+	width: 100%;
+}
 
-	.OptionsProfile_sub {
-		display: flex;
-		align-self: right;
-		text-align: left;
-	}
+.Profile:hover {
+	border: solid;
+	border-color: currentColor;
+	border-width: 1px;
 
-	.OptionsProfile_sub > a {
-		display: block;
-		width: 100%;
-		text-decoration: none;
-	}
+	background-color: var(--main-color-op-30);
+	color: var(--main-color-light);
+}
+
+.userName {
+	font-size: 18px;
+	padding-left: 4%;
+}
+
+.userImage {
+	display: flex;
+	border: solid;
+	border-radius: 5%;
+	height: 100px;
+	width: 100px;
+	align-self: center;
+}
+
+.userDatas {
+	padding-left: 5px;
+	display: flex;
+	justify-content: center;
+}
+
+.OptionsProfile {
+	width: 20%;
+	flex-direction: column;
+	align-self: right;
+}
+
+.OptionsProfile_sub {
+	display: flex;
+	align-self: right;
+	text-align: left;
+}
+
+.OptionsProfile_sub > a {
+	display: block;
+	width: 100%;
+	text-decoration: none;
+}

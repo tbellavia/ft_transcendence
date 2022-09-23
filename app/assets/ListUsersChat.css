@@ -1,0 +1,67 @@
+
+
+#chat .Profile {
+	font-size: 12px;
+	display: block;
+	align-self: left;
+	align-content: center;
+	justify-content: space-between;
+	border: solid;
+	border-width: 1px;
+	border-color: var(--main-color-op-30);
+	width: 100%;
+}
+
+#chat .Profile:hover {
+	border: solid;
+	border-color: currentColor;
+	border-width: 1px;
+
+	background-color: var(--main-color-op-10);
+	color: var(--main-color-light);
+}
+
+#chat .userName {
+	font-size: 12px;
+	align-self: center;
+	padding-left: 2%;
+}
+#chat .userImage {
+	display: flex;
+	border: 1px solid;
+	border-radius: 5%;
+	height: 40px;
+	width: 40px;
+	align-self: center;
+}
+
+#chat .userDatas {
+	padding-left: 0;
+	display: flex;
+	justify-content: flex-start;
+}
+
+/* display Options on Profile hover */
+#chat .Profile:hover .OptionsProfile {
+	width: 100%;
+	flex-grow: 1;
+	flex-direction: column;
+	display: block;
+}
+
+#chat .OptionsProfile {
+	display: none;
+}
+
+#chat .OptionsProfile_sub {
+	width: 100%;
+	display: flex;
+	align-self: right;
+	text-align: left;
+}
+
+/* #chat .OptionsProfile_sub > a {
+	display: block;
+	width: 100%;
+	text-decoration: none;
+} */

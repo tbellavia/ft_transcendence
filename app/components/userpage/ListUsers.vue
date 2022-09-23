@@ -1,6 +1,11 @@
 <script setup lang="ts">
 	const userApi = await useUserApi();
 	const users = ref(await userApi.getAllUsers());
+
+	async function refreshList() {
+		users.value = await userApi.getAllUsers();
+	}
+
 </script>
 	
 	<template>
@@ -8,6 +13,7 @@
 		<div class="all" v-for="user in users">
 			<Suspense >
 				<userpageListItem v-if="userApi.user !== user.username"
+				@refreshList="refreshList()"
 				:username="user.username"
 				:isFriend="false"
 				:pendingFriend="false" />
