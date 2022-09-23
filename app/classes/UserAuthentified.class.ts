@@ -113,6 +113,11 @@ export class UserAuthentified extends User {
       this.blockedUsers.splice(id, 1);
   }
 
+  public async isBlockUser(target: User | string) {
+    const booleanString = await this.fetchingMethod(`/blocked/me/${target}`);
+    return booleanString === 'true';
+  }
+
   /* UTILS */
   // Extract username if User
   private extractUsername(target: User | string) {
