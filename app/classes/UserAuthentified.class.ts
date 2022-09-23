@@ -14,7 +14,7 @@ interface BlockRelation {
   user_2: UserInfos;
 }
 
-class UserAuthentified extends User {
+export class UserAuthentified extends User {
   public friends: User[] = [];
   public pendingFriends: User[] = [];
   public blockedUsers: User[] = [];
@@ -39,6 +39,26 @@ class UserAuthentified extends User {
     );
     this.pendingFriends.push(new User(relation, this.fetchingMethod));
     return relation;
+  }
+
+  public async acceptFriend(target: User | string) {
+    const username = this.extractUsername(target);
+
+    const relation: FriendRelation = await this.fetchingMethod(
+      `/friends/me/${username}`,
+      {
+        method: 'PUT',
+        body: {
+          pending: false
+        }
+      },
+    );
+
+    const id = this.pendingFriends.findIndex(pendingFriend => pendingFriend.username == username);
+    if (id != -1) {
+      this.pendingFriends.splice(id, 1);
+      this.friends.push(new User(relation.user_2.username, this.fetchingMethod));
+    }
   }
 
   // Fetch friends or pending friends

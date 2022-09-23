@@ -2,7 +2,7 @@
 	<div v-if="props.username" class=Profile > 
 		<div class="userDatas">
 			
-			<div class="userImage"> <img :src="urlAvatar"/> </div>
+			<div class="userImage"> <img :src="targetedUser.avatar_url"/> </div>
 			<div class="userName"> {{ props.username }}</div>
 			<div class="rank"> rank </div>
 		</div> 
@@ -29,6 +29,8 @@
 </template>
 
 <script setup lang="ts">
+import { useUserAuthentified } from '~~/composables/useUserAuthentified';
+
 
 const props = defineProps({
 	username: {
@@ -39,38 +41,31 @@ const props = defineProps({
 	pendingFriend: Boolean,
 })
 
-const authUsername = (await useGetUser()).value.username;
-const messageLink = `/${authUsername}/chat/${props.username}`;
+const userAuthentified = await useUserAuthentified();
+const targetedUser = await useUser(props.username);
 
-const userApi = await useUserApi(props.username);
+const messageLink = `/${userAuthentified.value.username}/chat/${targetedUser.value.username}`;
 
 function acceptFriend() {
-	userApi.acceptFriend(props.username);
+	userAuthentified.value.acceptFriend(targetedUser.value);
 }
 
 function addFriend() {
-	userApi.addFriend(props.username);
+	userAuthentified.value.addFriend(targetedUser.value);
 }
 
 function block() {
-	userApi.block(props.username);
+	userAuthentified.value.blockUser(targetedUser.value);
 }
 
 function unblock() {
-	userApi.unblock(props.username);
+	userAuthentified.value.unblockUser(targetedUser.value);
 }
 
 function isblocked() {
-	return (userApi.isBlocked(props.username));
+	return userAuthentified.value.isBlocked(targetedUser.value);
 }
 
-async function displayAvatar() {
-	let avatar = await getAvatar(props.username);
-	console.log("avatar", avatar)
-	return URL.createObjectURL(avatar);
-}
-
-const urlAvatar = ref(await displayAvatar());
 </script>
 
 <style scoped>
