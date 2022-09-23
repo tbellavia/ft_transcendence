@@ -37,7 +37,7 @@
 			<button class="OptionsProfile_sub">  suggest a match </button>
 
 			<!-- SEE PROFILE PAGE -->
-			<button class="OptionsProfile_sub">  see Profile Page </button>
+			<button class="OptionsProfile_sub" @click='navigateTo("/" + userApi.user + "/profile_" + props.username)'> Profile Page </button>
 
 			<!-- BLOCK or UNBLOCK USER -->
 			<button v-if="isBlockedUser" class="OptionsProfile_sub"

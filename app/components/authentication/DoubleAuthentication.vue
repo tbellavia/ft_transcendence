@@ -40,7 +40,7 @@
             <v-card-actions>
 
               <!-- formulaire pour recuperer la clé (component) -->
-            <userpageDoubleAuthenticationForm 
+            <authenticationDoubleAuthenticationForm 
               justify="center" 
               @DoubleAuthValidate="printOk; activatePopup=false"/>
             </v-card-actions>

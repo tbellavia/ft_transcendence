@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<div>
-			<!-- img -->
-			<!-- name -->
+		<div class="profile-header">
+			<div class="profile-username"> {{ props.username }}</div>
+			<!-- <div class="profile-user-image"> <img :src="urlAvatar"/> </div> -->
 		</div>
 		<div>
 			<!-- options add friends etc... -->
@@ -22,12 +22,7 @@
 <script setup lang="ts">
 
 const props = defineProps({
-	username: {
-		type: String,
-	},
-	isFriend : {
-		type: Boolean,
-	}
+	username: String,
 })
 
 

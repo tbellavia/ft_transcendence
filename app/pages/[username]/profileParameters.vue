@@ -1,6 +1,6 @@
 <template>
 	<div>
 		USER PARAMETERS
-		<userpageUserParameters />
+		<profileSelfProfile />
 	</div>
 </template>

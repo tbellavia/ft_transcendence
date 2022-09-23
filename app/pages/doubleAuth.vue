@@ -22,7 +22,7 @@
         <v-spacer></v-spacer>
    
         <v-card-actions>
-        <userpageDoubleAuthenticationForm 
+        <authenticationAuthenticationForm 
           justify="center" 
           @DoubleAuthValidate="redirectIfConnected('/lvirgini', '/')"/>
         </v-card-actions>
