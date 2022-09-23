@@ -125,11 +125,6 @@ export class UsersController {
         return await this.usersService.findOneByName(username);
     }
 
-    @Get("/user/me")
-    async findMe(@Req() request: RequestWithUser) {
-        return request.user;
-    }
-
     //TODO: replace :user_id by me to only delete current auth user
     @Delete("/me")
     async delete(@Req() request: RequestWithUser) {

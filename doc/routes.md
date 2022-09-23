@@ -13,7 +13,7 @@ Users :
     - PUT       /api/v1/users/:username
         - Body
         {
-            avatar: string(),
+            username: string()
             double_auth: boolean()
         }
     - DELETE    /api/v1/users/:username
