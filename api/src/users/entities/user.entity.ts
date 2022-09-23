@@ -74,8 +74,8 @@ export class UserEntity extends BaseEntity {
     messages_target: MessageEntity[];
 
     // Channels created, joined, moderated
-    @OneToMany(() => ChannelEntity, channel => channel.creator, { cascade: true })
-    channels_created: ChannelEntity[];
+    @OneToMany(() => ChannelEntity, channel => channel.owner, { cascade: true })
+    channels_owned: ChannelEntity[];
 
     @ManyToMany(() => ChannelEntity, channel => channel.moderators)
     channels_moderated: ChannelEntity[];

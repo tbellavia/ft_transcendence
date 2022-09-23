@@ -1,4 +1,4 @@
-import { ClassSerializerInterceptor, SerializeOptions, UseInterceptors } from "@nestjs/common";
+import { ClassSerializerInterceptor, ConflictException, SerializeOptions, UseInterceptors } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from 'socket.io';
 import { SocketService } from "src/socket/socket.service";
@@ -7,7 +7,7 @@ import { GetAllMessagesDTO } from "./dto/getAllMessages.dto";
 import { SendMessageDTO } from "./dto/sendMessage.dto";
 import { JoinChannelDTO } from "./dto/joinChannel.dto";
 import { ChannelsService } from "./channels.service";
-import { instanceToPlain } from "class-transformer";
+import { WsUserNotInChannelException } from "./exceptions/channel/wsUserNotInChannel.exception";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
@@ -89,11 +89,7 @@ export class ChatGateway implements OnGatewayConnection {
     const channel = await this.channelService.createChannel(author, channelAuth);
     this.server
       .to(author.username)
-      .emit('receive_create_channel', instanceToPlain(channel, {
-        strategy: 'excludeAll',
-        exposeUnsetFields: false,
-        excludeExtraneousValues: true
-      }));
+      .emit('receive_create_channel', channel.channelName);
   }
 
   @SubscribeMessage('join_channel')
@@ -103,19 +99,9 @@ export class ChatGateway implements OnGatewayConnection {
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
 
-    const channel = await this.channelService.joinChannel(author, joinChannelDto);
-    this.server.to(author.username).emit('receive_join_channel', {
-      user: instanceToPlain(author, { strategy: 'excludeAll' }),
-      channel: instanceToPlain(channel, {
-        strategy: 'excludeAll',
-        exposeUnsetFields: false,
-        excludeExtraneousValues: true
-      })
-    });// For all client sockets
-    this.server.to(channel.name).emit('receive_join_channel', {
-      user: author.username,
-      channel: channel.name
-    });
+    const response = await this.channelService.joinChannel(author, joinChannelDto);
+    this.server.to(author.username).emit('receive_join_channel', response);
+    this.server.to(response.channelName).emit('receive_join_channel', response);
   }
 
   @SubscribeMessage('leave_channel')
@@ -136,16 +122,20 @@ export class ChatGateway implements OnGatewayConnection {
     const author = await this.socketService.getUserFromSocket(socket);
 
     const channels = await this.channelService.getAllChannels(author);
-    return channels;
+    return channels.map(channel => channel.name);
   }
 
   //Channel infos
-  @SubscribeMessage('get_channel_users')
-  async getChannelUsers(
-    @ConnectedSocket() socket,
-    @MessageBody() channel: string
+  @SubscribeMessage('get_channel_infos')
+  async getChannelInfos(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() channel_name: string
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
-    
+    const channel = await this.channelService.getChannel(channel_name);
+    if (channel.users.findIndex(channelUser => author.username == channelUser.username) == -1) {
+      throw new WsUserNotInChannelException(author.username, channel_name);
+    }
+    return channel;
   }
 }

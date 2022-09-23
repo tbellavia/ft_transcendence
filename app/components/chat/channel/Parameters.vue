@@ -1,36 +1,40 @@
 <template>
-  <fieldset>
-    <button @click="leaveChannel">Leave Channel</button>
-  </fieldset>
+  <div class="chat-channel-parameters">
+    <ChatChannelUsersList :channelName="channelName" />
+    <fieldset>
+      <button @click="leaveChannel">Leave Channel</button>
+    </fieldset>
+  </div>
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  target: {
-    required: true,
-    type: String
-  }
-});
+const props = defineProps<{channelName: string}>();
 
-const route = useRoute();
+// Leave channel method
 const socket = useSocketChat();
 function leaveChannel() {
   socket.value.emit(
     'leave_channel',
-    props.target
+    props.channelName
   );
 }
 
-const user = await useGetUser();
-
 // When user leave channel if it's currently load channel, load the main chat page
+const user = await useGetUser();
+const route = useRoute();
 socket.value.on(
   'receive_leave_channel',
   async ({username, channel}) => {
-    console.log('LEAVE CHANNEL: ', username, ':', channel.name);
-    if (user.value.username == username && channel.name == props.target)
+    if (user.value && user.value.username == username && channel == props.channelName)
       await navigateTo(route.fullPath.slice(0, route.fullPath.lastIndexOf('/')));
   }
-)
+);
 
 </script>
+
+<style scoped>
+  .chat-channel-parameters {
+    display: flex;
+    flex-direction: column;
+  }
+</style>

@@ -1,11 +1,9 @@
-import { ChannelEntity } from "../entities/channel.entity";
-
 export class LeaveChannel {
   username: string;
-  channel: ChannelEntity
+  channelName: string;
 
-  constructor(username: string, channel: ChannelEntity) {
+  constructor(username: string, channelName: string) {
     this.username = username;
-    this.channel = channel;
+    this.channelName = channelName;
   }
 }

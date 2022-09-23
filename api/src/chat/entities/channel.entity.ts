@@ -16,10 +16,10 @@ export class ChannelEntity {
   // Users relations
   @Expose()
   @Transform(({ value }) => value.username )
-  @ManyToOne(() => UserEntity, (creator => creator.channels_created), {
+  @ManyToOne(() => UserEntity, (owner => owner.channels_owned), {
     eager: true
   })
-  creator: UserEntity;
+  owner: UserEntity;
 
   @Expose()
   @Type(() => UserEntity)

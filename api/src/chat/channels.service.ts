@@ -5,6 +5,7 @@ import e from "express";
 import { PostgresErrorCode } from "src/database/postgresErrorCode.enum";
 import { UserEntity } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
+import { JoinChannel } from "./classes/joinChannel.class";
 import { LeaveChannel } from "./classes/leaveChannel.class";
 import { JoinChannelDTO } from "./dto/joinChannel.dto";
 import { ChannelEntity } from "./entities/channel.entity";
@@ -23,15 +24,16 @@ export class ChannelsService {
 
   // Create, Join and Leave channel
 
-  async createChannel(creator: UserEntity, channelRegister: JoinChannelDTO) {
+  async createChannel(owner: UserEntity, channelRegister: JoinChannelDTO) {
     try {
       const newChannel = this.channelRepository.create({
         ...channelRegister,
-        creator,
-        users: [creator]
+        owner,
+        users: [owner]
       })
       await this.channelRepository.save(newChannel);
-      return await this.getChannel(channelRegister.name);
+      const channel = await this.getChannel(channelRegister.name);
+      return new JoinChannel(owner.username, channel.name);
     }
     catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation)
@@ -48,7 +50,7 @@ export class ChannelsService {
 
     channel.users.push(user);
     await this.channelRepository.save(channel);
-    return channel;
+    return new JoinChannel(user.username, channel.name);
   }
 
   async leaveChannel(user: UserEntity, channel_name: string) {
@@ -60,29 +62,28 @@ export class ChannelsService {
       throw new WsUserNotInChannelException(user.username, channel_name);
     channel.users.splice(index, 1);
     // Check if user is owner of the channel, and if is the last user of it
-    if (channel.creator.username == user.username) {
+    if (channel.owner.username == user.username) {
       //Transfer ownership if other users are presents
       if (channel.users.length) {
         this.transferOwnership(user, channel);
       } else {
         await this.destroyChannel(channel);
-        return new LeaveChannel(user.username, channel);
+        return new LeaveChannel(user.username, channel_name);
       }
     }
 
     await this.channelRepository.save(channel);
-    return new LeaveChannel(user.username, channel);
+    return new LeaveChannel(user.username, channel_name);
   }
 
   private async destroyChannel(channel: ChannelEntity) {
     await this.channelRepository.remove(channel);
-    
   }
 
   // Channel Moderators and ownership
 
   private async transferOwnership(previousOwner: UserEntity, channel: ChannelEntity) {
-    channel.creator = channel.moderators[0] || channel.users[0];
+    channel.owner = channel.moderators[0] || channel.users[0];
     await this.channelRepository.save(channel);
   }
 
@@ -97,7 +98,7 @@ export class ChannelsService {
       )
       .where('users.user_id = :user_id', { user_id: user.user_id })
       .leftJoinAndSelect('channel.moderators', 'moderators')
-      .leftJoinAndSelect('channel.creator', 'creator')
+      .leftJoinAndSelect('channel.owner', 'owner')
       .getMany();
     return channels;
   }
