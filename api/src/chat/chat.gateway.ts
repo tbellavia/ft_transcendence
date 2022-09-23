@@ -8,7 +8,6 @@ import { SendMessageDTO } from "./dto/sendMessage.dto";
 import { JoinChannelDTO } from "./dto/joinChannel.dto";
 import { ChannelsService } from "./channels.service";
 import { instanceToPlain } from "class-transformer";
-import { userInfo } from "os";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
