@@ -1,29 +1,27 @@
 <script setup lang="ts">
-	const userAuthentified = await useUserAuthentified();
+import { UserAuthentified } from '~~/classes/UserAuthentified.class';
+
+
 	async function refreshList() {
-		await userAuthentified.value.fetchFriends();
-		
+		await	props.userAuthenticate.fetchAll();
 	}
 
-	function getFriendName(user: any) {
-		if (user) {
-			if (user.user_1.username === userApi.user)
-				return user.user_2.username
-			return user.user_1.username
-		}
-		return undefined;
-	}
+const props = defineProps({
+	userAuthenticate: ref(UserAuthentified),
+})
+
+
 </script>
 	
 <!-- -------------------------------------------------------------- -->
 
 <template>
 <div >
-	<div class="all" v-for="user in friends">
+	<div class="all" v-for="user in props.userAuthenticate.friends">
 		<Suspense v-if="user" >
 			<userpageListItem 
-			@refreshList="refreshList"
-			:username="getFriendName(user)"
+			@refreshList="refreshList()"
+			:userAuthenticate="props.userAuthenticate"
 			:isFriend="true"
 			:pendingFriend="false" />
 		</Suspense>

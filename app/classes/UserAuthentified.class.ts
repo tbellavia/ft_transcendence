@@ -87,7 +87,7 @@ export class UserAuthentified extends User {
   public async removeFriend(target: User | string) {
     const username = this.extractUsername(target);
     await this.fetchingMethod(
-      `/friends/me/${this.extractUsername(target)}`,
+      `/friends/me/${username}`,
       {method: 'DELETE'}
     );
     this.deleteFriend(username);
@@ -97,11 +97,12 @@ export class UserAuthentified extends User {
   /* BLOCK INTERFACE */
   public async blockUser(target: User | string) {
     const username = this.extractUsername(target);
-    const relation: BlockRelation = await this.fetchingMethod(
+    const relation: BlockRelation[] = await this.fetchingMethod(
       `/blocked/me/${username}`,
       {method: 'POST'}
     );
-    this.blockedUsers.push(new User(relation.user_2.username, this.fetchingMethod));
+    console.log("RELATION: ", relation);
+    this.blockedUsers.push(new User(username, this.fetchingMethod));
     this.deleteFriend(username);
   }
 

@@ -1,19 +1,24 @@
 <script setup lang="ts">
-	const userApi = await useUserApi();
-	let pendingFriends = ref(await userApi.getPendingFriends());
+import { UserAuthentified } from '~~/classes/UserAuthentified.class';
 
-	async function refreshList() {
-		pendingFriends.value = await userApi.getPendingFriends();
+async function refreshList() {
+		await	props.userAuthenticate.fetchAll();
 	}
+
+const props = defineProps({
+	userAuthenticate: ref(UserAuthentified),
+})
+
 </script>
 	
 	<template>
 	<div>
-    <div class="all" v-for="user in pendingFriends">
-			<Suspense v-if="userApi.username !== user.user_1.username">
+    <div class="all" v-for="user in props.userAuthenticate.pendingFriend">
+			<Suspense >
 				<userpageListItem 
-					@refreshList="refreshList"
-					:username="user.user_1.username"
+					@refreshList="refresList()"
+					:target="user"
+					:userAuthenticate="props.userAuthenticate"
 					:isFriend="false"
 					:pendingFriend="true" />
 			</Suspense>

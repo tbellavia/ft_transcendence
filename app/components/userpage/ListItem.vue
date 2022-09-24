@@ -1,11 +1,11 @@
 <template>
-	<div v-if="props.username" class=Profile > 
+	<div v-if="props.target" class=Profile > 
 		
 		<!--  AVATAR and NAME -->
 		<div class="userDatas">
 			
-			<div class="userImage"> <img :src="targetedUser.avatar_url"/> </div>
-			<div class="userName"> {{ props.username }}</div>
+			<div class="userImage"> <img :src="props.target.avatar_url"/> </div>
+			<div class="userName"> {{ props.target.username }}</div>
 		</div> 
 
 		<!-- Buttons of all options -->
@@ -14,38 +14,38 @@
 			<!-- PENDING FRIENDS: accept or refuse friendship -->
 			<div v-if="props.pendingFriend">
 				<button class="OptionsProfile_sub" 
-					@click="acceptFriend()"> accept friend
+					@click="useAction('acceptFriend')"> accept friend
 				</button>
 				<button class="OptionsProfile_sub" 
-					@click="deleteFriend()"> refuse friend
+					@click="useAction('removeFriend')"> refuse friend
 				</button>
 			</div>
 
 			<!-- ADD or REMOVE FRIENDSHIP -->
 			<button v-else-if="props.isFriend === false" class="OptionsProfile_sub"
-				@click="addFriend()"> add friend
+				@click="useAction('addFriend')"> add friend
 			</button>
 			<button v-else-if="props.isFriend === true" class="OptionsProfile_sub"
-				@click="deleteFriend()"> remove friend
+				@click="useAction('removeFriend')"> remove friend
 			</button>
 
 			<!-- SEND MESSAGE -->
-			<div class="OptionsProfile_sub">
+			<!-- <div class="OptionsProfile_sub">
 				<a :href="messageLink">message</a>
-			</div>
+			</div> -->
 
 			<!-- SUGGEST MATCH -->
 			<button class="OptionsProfile_sub">  suggest a match </button>
 
 			<!-- SEE PROFILE PAGE -->
-			<button class="OptionsProfile_sub">  see Profile Page </button>
+			<button class="OptionsProfile_sub"> Profile Page </button>
 
 			<!-- BLOCK or UNBLOCK USER -->
-			<button v-if="isBlockedUser" class="OptionsProfile_sub"
-				@click="unblock()"> unblock
+			<button v-if="isBlocked()" class="OptionsProfile_sub"
+				@click="useAction('block')"> unblock
 			</button>
 			<button v-else class="OptionsProfile_sub" 
-				@click="block()"> block
+				@click="useAction('block')"> block
 			</button>
 		</div> 
 	</div>
@@ -55,75 +55,55 @@
 
 <script setup lang="ts">
 import { useUserAuthentified } from '~~/composables/useUserAuthentified';
+import { UserAuthentified } from '~~/classes/UserAuthentified.class';
+import { User } from '~~/classes/User.class';
 
+async function isBlocked() {
+	return await props.userAuthenticate.value.isBlockUser(props.target);
+}
+
+async function useAction(action: string)
+{
+	// let functionList = {
+	// 	['acceptFriend']: async () => { await props.userAuthenticate.acceptFriend(props.target) },
+	// 	['addFriend']: async () => { await props.userAuthenticate.addFriend(props.target) },
+	// 	['removeFriend']: async () => { await props.userAuthenticate.removeFriend(props.target) },
+	// 	['block']: async () => { await props.userAuthenticate.blockUser(props.target) },
+	// 	['unblock']: async () => { await props.userAuthenticate.unblockUser(props.target) },
+	// }
+
+	if (action === 'acceptFriend') {
+		console.log(action);
+		await props.userAuthenticate.value.acceptFriend(props.target).then (async () => { emit('refreshList') });;
+	}
+	if (action === 'addFriend') {
+		console.log(action);
+		await props.userAuthenticate.value.addFriend(props.target).then  (async () => { emit('refreshList') });;
+	}
+	if (action === 'removeFriend') {
+		console.log(action);
+		await props.userAuthenticate.value.removeFriend(props.target).then  (async () => { emit('refreshList') });;
+	}
+	if (action === 'block') {
+		console.log(action);
+		await props.userAuthenticate.value.blockUser(props.target).then  (async () => { emit('refreshList') });;
+	}
+	if (action === 'unblock') {
+		console.log(action);
+		await props.userAuthenticate.value.unblockUser(props.target).then  (async () => { emit('refreshList') });;
+	}
+
+}
 
 const props = defineProps({
-	username: {
-		required: true,
-		type: String,
-	},
+	userAuthenticate: ref(UserAuthentified),
+	target: ref(User),
 	isFriend: Boolean,
 	isBlocked: Boolean,
 	pendingFriend: Boolean,
 })
-
-const userAuthentified = await useUserAuthentified();
-const targetedUser = await useUser(props.username);
-
-const userApi = await useUserApi(props.username);
 const emit = defineEmits(['refreshList']);
 
-async function acceptFriend() {
-	await userApi.acceptFriend(props.username)
-	.then (() => {
-		emit('refreshList')
-	})
-}
-
-async function deleteFriend() {
-	await userApi.deleteFriend(props.username)
-	.then (() => {
-		emit('refreshList')
-	})
-}
-
-async function addFriend() {
-	await userApi.addFriend(props.username)
-	.then (() => {
-		emit('refreshList')
-	})
-}
-
-async function block() {
-	await userApi.block(props.username)
-	.then (() => {
-		emit('refreshList')
-		isBlockedUser.value = true;
-	}).catch( (error) => console.warn(error))
-}
-
-async function unblock() {
-	await userApi.unblock(props.username)
-	.then (() => {
-		emit('refreshList')
-		isBlockedUser.value = false;
-	}).catch( (error) => console.warn(error))
-}
-
-
-async function isBlocked() {
-	return await userApi.isBlocked(props.username);
-}
-
-const isBlockedUser = ref(await isBlocked());
-console.log("isBlocked: ", typeof(isBlockedUser.value));
-
-async function displayAvatar() {
-	let avatar = await getAvatar(props.username);
-	return URL.createObjectURL(avatar);
-}
-
-const urlAvatar = ref(await displayAvatar());
 </script>
 
 <!-- -------------------------------------------------------------- -->

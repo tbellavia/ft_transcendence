@@ -5,7 +5,7 @@ import { Ref } from 'vue';
 
 async function getUserAuthentifiedInfos() {
   const { $apiFetch } = useNuxtApp();
-  const userAuthentifiedInfos: UserInfos = await $apiFetch('/user/user/me');
+  const userAuthentifiedInfos: UserInfos = await $apiFetch('/users/user/me');
   return userAuthentifiedInfos;
 }
 
