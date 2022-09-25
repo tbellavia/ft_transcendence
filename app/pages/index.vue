@@ -18,9 +18,12 @@
 
 onMounted(async () => {
   useRefreshUser();
-  const user = await useGetUser();
-  if (user.value?.username)
+  await useUserAuthentified();
+  const user = await useUserAuthentified(); // TODO dont WORK if already connected
+  console.log("ON MOUNTED: ", user);
+  if (user.value?.username) {
     await redirectIfConnected('/' + user.value.username, '/');
+  }
 })
 
 const { $eventBus } = useNuxtApp();
@@ -30,6 +33,8 @@ $eventBus.$on('connect', async () => {
     const user = await useGetUser();
     if (user.value?.username)
     {
+      console.log("ON EVENT connect: ", user); // TODO dont WORK if already connected
+      await useUserAuthentified();
       if (user.value.is_two_factor_auth_enabled === true)
         await navigateTo('/doubleAuth') // TODO
       else

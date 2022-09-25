@@ -29,6 +29,8 @@ export class UserAuthentified extends User {
     this.pendingFriends.forEach(friend => friend.fetchAll());
     this.friends.forEach(friend => friend.fetchAll());
     this.blockedUsers.forEach(user => user.fetchAll());
+
+
     return this;
   }
 
@@ -82,7 +84,21 @@ export class UserAuthentified extends User {
       this.pendingFriends = friendsUser;
     else
       this.friends = friendsUser;
+
+      console.log("THIS friends:", this.friends);
+      console.log("THIS pending:", this.pendingFriends);
   }
+
+// VIRGINIE  -------------------------------------------------------------- -->
+
+public async getFriends(pending: boolean = false) {
+  const friends = await useApi(`/users/friends/me?pending=${pending}`);
+  console.log("FRIENDS request");
+  return friends;
+}
+
+//  -------------------------------------------------------------- -->
+
 
   public async removeFriend(target: User | string) {
     const username = this.extractUsername(target);

@@ -1,24 +1,24 @@
 <script setup lang="ts">
 import { UserAuthentified } from '~~/classes/UserAuthentified.class';
 
-async function refreshList() {
-		await	props.userAuthenticate.fetchAll();
-	}
+let userAuthenticate = await getUserAuthenticate();
+let pendingFriends = await userAuthenticate.getFriends(true);
 
-const props = defineProps({
-	userAuthenticate: ref(UserAuthentified),
-})
+async function refreshList() {
+	userAuthenticate = await getRefreshedUserAuthenticate();
+	pendingFriends = await userAuthenticate.getFriends(true);
+}
+
 
 </script>
 	
 	<template>
 	<div>
-    <div class="all" v-for="user in props.userAuthenticate.pendingFriend">
+    <div class="all" v-for="pending in pendingFriends">
 			<Suspense >
 				<userpageListItem 
-					@refreshList="refresList()"
-					:target="user"
-					:userAuthenticate="props.userAuthenticate"
+					@refreshList="refreshList()"
+					:target="pending"
 					:isFriend="false"
 					:pendingFriend="true" />
 			</Suspense>

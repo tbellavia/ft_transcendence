@@ -1,8 +1,8 @@
 <script setup lang="ts">
 let users = ref('friends');
 
-const userAuthenticate = await useUserAuthentified();
-
+let userAuthenticate = await getRefreshedUserAuthenticate();
+console.log("USERLIST: ", userAuthenticate.value);
 
 
 </script>
@@ -16,13 +16,13 @@ const userAuthenticate = await useUserAuthentified();
 	</div>
 	<div class="userLists">
 		<Suspense v-if="users === 'friends'">
-			<userpageListFriends :userAuthenticate="toRef(userAuthenticate)" class="all"/>
+			<userpageListFriends class="all"/>
 		</Suspense>
 		<Suspense v-else-if="users === 'all'">
-			<userpageListUsers :userAuthenticate="toRef(userAuthenticate)" class="all"/>
+			<userpageListUsers class="all"/>
 		</Suspense>
 		<Suspense v-else>
-			<userpageListPending :userAuthenticate="toRef(userAuthenticate)" class="all"/>
+			<userpageListPending class="all"/>
 		</Suspense>
 	</div>
 </div>

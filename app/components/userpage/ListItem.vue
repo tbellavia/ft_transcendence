@@ -58,10 +58,24 @@ import { useUserAuthentified } from '~~/composables/useUserAuthentified';
 import { UserAuthentified } from '~~/classes/UserAuthentified.class';
 import { User } from '~~/classes/User.class';
 
+
+
+
+const userAuthenticate = await getRefreshedUserAuthenticate();
+const emit = defineEmits(['refreshList']);
+
+const props = defineProps({
+	target: User,
+	isFriend: Boolean,
+	isBlocked: Boolean,
+	pendingFriend: Boolean,
+})
+
 async function isBlocked() {
-	return await props.userAuthenticate.value.isBlockUser(props.target);
+	return await userAuthenticate.value.isBlockUser(props.target);
 }
 
+console.log("LISTITEN: ", props.target)
 async function useAction(action: string)
 {
 	// let functionList = {
@@ -74,35 +88,27 @@ async function useAction(action: string)
 
 	if (action === 'acceptFriend') {
 		console.log(action);
-		await props.userAuthenticate.value.acceptFriend(props.target).then (async () => { emit('refreshList') });;
+		await userAuthenticate.value.acceptFriend(props.target).then (async () => { emit('refreshList') });;
 	}
 	if (action === 'addFriend') {
 		console.log(action);
-		await props.userAuthenticate.value.addFriend(props.target).then  (async () => { emit('refreshList') });;
+		await userAuthenticate.value.addFriend(props.target).then  (async () => { emit('refreshList') });;
 	}
 	if (action === 'removeFriend') {
 		console.log(action);
-		await props.userAuthenticate.value.removeFriend(props.target).then  (async () => { emit('refreshList') });;
+		await userAuthenticate.value.removeFriend(props.target).then  (async () => { emit('refreshList') });;
 	}
 	if (action === 'block') {
 		console.log(action);
-		await props.userAuthenticate.value.blockUser(props.target).then  (async () => { emit('refreshList') });;
+		await userAuthenticate.value.blockUser(props.target).then  (async () => { emit('refreshList') });;
 	}
 	if (action === 'unblock') {
 		console.log(action);
-		await props.userAuthenticate.value.unblockUser(props.target).then  (async () => { emit('refreshList') });;
+		await userAuthenticate.value.unblockUser(props.target).then  (async () => { emit('refreshList') });;
 	}
 
 }
 
-const props = defineProps({
-	userAuthenticate: ref(UserAuthentified),
-	target: ref(User),
-	isFriend: Boolean,
-	isBlocked: Boolean,
-	pendingFriend: Boolean,
-})
-const emit = defineEmits(['refreshList']);
 
 </script>
 
