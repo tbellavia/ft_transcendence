@@ -1,10 +1,5 @@
 <script setup lang="ts">
 let users = ref('friends');
-
-let userAuthenticate = await getRefreshedUserAuthenticate();
-console.log("USERLIST: ", userAuthenticate.value);
-
-
 </script>
 
 <template>

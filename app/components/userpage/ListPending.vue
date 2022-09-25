@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import { User } from '~~/classes/User.class';
-import { UserAuthentified } from '~~/classes/UserAuthentified.class';
-
 let userAuthenticate = await getUserAuthenticate();
 let pendingFriends = ref(await userAuthenticate.value.getFriendsRequest());
 
 async function refreshList() {
-	userAuthenticate.value = await getRefreshedUserAuthenticate();
+	userAuthenticate = await getRefreshedUserAuthenticate();
 	pendingFriends.value = await userAuthenticate.value.getFriendsRequest();
 }
-
 </script>
+
+<!-- -------------------------------------------------------------- -->
 	
 <template>
 <div>

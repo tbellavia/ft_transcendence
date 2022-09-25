@@ -44,15 +44,15 @@ export class UserAuthentified extends User {
   /* FRIEND INTERFACE */
   /* -------------------------------------------------------------- */
   public async addFriend(target: User | string) {
-    return await postApi(`/users/friends/me/${this.extractUsername(target)}`)
+    await postApi(`/users/friends/me/${this.extractUsername(target)}`)
   }
 
   public async acceptFriend(target: User | string) {
-    return await putApi(`/users/friends/me/${this.extractUsername(target)}`,  { "pending": false })
+    await putApi(`/users/friends/me/${this.extractUsername(target)}`,  { "pending": false })
   }
 
   public async deleteFriend(username: User | string) {
-		return await deleteApi(`/users/friends/me/${this.extractUsername(username)}`)
+		await deleteApi(`/users/friends/me/${this.extractUsername(username)}`)
 	}
 
   public async getFriends(pending: boolean = false) {
@@ -67,11 +67,11 @@ export class UserAuthentified extends User {
   /* BLOCK INTERFACE */
   /* -------------------------------------------------------------- */
   public async blockUser(target: User | string) {
-    return await postApi(`users/blocked/me/${this.extractUsername(target)}`);
+    await postApi(`users/blocked/me/${this.extractUsername(target)}`);
   }
 
   public async unblockUser(target: User | string) {
-    return await deleteApi(`users/blocked/me/${this.extractUsername(target)}`);
+    await deleteApi(`users/blocked/me/${this.extractUsername(target)}`);
   }
 
   public async isBlockUser(target: User | string) {

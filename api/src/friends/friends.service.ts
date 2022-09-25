@@ -76,7 +76,6 @@ export class FriendsService {
                 user_1: true
             }
         )
-        console.log(await this.friendRepository.find(opts));
         return await this.friendRepository.find(opts);
     }
 

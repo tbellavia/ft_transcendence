@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { list } from 'postcss';
-import { UserAuthentified } from '~~/classes/UserAuthentified.class';
-
 let userAuthenticate = await getUserAuthenticate();
 let listFriends = ref(await userAuthenticate.value.getFriends());
 

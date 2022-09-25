@@ -30,9 +30,9 @@
 			</button>
 
 			<!-- SEND MESSAGE -->
-			<!-- <div class="OptionsProfile_sub">
-				<a :href="messageLink">message</a>
-			</div> -->
+			<div class="OptionsProfile_sub">
+				<NuxtLink :href="messageLink">message </NuxtLink>
+			</div>
 
 			<!-- SUGGEST MATCH -->
 			<button class="OptionsProfile_sub">  suggest a match </button>
@@ -54,56 +54,37 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
-import { useUserAuthentified } from '~~/composables/useUserAuthentified';
-import { UserAuthentified } from '~~/classes/UserAuthentified.class';
-import { User } from '~~/classes/User.class';
-
 const userAuthenticate = await getRefreshedUserAuthenticate();
 const targetAvatar = ref(await getAvatar(props.target.username))
 const isBlocked = ref(await userAuthenticate.value.isBlockUser(props.target));
+const messageLink = `/${userAuthenticate.value.username}/chat/${props.target.username}`;
 const emit = defineEmits(['refreshList']);
 
 const props = defineProps({
-	target: User,
+	target: Object,
 	isFriend: Boolean,
 	isBlocked: Boolean,
 	pendingFriend: Boolean,
 })
 
-
-// console.log("LIST ITEM: ", props.target)
-console.log("is blocked = ", isBlocked);
-async function useAction(action: string)
-{
-	// let functionList = {
-	// 	['acceptFriend']: async () => { await props.userAuthenticate.acceptFriend(props.target) },
-	// 	['addFriend']: async () => { await props.userAuthenticate.addFriend(props.target) },
-	// 	['removeFriend']: async () => { await props.userAuthenticate.removeFriend(props.target) },
-	// 	['block']: async () => { await props.userAuthenticate.blockUser(props.target) },
-	// 	['unblock']: async () => { await props.userAuthenticate.unblockUser(props.target) },
-	// }
-
+async function useAction(action: string) {
 	console.log(action);
 	if (action === 'acceptFriend')
 		await userAuthenticate.value.acceptFriend(props.target);
-	if (action === 'addFriend')
+	else if (action === 'addFriend')
 		await userAuthenticate.value.addFriend(props.target);
-	if (action === 'removeFriend')
+	else if (action === 'removeFriend')
 		await userAuthenticate.value.deleteFriend(props.target);
-	if (action === 'block') {
+	else if (action === 'block') {
 		await userAuthenticate.value.blockUser(props.target);
 		isBlocked.value = await userAuthenticate.value.isBlockUser(props.target);
 	}
-	if (action === 'unblock') {
+	else if (action === 'unblock') {
 		await userAuthenticate.value.unblockUser(props.target);
 		isBlocked.value = await userAuthenticate.value.isBlockUser(props.target);
 	}
 	emit('refreshList');
-	console.log("is blocked2 = ", isBlocked);
-
 }
-
-
 </script>
 
 <!-- -------------------------------------------------------------- -->
