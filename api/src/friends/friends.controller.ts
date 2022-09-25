@@ -27,6 +27,10 @@ export class FriendsController {
         @Query() getFriendsQueryDto: GetFriendsQueryDTO
     ) 
     {
+        if ( getFriendsQueryDto.pending === true ){
+            console.log("OK")
+            return this.friendsService.findFriendsRequests(request.user.username, getFriendsQueryDto);
+        }        
         return this.friendsService.findAll(request.user.username, getFriendsQueryDto);
     }
 
@@ -36,6 +40,7 @@ export class FriendsController {
         @Query() paginationQueryDto: PaginationQueryDto
     )
     {
+        console.log("OK")
         return await this.friendsService.findFriendsRequests(request.user.username, paginationQueryDto);
     }
 

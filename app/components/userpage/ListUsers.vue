@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { UserAuthentified } from '~~/classes/UserAuthentified.class';
 
-	const userApi = await useUserApi();
-	let users = ref(await getAllUsers());
-	let userAuthenticate = await getUserAuthenticate();
+let userAuthenticate = await getUserAuthenticate();
+let users = ref(await getAllUsers());
 
-	async function refreshList() {
-		users = ref(await getAllUsers());
-		userAuthenticate = await getRefreshedUserAuthenticate();
-	}
+async function refreshList() {
+	users = ref(await getAllUsers());
+	userAuthenticate = await getRefreshedUserAuthenticate();
+}
 </script>
 	
 	<template>

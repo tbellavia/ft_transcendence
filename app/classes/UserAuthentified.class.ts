@@ -59,6 +59,10 @@ export class UserAuthentified extends User {
     return await useApi(`/users/friends/me?pending=${pending}`);
   }
 
+  public async getFriendsRequest(pending: boolean = false) {
+    return await useApi(`/users/friends/me/request`);
+  }
+
 
   /* BLOCK INTERFACE */
   /* -------------------------------------------------------------- */

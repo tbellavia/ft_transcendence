@@ -53,16 +53,12 @@ export class User {
 		this.stats = stats;
 	}
 
-	// public async fetchAvatar() {
-	// 	const avatar: Blob = await this.fetchingMethod(`${this.username}/avatar`);
-	// 	this.avatar = avatar;
-	// 	this.avatar_url = URL.createObjectURL(this.avatar);
-	// }
+	public async fetchAvatar() {
+		const avatar: Blob = await this.fetchingMethod(`${this.username}/avatar`);
+		this.avatar = avatar;
+		this.avatar_url = URL.createObjectURL(this.avatar);
+	}
 
-	public async getAvatar() {
-		const avatar = await useApi(`users/${this.username}/avatar`);
-		return URL.createObjectURL(avatar);
-		}
 }
 
 export async function createAndInitUser(username: string, fetchingMethod: $Fetch) {
@@ -70,3 +66,4 @@ export async function createAndInitUser(username: string, fetchingMethod: $Fetch
 	// await user.fetchAll();
 	return user;
 }
+

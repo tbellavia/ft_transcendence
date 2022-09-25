@@ -7,7 +7,7 @@ let listFriends = ref(await userAuthenticate.value.getFriends());
 
 async function refreshList() {
 	userAuthenticate = await getRefreshedUserAuthenticate();
-	listFriends = ref(await userAuthenticate.getFriends());
+	listFriends.value = await userAuthenticate.value.getFriends();
 }
 </script>
 	

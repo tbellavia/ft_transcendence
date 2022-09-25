@@ -1,12 +1,13 @@
 <script setup lang="ts">
+import { User } from '~~/classes/User.class';
 import { UserAuthentified } from '~~/classes/UserAuthentified.class';
 
 let userAuthenticate = await getUserAuthenticate();
-let pendingFriends = await userAuthenticate.value.getFriends(true);
+let pendingFriends = ref(await userAuthenticate.value.getFriendsRequest());
 
 async function refreshList() {
-	userAuthenticate = await getRefreshedUserAuthenticate();
-	pendingFriends = await userAuthenticate.value.getFriends(true);
+	userAuthenticate.value = await getRefreshedUserAuthenticate();
+	pendingFriends.value = await userAuthenticate.value.getFriendsRequest();
 }
 
 </script>
@@ -17,7 +18,7 @@ async function refreshList() {
 	<Suspense >
 		<userpageListItem 
 			@refreshList="refreshList()"
-			:target="userAuthenticate.extractFriend(pending)"
+			:target="pending.user_1"
 			:isFriend="false"
 			:pendingFriend="true" />
 	</Suspense>

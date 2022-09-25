@@ -9,10 +9,12 @@ export function getUserAuthenticate() {
 }
 
 export async function getRefreshedUserAuthenticate() {
-  if (userAuthenticate === undefined)
-    await useUserAuthentified();
-  else
-    await userAuthenticate.value.fetchAll()
+  await useUserAuthentified();
+
+  // if (userAuthenticate === undefined)
+  //   await useUserAuthentified();
+  // else
+  //   await userAuthenticate.value.fetchAll()
   return userAuthenticate;
 }
 

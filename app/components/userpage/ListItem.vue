@@ -4,7 +4,7 @@
 		<!--  AVATAR and NAME -->
 		<div class="userDatas">
 			
-			<div class="userImage"> <img :src="props.target.avatar_url"/> </div>
+			<div class="userImage"> <img :src="targetAvatar"/> </div>
 			<div class="userName"> {{ props.target.username }}</div>
 		</div> 
 
@@ -41,8 +41,8 @@
 			<button class="OptionsProfile_sub"> Profile Page </button>
 
 			<!-- BLOCK or UNBLOCK USER -->
-			<button v-if="isBlocked()" class="OptionsProfile_sub"
-				@click="useAction('block')"> unblock
+			<button v-if="isBlocked" class="OptionsProfile_sub"
+				@click="useAction('unblock')"> unblock
 			</button>
 			<button v-else class="OptionsProfile_sub" 
 				@click="useAction('block')"> block
@@ -58,10 +58,9 @@ import { useUserAuthentified } from '~~/composables/useUserAuthentified';
 import { UserAuthentified } from '~~/classes/UserAuthentified.class';
 import { User } from '~~/classes/User.class';
 
-
-
-
 const userAuthenticate = await getRefreshedUserAuthenticate();
+const targetAvatar = ref(await getAvatar(props.target.username))
+const isBlocked = ref(await userAuthenticate.value.isBlockUser(props.target));
 const emit = defineEmits(['refreshList']);
 
 const props = defineProps({
@@ -71,11 +70,9 @@ const props = defineProps({
 	pendingFriend: Boolean,
 })
 
-async function isBlocked() {
-	return await userAuthenticate.value.isBlockUser(props.target);
-}
 
-console.log("LISTITEN: ", props.target)
+// console.log("LIST ITEM: ", props.target)
+console.log("is blocked = ", isBlocked);
 async function useAction(action: string)
 {
 	// let functionList = {
@@ -86,26 +83,23 @@ async function useAction(action: string)
 	// 	['unblock']: async () => { await props.userAuthenticate.unblockUser(props.target) },
 	// }
 
-	if (action === 'acceptFriend') {
-		console.log(action);
-		await userAuthenticate.value.acceptFriend(props.target).then (async () => { emit('refreshList') });;
-	}
-	if (action === 'addFriend') {
-		console.log(action);
-		await userAuthenticate.value.addFriend(props.target).then  (async () => { emit('refreshList') });;
-	}
-	if (action === 'removeFriend') {
-		console.log(action);
-		await userAuthenticate.value.removeFriend(props.target).then  (async () => { emit('refreshList') });;
-	}
+	console.log(action);
+	if (action === 'acceptFriend')
+		await userAuthenticate.value.acceptFriend(props.target);
+	if (action === 'addFriend')
+		await userAuthenticate.value.addFriend(props.target);
+	if (action === 'removeFriend')
+		await userAuthenticate.value.deleteFriend(props.target);
 	if (action === 'block') {
-		console.log(action);
-		await userAuthenticate.value.blockUser(props.target).then  (async () => { emit('refreshList') });;
+		await userAuthenticate.value.blockUser(props.target);
+		isBlocked.value = await userAuthenticate.value.isBlockUser(props.target);
 	}
 	if (action === 'unblock') {
-		console.log(action);
-		await userAuthenticate.value.unblockUser(props.target).then  (async () => { emit('refreshList') });;
+		await userAuthenticate.value.unblockUser(props.target);
+		isBlocked.value = await userAuthenticate.value.isBlockUser(props.target);
 	}
+	emit('refreshList');
+	console.log("is blocked2 = ", isBlocked);
 
 }
 
