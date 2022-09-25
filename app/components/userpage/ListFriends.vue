@@ -3,13 +3,11 @@ import { list } from 'postcss';
 import { UserAuthentified } from '~~/classes/UserAuthentified.class';
 
 let userAuthenticate = await getUserAuthenticate();
-let listFriends = await userAuthenticate.value.getFriends();
-console.log("LIST FRIEND user.friend: ", userAuthenticate.value.friends);
-console.log("LIST FRIEND: user.fetchApi ", listFriends);
+let listFriends = ref(await userAuthenticate.value.getFriends());
 
 async function refreshList() {
-	// userAuthenticate.value = await getRefreshedUserAuthenticate();
-	listFriends = await userAuthenticate.getFriends();
+	userAuthenticate = await getRefreshedUserAuthenticate();
+	listFriends = ref(await userAuthenticate.getFriends());
 }
 </script>
 	
@@ -21,7 +19,7 @@ async function refreshList() {
 		<Suspense v-if="friend" >
 			<userpageListItem 
 			@refreshList="refreshList()"
-			:target="friend"
+			:target="userAuthenticate.extractFriend(friend)"
 			:isFriend="true"
 			:pendingFriend="false" />
 		</Suspense>

@@ -15,3 +15,7 @@ export async function useGetUser() {
     return undefined;
   }
 }
+
+export async function getAllUsers() {
+	return await useApi(`/users/`);
+}

@@ -30,7 +30,6 @@ export class User {
 		});
 	}
 
-
 	/**
 	 * Fetch all user's datas
 	 * call all fetch methods that is not fetchAll
@@ -53,20 +52,15 @@ export class User {
 		this.stats = stats;
 	}
 
-	// public async fetchAvatar() {
-	// 	const avatar: Blob = await this.fetchingMethod(`${this.username}/avatar`);
-	// 	this.avatar = avatar;
-	// 	this.avatar_url = URL.createObjectURL(this.avatar);
-	// }
-
-	public async getAvatar() {
-		const avatar = await useApi(`users/${this.username}/avatar`);
-		return URL.createObjectURL(avatar);
-		}
+	public async fetchAvatar() {
+		const avatar: Blob = await this.fetchingMethod(`${this.username}/avatar`);
+		this.avatar = avatar;
+		this.avatar_url = URL.createObjectURL(this.avatar);
+	}
 }
 
 export async function createAndInitUser(username: string, fetchingMethod: $Fetch) {
 	const user = new User(username, fetchingMethod);
-	// await user.fetchAll();
+	await user.fetchAll();
 	return user;
 }

@@ -29,12 +29,11 @@ export class UserAuthentified extends User {
     this.pendingFriends.forEach(friend => friend.fetchAll());
     this.friends.forEach(friend => friend.fetchAll());
     this.blockedUsers.forEach(user => user.fetchAll());
-
-
     return this;
   }
 
   /* USER INTERFACE */
+  /* -------------------------------------------------------------- */
   public async updateAvatar() {}
 
   public async updateUsername(username: string) {}
@@ -43,127 +42,47 @@ export class UserAuthentified extends User {
 
 
   /* FRIEND INTERFACE */
+  /* -------------------------------------------------------------- */
   public async addFriend(target: User | string) {
-    const relation = await this.fetchingMethod(
-      `/friends/me/${this.extractUsername(target)}`,
-      {method: 'POST'}
-    );
-    this.pendingFriends.push(new User(relation, this.fetchingMethod));
-    return relation;
+    return await postApi(`/users/friends/me/${this.extractUsername(target)}`)
   }
 
   public async acceptFriend(target: User | string) {
-    const username = this.extractUsername(target);
-
-    const relation: FriendRelation = await this.fetchingMethod(
-      `/friends/me/${username}`,
-      {
-        method: 'PUT',
-        body: {
-          pending: false
-        }
-      },
-    );
-
-    const id = this.pendingFriends.findIndex(pendingFriend => pendingFriend.username == username);
-    if (id != -1) {
-      this.pendingFriends.splice(id, 1);
-      this.friends.push(new User(this.extractFriend(relation), this.fetchingMethod));
-    }
+    return await putApi(`/users/friends/me/${this.extractUsername(target)}`,  { "pending": false })
   }
 
-  // Fetch friends or pending friends
-  public async fetchFriends(pending: boolean = false) {
-    const friends: FriendRelation[] = await this.fetchingMethod(`/friends/me?pending=${pending}`);
-    const friendsUser = friends.map(friend => {
-      return new User(this.extractFriend(friend), this.fetchingMethod);
-    });
-    friendsUser.forEach(friend => friend.fetchAll());
-  
-    if (pending)
-      this.pendingFriends = friendsUser;
-    else
-      this.friends = friendsUser;
+  public async deleteFriend(username: User | string) {
+		return await deleteApi(`/users/friends/me/${this.extractUsername(username)}`)
+	}
 
-      console.log("THIS friends:", this.friends);
-      console.log("THIS pending:", this.pendingFriends);
-  }
-
-// VIRGINIE  -------------------------------------------------------------- -->
-
-public async getFriends(pending: boolean = false) {
-  const friends = await useApi(`/users/friends/me?pending=${pending}`);
-  console.log("FRIENDS request");
-  return friends;
-}
-
-//  -------------------------------------------------------------- -->
-
-
-  public async removeFriend(target: User | string) {
-    const username = this.extractUsername(target);
-    await this.fetchingMethod(
-      `/friends/me/${username}`,
-      {method: 'DELETE'}
-    );
-    this.deleteFriend(username);
+  public async getFriends(pending: boolean = false) {
+    return await useApi(`/users/friends/me?pending=${pending}`);
   }
 
 
   /* BLOCK INTERFACE */
+  /* -------------------------------------------------------------- */
   public async blockUser(target: User | string) {
-    const username = this.extractUsername(target);
-    const relation: BlockRelation[] = await this.fetchingMethod(
-      `/blocked/me/${username}`,
-      {method: 'POST'}
-    );
-    console.log("RELATION: ", relation);
-    this.blockedUsers.push(new User(username, this.fetchingMethod));
-    this.deleteFriend(username);
-  }
-
-  public async fetchBlockedUsers() {
-    const blockedRelations: BlockRelation[] = await this.fetchingMethod('/blocked/me');
-    const blockedUsers = blockedRelations.map(
-      relation => new User(relation.user_2.username, this.fetchingMethod)
-    );
-    this.blockedUsers = blockedUsers;
+    return await postApi(`users/blocked/me/${this.extractUsername(target)}`);
   }
 
   public async unblockUser(target: User | string) {
-    const username = this.extractUsername(target);
-    await this.fetchingMethod(
-      `/blocked/me/${username}`,
-      {method: 'DELETE'}
-    );
-
-    let id = this.blockedUsers.findIndex(blockedUser => blockedUser.username == username);
-    if (id != -1)
-      this.blockedUsers.splice(id, 1);
+    return await deleteApi(`users/blocked/me/${this.extractUsername(target)}`);
   }
 
   public async isBlockUser(target: User | string) {
-    const booleanString = await this.fetchingMethod(`/blocked/me/${target}`);
+    const booleanString = await useApi(`/users/blocked/me/${this.extractUsername(target)}`);
     return booleanString === 'true';
   }
 
   /* UTILS */
+  /* -------------------------------------------------------------- */
   // Extract username if User
   private extractUsername(target: User | string) {
     return typeof(target) == 'string' ? target : target.username;
   }
 
-  private extractFriend(relation: FriendRelation) {
-    const username = relation.user_2.username != this.username ? relation.user_2.username : relation.user_1.username;
-    return username;
-  }
-
-  private deleteFriend(username: string) {
-    let id = this.friends.findIndex(friend => friend.username == username);
-    if (id != -1)
-      this.friends.splice(id, 1);
-    id = this.pendingFriends.findIndex(friend => friend.username == username);
-    if (id != -1)
-      this.friends.splice(id, 1);
+  public  extractFriend(relation: FriendRelation) {
+    return relation.user_2.username != this.username ? relation.user_2 : relation.user_1;
   }
 }

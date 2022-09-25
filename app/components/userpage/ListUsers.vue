@@ -2,15 +2,13 @@
 import { UserAuthentified } from '~~/classes/UserAuthentified.class';
 
 	const userApi = await useUserApi();
-	const users = ref(await userApi.getAllUsers());
+	let users = ref(await getAllUsers());
 	let userAuthenticate = await getUserAuthenticate();
 
 	async function refreshList() {
-		users.value = await userApi.getAllUsers();
+		users = ref(await getAllUsers());
 		userAuthenticate = await getRefreshedUserAuthenticate();
 	}
-
-
 </script>
 	
 	<template>
