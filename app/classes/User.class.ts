@@ -26,7 +26,7 @@ export class User {
 	constructor(username: string, fetchingMethod: $Fetch) {
 		this.username = username;
 		this.fetchingMethod = fetchingMethod.create({
-			baseURL: '/api/v1/users'
+			baseURL: 'http://localhost:3000/api/v1/users'
 		});
 	}
 
@@ -36,34 +36,32 @@ export class User {
 	 * call all fetch methods that is not fetchAll
 	 */
 	public async fetchAll() {
-		for (let key in Object.keys(this)) {
-			if (key.startsWith('fetch') && key != 'fetchAll' && key != 'fetchingMethod')
+		Object.getOwnPropertyNames(User.prototype).forEach(async key => {
+			if (key.startsWith('fetch') && key != 'fetchAll' && key != 'fetchingMethod') {
+				console.log('Fetch: ', key);
 				await this[key]();
-		}
+			}
+		});
 		return this;
 	}
 
 	public async fetchInfos() {
 		const infos: UserInfos = await this.fetchingMethod(this.username);
 		this.double_auth_enabled = infos.double_auth_enabled;
+		return this.double_auth_enabled;
 	}
 
 	public async fetchStats() {
 		const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`);
 		this.stats = stats;
+		return this.stats;
 	}
 
 	public async fetchAvatar() {
 		const avatar: Blob = await this.fetchingMethod(`${this.username}/avatar`);
 		this.avatar = avatar;
 		this.avatar_url = URL.createObjectURL(this.avatar);
+		return this.avatar_url;
 	}
 
 }
-
-export async function createAndInitUser(username: string, fetchingMethod: $Fetch) {
-	const user = new User(username, fetchingMethod);
-	// await user.fetchAll();
-	return user;
-}
-
