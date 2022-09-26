@@ -44,38 +44,57 @@ export class UserAuthentified extends User {
   /* FRIEND INTERFACE */
   /* -------------------------------------------------------------- */
   public async addFriend(target: User | string) {
-    await postApi(`/users/friends/me/${this.extractUsername(target)}`)
+    await this.fetchingMethod(
+      `/friends/me/${this.extractUsername(target)}`,
+      {method: 'POST'}
+    );
   }
 
   public async acceptFriend(target: User | string) {
-    await putApi(`/users/friends/me/${this.extractUsername(target)}`,  { "pending": false })
+    await this.fetchingMethod(
+      `/friends/me/${this.extractUsername(target)}`, { 
+        method: 'PUT',
+        body: {
+          pending: false
+        }
+      }
+    );
   }
 
   public async deleteFriend(username: User | string) {
-		await deleteApi(`/users/friends/me/${this.extractUsername(username)}`)
+		await this.fetchingMethod(
+      `/friends/me/${this.extractUsername(username)}`,
+      {method: 'DELETE'}
+    );
 	}
 
   public async getFriends(pending: boolean = false) {
-    return await useApi(`/users/friends/me?pending=${pending}`);
+    return await this.fetchingMethod(`/friends/me?pending=${pending}`);
   }
 
-  public async getFriendsRequest(pending: boolean = false) {
-    return await useApi(`/users/friends/me/request`);
+  public async getFriendsRequest() {
+    return await this.fetchingMethod(`/friends/me/request`);
   }
 
 
   /* BLOCK INTERFACE */
   /* -------------------------------------------------------------- */
   public async blockUser(target: User | string) {
-    await postApi(`users/blocked/me/${this.extractUsername(target)}`);
+    await this.fetchingMethod(
+      `/blocked/me/${this.extractUsername(target)}`,
+      {method: 'POST'}
+    );
   }
 
   public async unblockUser(target: User | string) {
-    await deleteApi(`users/blocked/me/${this.extractUsername(target)}`);
+    await this.fetchingMethod(
+      `/blocked/me/${this.extractUsername(target)}`,
+      {method: 'DELETE'}
+    );
   }
 
   public async isBlockUser(target: User | string) {
-    const booleanString = await useApi(`/users/blocked/me/${this.extractUsername(target)}`);
+    const booleanString = await this.fetchingMethod(`/blocked/me/${this.extractUsername(target)}`);
     return booleanString === 'true';
   }
 

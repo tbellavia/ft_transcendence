@@ -21,6 +21,7 @@ export async function useUserAuthentified(): Promise<Ref<UserAuthentified>> {
   const { username } = await getUserAuthentifiedInfos();
   
   userAuthenticate = await useState(username, () => new UserAuthentified(username, $apiFetch));
+  await userAuthenticate.value.fetchAll();
   return userAuthenticate;
 }
 
