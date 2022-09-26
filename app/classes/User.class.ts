@@ -36,27 +36,32 @@ export class User {
 	 * call all fetch methods that is not fetchAll
 	 */
 	public async fetchAll() {
-		for (let key in Object.keys(this)) {
-			if (key.startsWith('fetch') && key != 'fetchAll' && key != 'fetchingMethod')
+		Object.getOwnPropertyNames(User.prototype).forEach(async key => {
+			if (key.startsWith('fetch') && key != 'fetchAll' && key != 'fetchingMethod') {
+				console.log('Fetch: ', key);
 				await this[key]();
-		}
+			}
+		});
 		return this;
 	}
 
 	public async fetchInfos() {
 		const infos: UserInfos = await this.fetchingMethod(this.username);
 		this.double_auth_enabled = infos.double_auth_enabled;
+		return this.double_auth_enabled;
 	}
 
 	public async fetchStats() {
 		const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`);
 		this.stats = stats;
+		return this.stats;
 	}
 
 	public async fetchAvatar() {
 		const avatar: Blob = await this.fetchingMethod(`${this.username}/avatar`);
 		this.avatar = avatar;
 		this.avatar_url = URL.createObjectURL(this.avatar);
+		return this.avatar_url;
 	}
 
 }
