@@ -27,7 +27,6 @@ const user = await useGetUser();
 socket.value.on(
   'receive_leave_channel',
   async ({username, channel}) => {
-    console.log('LEAVE CHANNEL: ', username, ':', channel.name);
     if (user.value.username == username && channel.name == props.target)
       await navigateTo(route.fullPath.slice(0, route.fullPath.lastIndexOf('/')));
   }
