@@ -1,4 +1,4 @@
 <template>
-		<profilePublic :username="Lylian" />
+		<profileSelfProfile />
 		<!-- <profileSelfProfile /> -->
 </template>

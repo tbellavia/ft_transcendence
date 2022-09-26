@@ -1,11 +1,11 @@
 <template>
 	<div class="profile-page">
 		<div class="profile-header">
-			<div class="profile-user-image"> <img :src="urlAvatar"/> </div>
+			<!-- <div class="profile-user-image"> <img :src="urlAvatar"/> </div>
 			<div class="profile-user-image">
 
 				<h2 class="profile-username"> {{ authUsername }}</h2>
-			</div>
+			</div> -->
 			<div>
 				<!-- options add friends etc... -->
 			</div>
@@ -15,11 +15,11 @@
 				<!--  -->
 			</div>
 		</div>
-		<div class="profile-match">
+		<!-- <div class="profile-match">
 			<Suspense>
-				<profileMatchHistory />
+				<profileMatchHistory :target="props.user"/>
 			</Suspense>
-		</div>
+		</div> -->
 
 	</div>
 </template>
@@ -28,25 +28,19 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
+import { User } from '~~/classes/User.class';
+import { UserAuthentified } from '~~/classes/UserAuthentified.class';
 
-let props = ({
-	username: "Lylian",
+
+const props = defineProps({
+	user: Object,
 })
 
-// authUsername = NULL;
-const authUsername = (await useGetUser())?.value?.username;
-const userApi = await useUserApi(props.username);
+console.log(props.user);
 
-console.log(authUsername);
-console.log(userApi);
-console.log(await userApi.getInfo());
+
 
 //-- -------------------------------------------------------------- -->
 
-async function displayAvatar() {
-	let avatar = await getAvatar(props.username);
-	return URL.createObjectURL(avatar);
-}
 
-const urlAvatar = ref(await displayAvatar());
 </script>

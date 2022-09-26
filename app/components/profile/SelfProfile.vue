@@ -1,6 +1,29 @@
 <template>
 	<Suspense>
-	<profilePublic :username="Lylian" />
+		<!-- <profilePublic :user=userAuthenticate/> -->
+	<div class="profile-page">
+		<div class="profile-header">
+			<div class="profile-user-image"> <img :src="getAvatar(userAuthenticate.username)"/> </div>
+			<div class="profile-user-image">
+
+				<h2 class="profile-username"> {{ userAuthenticate.username }}</h2>
+			</div>
+			<div>
+				<!-- options add friends etc... -->
+			</div>
+			<div>
+				<!-- stats -->
+				<!-- rank -->
+				<!--  -->
+			</div>
+		</div>
+		<div class="profile-match">
+			<Suspense>
+				<profileMatchHistory :target="userAuthenticate"/>
+			</Suspense>
+		</div>
+
+	</div>
 	<!-- <div class="user_parameters">
 	  <div class="user-parameters-sub"><authenticationDoubleAuthentication /></div>
 	  <div class="user-parameters-sub"> </div>
@@ -11,7 +34,11 @@
 	</template>
 	
 	<script setup lang="ts">
+import { UserAuthentified } from '~~/classes/UserAuthentified.class';
 
+	const userAuthenticate: UserAuthentified = getUserAuthenticate();
+	
+	console.log("USER AUTH: ", userAuthenticate)
 	</script>
 
 

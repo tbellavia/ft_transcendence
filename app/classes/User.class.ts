@@ -59,6 +59,21 @@ export class User {
 		this.avatar_url = URL.createObjectURL(this.avatar);
 	}
 
+	public async fetchMatch() {
+		// const matchs = await this.fetchingMethod(`/api/v1/users/${this.username}/matches`);
+		const matchs = useApi(`/api/v1/users/${this.username}/matches`);
+		return matchs;
+	}
+	
+
+	  /* UTILS */
+  /* -------------------------------------------------------------- */
+  // Extract username if User
+  	private extractUsername(target: User | string) {
+    return typeof(target) == 'string' ? target : target.username;
+  }
+
+
 }
 
 export async function createAndInitUser(username: string, fetchingMethod: $Fetch) {

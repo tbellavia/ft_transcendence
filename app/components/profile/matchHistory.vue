@@ -2,31 +2,29 @@
 <div >
 	<h2>MATCH HISTORY</h2>
 	<div class="list-match" v-for="match in matchs">
-		<div class="match-user-image"> <img :src="urlAvatar"/> </div>
-		<div class="match-user-name" >	</div>
-		<div>{{ getMessage(match) }}</div> 
+		<profileMatchItem :match="match" :user="props.user" />
+		
 	</div>
 </div>
 </template>
 
 <script setup lang="ts">
-import { getAllDependencies } from 'vue-bundle-renderer/runtime';
+import { User } from '~~/classes/User.class';
 
-const userApi = await useUserApi("Lylian");
+
+const props = defineProps ({
+	user: User,
+})
+
 const matchs = ref(await useApi("/users/matches/all"));
 
 console.log("MATCH= ", matchs.value);
 
-
-let player_name = ref("");
-let match_result = ref("");
-
-
-function getDisplayedMatchInfos(match: any) {
-	player_name.value = getPlayerName(match);
-	// match_result.value = getMatchResult(match, player_name.value);
+// function getDisplayedMatchInfos(match: any) {
+// 	player_name.value = getPlayerName(match);
+// 	// match_result.value = getMatchResult(match, player_name.value);
 		
-}
+// }
 
 // function getMatchResult(match: any, player_name: string) {
 // 	if (match.user_1.username === userApi,user) {
@@ -35,24 +33,17 @@ function getDisplayedMatchInfos(match: any) {
 // }
 
 
-function getPlayerName(match: any) { //TODO make match interface 
-	if (match.user_1.username === userApi.user)
-		return match.user_2.username;
-	return match.user_1.username;
-}
+// function getPlayerName(match: any) { //TODO make match interface 
+// 	if (match.user_1.username === userApi.user)
+// 		return match.user_2.username;
+// 	return match.user_1.username;
+// }
 
-function getMessage(match: any) {
-	if (match.)
-}
+// function getMessage(match: any) {
+// 	if (match.)
+// }
 
 //-- -------------------------------------------------------------- -->
-
-async function displayAvatar() { // TODO get avatar from user in match
-	let avatar = await getAvatar("Lylian");
-	return URL.createObjectURL(avatar);
-}
-
-const urlAvatar = ref(await displayAvatar());
 
 </script>
 

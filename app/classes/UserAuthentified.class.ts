@@ -79,7 +79,7 @@ export class UserAuthentified extends User {
     return booleanString === 'true';
   }
 
-  /* UTILS */
+	  /* UTILS */
   /* -------------------------------------------------------------- */
   // Extract username if User
   private extractUsername(target: User | string) {
