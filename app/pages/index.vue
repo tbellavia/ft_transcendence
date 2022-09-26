@@ -33,7 +33,6 @@ $eventBus.$on('connect', async (userInfos: UserInfos) => {
 
   if (!double_auth_enabled.value) {
     const user = await getRefreshedUserAuthenticate();
-    console.log('New user connected:', user.value);
     await redirectIfConnected(`/${user.value.username}`, '/');
   }
 });

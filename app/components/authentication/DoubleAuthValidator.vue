@@ -1,45 +1,70 @@
 <template>
-    <v-dialog
-      persistent
-      max-width="400">
+  <!-- Pop windows with Qr Code here -->
+  <v-card density="comfortable" class="v-card-2fa">
+    <!-- title and cancel button -->
+    <v-card-title class="card-title" >
+      <p class="card-title-sub">double authentication</p>
+    <v-spacer></v-spacer>
+      <div class="card-title-sub" style="height: 40px; width: 40px">
+      <button class="xmark" @click="disconnect">
+        <svgXmark style="height: 40px; width: 40px; display: flex"/>
+      </button>
+      </div>
+    </v-card-title>
+    <v-spacer></v-spacer>
 
-      <!-- Pop windows with Qr Code here -->
-      <v-card density="comfortable">
-        <!-- title and cancel button -->
-        <v-card-title class="card-title" >
-          <p class="card-title-sub">double authentication</p>
-        <v-spacer></v-spacer>
-          <div class="card-title-sub" style="height: 40px; width: 40px">
-          <button class="xmark"  
-            @click="disconnect">
-            <svgXmark style="height: 40px; width: 40px; display: flex"/>
-          </button>
-          </div>
-        </v-card-title>
-        <v-spacer></v-spacer>
-   
-        <v-card-actions>
-        <userpageDoubleAuthenticationForm 
-          justify="center" 
-          @DoubleAuthValidate=""/>
-        </v-card-actions>
-      </v-card>
-      </v-dialog>
+    <v-card-actions>
+    <userpageDoubleAuthenticationForm 
+      justify="center" 
+      @DoubleAuthValidate="checkValidation" />
+    </v-card-actions>
+
+    <v-card-text v-if="errorMessage">{{ errorMessage }}</v-card-text>
+  </v-card>
 </template>
 
 <script setup lang="ts">
 const { $apiFetch } = useNuxtApp();
+
 async function disconnect() {
   await $apiFetch("/auth/disconnect")
-    .then(async () => {
+    .then(() => {
       const { $eventBus } = useNuxtApp();
       $eventBus.$emit('disconnect');
-      await navigateTo("/")
     })
-    .catch(async error => {
+    .catch(error => {
       console.warn(error);
-      await navigateTo("/");
     });
 }
 
+let errorMessage = ref('');
+async function checkValidation(code: string) {
+  try {
+    errorMessage.value = '';
+    await $apiFetch("2fa/authenticate", {
+      method: 'POST',
+      body: {
+        code
+      }
+    });
+
+    // Load new user
+    const user = await getRefreshedUserAuthenticate();
+    await redirectIfConnected(`/${user.value.username}`, '/');
+
+  } catch (error) {
+    if (Array.isArray(error.data))
+      errorMessage.value = error.data.messsage.join(' ');
+    else
+      errorMessage.value = error.data.messsage;
+  }
+}
+
 </script>
+
+<style scoped>
+  .v-card-2fa {
+    background-color: var(--background-color);
+    opacity: 90%;
+  }
+</style>
