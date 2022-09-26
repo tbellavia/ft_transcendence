@@ -1,9 +1,6 @@
 <template>
   <!-- Pop windows with Qr Code here -->
-  <v-dialog>
-    <template v-slot:activator="{ on: enableDialog }">
-    </template>
-
+  <v-dialog v-model="enableDialog">
     <v-card density="comfortable" class="v-card-2fa">
       <!-- title and cancel button -->
       <v-card-title class="card-title" >
@@ -31,7 +28,7 @@
 <script setup lang="ts">
 const { $apiFetch } = useNuxtApp();
 
-let enableDialog = ref(true);
+let enableDialog = ref<boolean>(true);
 async function disconnect() {
   await $apiFetch("/auth/disconnect")
     .then(() => {
