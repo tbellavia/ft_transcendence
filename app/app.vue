@@ -19,6 +19,11 @@
 
 <script setup lang="ts">
 
+// Try to load user in all app
+try {
+   await getRefreshedUserAuthenticate();
+} catch {}
+
 const { $eventBus } = useNuxtApp();
 
 let layout = ref('default');
