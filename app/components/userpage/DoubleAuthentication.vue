@@ -45,7 +45,7 @@
               @DoubleAuthValidate="validateTwoFactorAuthentication"/>
             </v-card-actions>
 
-            <v-card-text v-if="errorMessage">{{ errorMessage }}</v-card-text>
+            <v-card-text style="margin: 0 auto;" v-if="errorMessage">{{ errorMessage }}</v-card-text>
           </v-card>
         </v-dialog>
 </div>
@@ -113,7 +113,10 @@ async function validateTwoFactorAuthentication(code: string) {
     // Close pop-up when valid
     activatePopup.value = false;
   } catch (error) {
-    errorMessage.value = error.data.message;
+    if (Array.isArray(error.data.message))
+      errorMessage.value = error.data.message.join('\r\n');
+    else
+      errorMessage.value = error.data.message;
   }
 }
 

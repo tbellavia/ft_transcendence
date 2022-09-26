@@ -30,7 +30,7 @@ function clickEvent(current_id: string, next_id: string, event) {
 	else if (event.key === "Enter")
 		checkKey();
 	// pass to next_id input only if input is a number else reset value
-	else if ( (event.keyCode >= 97 && event.keyCode <= 105) 
+	else if ( (event.keyCode >= 96 && event.keyCode <= 105) 
 	|| (event.keyCode >= 48 && event.keyCode <= 57)) {
 		if (next_id)
 			document.getElementById(next_id).focus();

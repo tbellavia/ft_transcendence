@@ -32,10 +32,11 @@ export class TwoFactorAuthController {
    */
   @Post('turn-on')
   async turnOnTwoFactorAuth(@Req() requestWithUser, @Body() { code }: TwoFactorCodeDTO) {
-    const isCodeValid = this.twoFactorAuthService.isTwoFactorAuthCodeValid(
+    const isCodeValid = await this.twoFactorAuthService.isTwoFactorAuthCodeValid(
       code,
       requestWithUser.user
     );
+    console.log('Code:', code, 'is', isCodeValid ? 'valid' : 'invalid');
     if (!isCodeValid)
       throw new UnauthorizedException('Wrong authentication code');
     await this.userService.turnOnTwoFactorAuth(requestWithUser.user.user_id);
