@@ -46,15 +46,8 @@ DoubleAuthValidate: null,
 })
 
 function checkKey() {
-	// LYLIAN: YOU CAN CHOOSE string or numbers:
-	// join() make a string of all number
-	console.log(input.value.join(''));
-
-	// you can Number(input.value.join(''))
-	console.log(Number(input.value.join('')));
-
 	if (input.value.join() === "123456")
-		emit("DoubleAuthValidate", input.value);
+		emit("DoubleAuthValidate", input.value.join(''));
 	else {
 		// clean input and focus to first element input
 		input.value = [];
