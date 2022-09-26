@@ -1,11 +1,10 @@
 <template>
-<div >
 	<h2>MATCH HISTORY</h2>
-	<div class="list-match" v-for="match in matchs">
-		<profileMatchItem :match="match" :user="props.user" />
-		
+	<div class="profile-match-body">
+		<div class="list-match" v-for="match in props.user.matchs">
+			<profileMatchItem :match="match" :user="props.user" />
+		</div>
 	</div>
-</div>
 </template>
 
 <script setup lang="ts">
@@ -15,33 +14,6 @@ import { User } from '~~/classes/User.class';
 const props = defineProps ({
 	user: User,
 })
-
-const matchs = ref(await useApi("/users/matches/all"));
-
-console.log("MATCH= ", matchs.value);
-
-// function getDisplayedMatchInfos(match: any) {
-// 	player_name.value = getPlayerName(match);
-// 	// match_result.value = getMatchResult(match, player_name.value);
-		
-// }
-
-// function getMatchResult(match: any, player_name: string) {
-// 	if (match.user_1.username === userApi,user) {
-// 		return 
-// 	}
-// }
-
-
-// function getPlayerName(match: any) { //TODO make match interface 
-// 	if (match.user_1.username === userApi.user)
-// 		return match.user_2.username;
-// 	return match.user_1.username;
-// }
-
-// function getMessage(match: any) {
-// 	if (match.)
-// }
 
 //-- -------------------------------------------------------------- -->
 
@@ -54,14 +26,29 @@ console.log("MATCH= ", matchs.value);
 	display: flex;
 	flex-direction: column;
 }
-.match-user-image {
-	width: 40px;
-	height: 40px;
-	display: flex;
+
+.profile-match-component {
+	width: 100%;
+	border-width: 3px;
+ 	border-style: solid;
+	border-image: linear-gradient( to bottom, var(--main-color), transparent) 1 100%;
+	border-top: none;
+
 }
 
-.match-user-name {
+.profile-match-body {
+	width: 100%;
+	height: 100%;
+	overflow-y: scroll;
+}
 
+h2 {
+	display: block;
+	text-align: center;
+	background: linear-gradient(to right, var(--main-color-op-30), transparent, var(--main-color-op-30));
+	border-bottom: solid 1px;
+	border-top: solid 1px;
+	margin-bottom: 3%;
 }
 
 </style>

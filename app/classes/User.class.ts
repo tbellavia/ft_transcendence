@@ -14,11 +14,16 @@ export interface UserInfos {
 	creation_date: Date;
 };
 
+// export interface UserMatchs {
+// 	public: 
+// }
+
 export class User {
 	public username: string;
 	public double_auth_enabled: boolean;
 	public avatar_url: string;
 	public stats: UserStats;
+	public matchs: Object;
 
 	protected readonly fetchingMethod: $Fetch;
 	private avatar: Blob;
@@ -66,8 +71,8 @@ export class User {
 
 	public async fetchMatch() {
 		// const matchs = await this.fetchingMethod(`/api/v1/users/${this.username}/matches`);
-		const matchs = useApi(`/api/v1/users/${this.username}/matches`);
-		return matchs;
+		this.matchs = await this.fetchingMethod(`/${this.username}/matches`);
+		return this.matchs;
 	}
 	
 

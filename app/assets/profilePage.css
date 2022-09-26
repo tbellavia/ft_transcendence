@@ -4,24 +4,30 @@
 }
 
 .profile-header {
-	border: solid;  /*TODO */
-
+	width: 100%;
 	display: flex;
 	justify-content: space-between;
 	height: 50%;
 
 }
 
-.profile-header {
-
+.profile-user-image {
+	display: contents;
 }
 
-
+.profile-user-param {
+	display: flex;
+	width: auto;  /* TODO a check */
+}
 
 .profile-match {
-	border: solid;  /*TODO */
 
 	display: flex;
 	width: 100%;
 	height: 50%;
+	border-width: 3px;
+ 	border-style: solid;
+	border-image: linear-gradient( to bottom, var(--main-color), transparent) 1 100%;
+	border-top: none;
+	flex-direction: column;
 }
