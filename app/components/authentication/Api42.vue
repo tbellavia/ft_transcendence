@@ -12,13 +12,15 @@
 </template>
 
 <script setup lang="ts">
+import { UserInfos } from '~~/classes/User.class';
+
 async function oauth42(code: string) {
   const { $apiFetch } = useNuxtApp();
   await $apiFetch(`/auth/api42?code=${code}`)
-    .then(() => {
+    .then(async (userInfos: UserInfos) => { 
       const { $eventBus } = useNuxtApp();
-      $eventBus.$emit('connect');
-    }) //Emit global connection event when success)
+      $eventBus.$emit('connect', userInfos);
+    })
     .catch((error) => console.warn(error));
 }
 

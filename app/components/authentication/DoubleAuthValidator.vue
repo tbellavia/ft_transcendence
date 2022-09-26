@@ -1,6 +1,5 @@
 <template>
     <v-dialog
-      v-model="notConnected"
       persistent
       max-width="400">
       <template :activator="{ on: notConnected }"></template>
@@ -13,7 +12,7 @@
         <v-spacer></v-spacer>
           <div class="card-title-sub" style="height: 40px; width: 40px">
           <button class="xmark"  
-            @click="notConnected = false">
+            @click="disconnect">
             <svgXmark style="height: 40px; width: 40px; display: flex"/>
           </button>
           </div>
@@ -23,13 +22,25 @@
         <v-card-actions>
         <userpageDoubleAuthenticationForm 
           justify="center" 
-          @DoubleAuthValidate="redirectIfConnected('/lvirgini', '/')"/>
+          @DoubleAuthValidate=""/>
         </v-card-actions>
       </v-card>
       </v-dialog>
 </template>
 
 <script setup lang="ts">
-	const notConnected =ref(true);
+const { $apiFetch } = useNuxtApp();
+async function disconnect() {
+  await $apiFetch("/auth/disconnect")
+    .then(async () => {
+      const { $eventBus } = useNuxtApp();
+      $eventBus.$emit('disconnect');
+      await navigateTo("/")
+    })
+    .catch(async error => {
+      console.warn(error);
+      await navigateTo("/");
+    });
+}
 
 </script>
