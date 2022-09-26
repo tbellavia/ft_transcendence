@@ -2,7 +2,6 @@
     <v-dialog
       persistent
       max-width="400">
-      <template :activator="{ on: notConnected }"></template>
 
       <!-- Pop windows with Qr Code here -->
       <v-card density="comfortable">

@@ -22,10 +22,10 @@
 const { $eventBus } = useNuxtApp();
 
 let layout = ref('default');
-$eventBus.$on('connect', async () => {
+$eventBus.$on('connected', () => {
    layout.value = 'home'
 });
-$eventBus.$on('disconnect', async () => {
+$eventBus.$on('disconnect', () => {
    layout.value = 'default'
 });
 

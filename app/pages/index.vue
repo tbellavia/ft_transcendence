@@ -7,7 +7,7 @@
       </div>
       <div class="auth-page">
         <NuxtPage />
-        <AuthenticationDoubleAuthValidator />
+        <AuthenticationDoubleAuthValidator v-if="double_auth_enabled" />
       </div>
     </div>
   </nuxtLayout>
@@ -16,6 +16,8 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
+import { UserInfos } from '~~/classes/User.class';
+import { getRefreshedUserAuthenticate } from '~~/composables/useUserAuthentified';
 
 onMounted(async () => {
   useRefreshUser();
@@ -24,18 +26,15 @@ onMounted(async () => {
     await redirectIfConnected('/' + user.value.username, '/');
 })
 
+let double_auth_enabled = ref(false);
 const { $eventBus } = useNuxtApp();
-$eventBus.$on('connect', async () => {
-  for (let tries = 3; tries; tries--) {
-    useRefreshUser();
-    const user = await useGetUser();
-    if (user.value?.username)
-    {
-      if (user.value.is_two_factor_auth_enabled === true)
-        await navigateTo('/doubleAuth') // TODO
-      else
-        await redirectIfConnected('/' + user.value.username, '/')
-    }
+$eventBus.$on('connect', async (userInfos: UserInfos) => {
+  double_auth_enabled.value = userInfos.double_auth_enabled;
+
+  if (!double_auth_enabled.value) {
+    const user = await getRefreshedUserAuthenticate();
+    console.log('New user connected:', user.value);
+    await redirectIfConnected(`/${user.value.username}`, '/');
   }
 });
 </script>
