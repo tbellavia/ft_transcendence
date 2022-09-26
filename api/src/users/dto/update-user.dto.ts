@@ -7,6 +7,11 @@ export class UpdateUserDTO {
     public password?: string;
 
     @IsOptional()
+    @IsNotEmpty()
+    @IsString()
+    public username?: string;
+
+    @IsOptional()
     @IsBoolean()
     public is_two_factor_auth_enabled?: boolean;
 }

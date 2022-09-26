@@ -15,9 +15,9 @@
 	display: contents;
 }
 
-.profile-user-param {
-	display: flex;
-	width: auto;  /* TODO a check */
+.profile-user-params {
+	width: 100%;
+	padding-left: 5%;
 }
 
 .profile-match {

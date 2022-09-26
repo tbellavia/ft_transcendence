@@ -96,6 +96,13 @@ export class UsersService {
     await user.save();
   }
 
+  async changeUsername(username: string, newUsername: string) {
+    const user = await this.findOneByName(username);
+
+    user.username = newUsername;
+    await user.save();
+  }
+
   async turnOnTwoFactorAuth(user_id: string) {
     return this.update(
       {
@@ -106,9 +113,17 @@ export class UsersService {
     }
     
     async update(updateUserDto: UpdateUserDTO, user_id: string) {
-      const { password, is_two_factor_auth_enabled } = updateUserDto;
+      const {username, password, is_two_factor_auth_enabled } = updateUserDto;
       const user = await this.findOneById(user_id);
       
+      if(username) {
+        try {
+          await this.findOneByName(username)
+        }
+        catch {
+          user.username = username;
+        }
+      }
       if (password !== undefined)
         user.two_factor_auth_secret = password;
       if (is_two_factor_auth_enabled !== undefined)

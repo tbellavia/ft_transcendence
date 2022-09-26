@@ -26,7 +26,6 @@ const props = defineProps({
 	user: User,
 })
 
-console.log(typeof(props.match.creation_date));
 const background = ref();
 const target = ref(getTargetUser());
 
@@ -69,7 +68,6 @@ function getMatchMessage() {
 	return formateMatchMessage(props.match.player_2_point, props.match.player_1_point);
 }
 
-	console.log(props.match);
 </script>
 
 <!-- -------------------------------------------------------------- -->

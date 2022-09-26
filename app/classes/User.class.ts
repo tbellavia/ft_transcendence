@@ -1,7 +1,6 @@
 import { $Fetch } from "ohmyfetch";
 
 export interface UserStats {
-	stat_id: string;
 	game_total: number;
 	game_won: number;
 	game_abandonned: number;
@@ -33,6 +32,7 @@ export class User {
 		this.fetchingMethod = fetchingMethod.create({
 			baseURL: 'http://localhost:3000/api/v1/users'
 		});
+
 	}
 
 
@@ -57,8 +57,15 @@ export class User {
 	}
 
 	public async fetchStats() {
+		this.stats = {
+			game_abandonned: 0,
+			game_total: 0,
+			game_won: 0,
+			rank: 'WOOD',
+		}
 		const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`);
-		this.stats = stats;
+		if (stats)
+			this.stats = stats;
 		return this.stats;
 	}
 

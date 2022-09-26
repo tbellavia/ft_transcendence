@@ -16,7 +16,6 @@
   const links = ref([
     {name: 'PROFILE', link: 'profileParameters'},
     {name: 'FRIENDS', link: 'friendsList'},
-    {name: 'MATCH HISTORY', link: 'matchHistory'},
     {name: 'CHAT', link: 'chat'}
   ]);
   const user = await useGetUser();

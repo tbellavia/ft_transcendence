@@ -198,6 +198,8 @@ input::placeholder {
 img {
   min-height: auto;
   min-width: auto;
+  max-width: max-content;
+  max-height: max-content;
 }
 /* --------------------------------------------------------------  */
 

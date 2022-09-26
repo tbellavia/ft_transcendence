@@ -34,9 +34,25 @@ export class UserAuthentified extends User {
 
   /* USER INTERFACE */
   /* -------------------------------------------------------------- */
-  public async updateAvatar() {}
+  public async updateAvatar(newAvatar: any) { //TODO modif type
+    await this.fetchingMethod(`/avatar/me`,
+    {method: 'PUT',
+    body: newAvatar, 
+  }
+  );
+  
+}
 
-  public async updateUsername(username: string) {}
+public async updateUsername(newUsername: string) {
+  console.log(newUsername),
+  await this.fetchingMethod(`/me`,
+    {method: 'PUT',
+    body: {
+      'username': newUsername,
+    }, 
+  }
+  );
+  }
 
   public async updateDoubleAuth(enable: boolean) {}
 

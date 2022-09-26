@@ -1,8 +1,7 @@
 <template>
 <Suspense>
 	<profilePublic :username="props.username"/>
-	
-</Suspense>	COUCOU
+</Suspense>
 </template>
 
 <script setup lang="ts">

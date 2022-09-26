@@ -1,3 +1,0 @@
-<template>
-	MATCH HISTORY
-</template>
