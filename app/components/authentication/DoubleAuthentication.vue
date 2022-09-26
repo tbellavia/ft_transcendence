@@ -2,18 +2,18 @@
   <div class="line" style="height: 20px;">
 			<!-- https://lightrun.com/answers/vuetifyjs-vuetify-documentation-v-slotactivator-on-
 			https://ramblings.mcpher.com/snipgraphql/vuejs/vuejs-and-vuetify-what-does-v-on-mean/ -->
-          <v-dialog
-            v-model="activatePopup"
-            persistent
-            max-width="400">
-            <template  v-slot:activator="{ on: activatePopup }">
-             <span class="line-sub"> Double Authentication :</span>
-              <v-switch class="line-sub"
-              v-model="userChoice"
-              v-bind="userChoice"
-              v-on="activatePopup" >
-              </v-switch>
-           </template>
+        <v-dialog
+          v-model="activatePopup"
+          persistent
+          max-width="400">
+          <template  v-slot:activator="{ on: activatePopup }">
+            <span class="line-sub"> Double Authentication :</span>
+            <v-switch class="line-sub"
+            v-model="userChoice"
+            v-on:click="activatePopup" >
+            <!-- Handle connection -->
+            </v-switch>
+          </template>
 
            <!-- Pop windows with Qr Code here -->
           <v-card density="comfortable">
@@ -42,9 +42,10 @@
               <!-- formulaire pour recuperer la clé (component) -->
             <authenticationDoubleAuthenticationForm 
               justify="center" 
-              @DoubleAuthValidate="printOk; activatePopup=false"/>
+              @DoubleAuthValidate="validateTwoFactorAuthentication"/>
             </v-card-actions>
 
+            <v-card-text style="margin: 0 auto;" v-if="errorMessage">{{ errorMessage }}</v-card-text>
           </v-card>
         </v-dialog>
 </div>
@@ -53,28 +54,19 @@
 
 	
 <script setup lang="ts">
-import Xmark from '../svg/Xmark.vue';
 
-/*
-** test for form 
-*/
-function printOk(){
-  activatePopup = false;
-};
-
-let svg = ref();
-let activatePopup = ref(false);
-let userChoice = ref(false);  // TODO: a recuperer sur l'api.
+const { $apiFetch } = useNuxtApp();
 
 /*
 ** Generate Qr Code for 2fa
 */
+let svg = ref();
 async function generateQrCode() {
-	const { data: qrCode } = await useApiFetch('/2fa/generate', {
+	const qrCode = await $apiFetch('/2fa/generate', {
 		method: 'POST'
 	});
 	const temp = document.createElement('temporary');
-	temp.innerHTML = qrCode.value.trim();
+	temp.innerHTML = qrCode.trim();
 	svg.value = temp.firstChild;
 
 	for (let i = 0; i < svg.value.children.length; ++i) {
@@ -84,18 +76,52 @@ async function generateQrCode() {
 	return (true);
 }
 
+/*************************************************************/
 
 /*
 ** Watcher of switch activator for Double Authentication
 */
+let errorMessage = ref('');
+let userAuthentified = getUserAuthenticate();
+let activatePopup = ref(false);
+let userChoice = ref(userAuthentified.value.double_auth_enabled);  // TODO: a recuperer sur l'api.
 watch(userChoice, (newUserChoice) => {
-	console.log(`user choice: ${userChoice.value}`);
-	if (userChoice.value == true) {
+	if (newUserChoice == true) {
 		generateQrCode()
-      .then( () => activatePopup.value = true )
+      .then(() => activatePopup.value = true )
  		  .catch(error => console.warn(error));
-	}
-})
+  } else {
+    // TODO: Disable 2fa for auth user
+    $apiFetch('/2fa/turn-off', {method: 'DELETE'})
+      .catch(error => errorMessage.value = error.data?.message || 'Unknown Error');
+    userChoice.value = false;
+  }
+});
+
+/*************************************************************/
+
+/*
+** Activate 2fa if code is valide
+*/
+async function validateTwoFactorAuthentication(code: string) {
+  errorMessage.value = '';
+  try {
+    await $apiFetch('/2fa/turn-on', {
+      method: 'POST',
+      body: {
+        code
+      }
+    });
+    // Close pop-up when valid
+    activatePopup.value = false;
+  } catch (error) {
+    if (Array.isArray(error.data.message))
+      errorMessage.value = error.data.message.join('\r\n');
+    else
+      errorMessage.value = error.data.message;
+  }
+}
+
 </script>
 	
 	

@@ -2,7 +2,18 @@ import { UserAuthentified } from '~~/classes/UserAuthentified.class'
 import { UserInfos } from '~~/classes/User.class';
 import { Ref } from 'vue';
 
-let userAuthenticate: ref<UserAuthentified> = undefined;
+let userAuthenticate: Ref<UserAuthentified> = undefined;
+
+// fetch userAuthenticate and return it in class
+export async function useUserAuthentified(): Promise<Ref<UserAuthentified>> {
+  const { $apiFetch } = useNuxtApp();
+  const { username } = await getUserAuthentifiedInfos();
+  
+  userAuthenticate = useState(username, () => new UserAuthentified(username, $apiFetch));
+  await userAuthenticate.value.fetchAll();
+  return userAuthenticate;
+}
+
 
 // get userAuthenticate reference
 export function getUserAuthenticate() {
@@ -15,15 +26,6 @@ export async function getRefreshedUserAuthenticate() {
   return userAuthenticate;
 }
 
-// fetch userAuthenticate and return it in class
-export async function useUserAuthentified(): Promise<Ref<UserAuthentified>> {
-  const { $apiFetch } = useNuxtApp();
-  const { username } = await getUserAuthentifiedInfos();
-  
-  userAuthenticate = await useState(username, () => new UserAuthentified(username, $apiFetch));
-  await userAuthenticate.value.fetchAll();
-  return userAuthenticate;
-}
 
 async function getUserAuthentifiedInfos() {
   const { $apiFetch } = useNuxtApp();

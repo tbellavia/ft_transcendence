@@ -43,9 +43,6 @@ export class TwoFactorAuthService {
   }
 
   public async isTwoFactorAuthCodeValid(twoFactorAuthCode: string, user: UserEntity) {
-    return authenticator.verify({
-      token: twoFactorAuthCode,
-      secret: user.two_factor_auth_secret
-    });
+    return authenticator.check(twoFactorAuthCode, user.two_factor_auth_secret);
   }
 }

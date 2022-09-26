@@ -6,6 +6,7 @@ import { Public } from 'src/common/decorators/public.decorator';
 import { RequestWithUser } from './interfaces/requestWithUser.interface';
 import { PasswordAuthDTO } from './dto/passwordAuth.dto';
 import { PasswordAuthGuard } from './guards/passwordAuth.guard';
+import { JWTAuthGuard } from './guards/jwtauth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -49,6 +50,8 @@ export class AuthController {
    * Clear the session cookie from server
    * @param res the response object for clearing the cookie
    */
+  @Public()
+  @UseGuards(new JWTAuthGuard()) // 2fa not full connected can disconnect
   @Get('disconnect')
   disconnectCookie(@Res({ passthrough: true }) res) {
     res.clearCookie('Authentication')
