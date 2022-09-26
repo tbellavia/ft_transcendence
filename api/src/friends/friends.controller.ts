@@ -27,6 +27,9 @@ export class FriendsController {
         @Query() getFriendsQueryDto: GetFriendsQueryDTO
     ) 
     {
+        if ( getFriendsQueryDto.pending === true ){
+            return this.friendsService.findFriendsRequests(request.user.username, getFriendsQueryDto);
+        }        
         return this.friendsService.findAll(request.user.username, getFriendsQueryDto);
     }
 

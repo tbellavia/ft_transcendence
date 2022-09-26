@@ -26,13 +26,12 @@ export class UserEntity extends BaseEntity {
     @Column({ nullable: true })
     password?: string;
 
-    @Expose()
     @Column({ nullable: true })
-    public two_factor_auth_secret?: string;
+    two_factor_auth_secret?: string;
 
     @Expose()
     @Column({ default: false })
-    public is_two_factor_auth_enabled: boolean;
+    double_auth_enabled: boolean;
 
     @Expose()
     @CreateDateColumn()

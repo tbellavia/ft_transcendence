@@ -13,13 +13,14 @@ Users :
     - PUT       /api/v1/users/:username
         - Body
         {
-            avatar: string(),
+            username: string()
             double_auth: boolean()
         }
     - DELETE    /api/v1/users/:username
 
 Blocked :
     - POST      /api/v1/users/blocked/me/:target
+    - GET       /api/v1/users/blocked/me/:target
     - GET       /api/v1/users/blocked/me?limit=<int>&skip=<int>
     - DELETE    /api/v1/users/blocked/me/:target
 

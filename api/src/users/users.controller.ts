@@ -125,8 +125,8 @@ export class UsersController {
         return await this.usersService.findOneByName(username);
     }
 
-    @Get("/user/me")
-    async findMe(@Req() request: RequestWithUser) {
+    @Get('/user/me')
+    async getMe(@Req() request: RequestWithUser) {
         return request.user;
     }
 
