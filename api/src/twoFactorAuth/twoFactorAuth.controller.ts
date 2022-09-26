@@ -45,7 +45,7 @@ export class TwoFactorAuthController {
   }
 
   @Public()
-  @UseGuards(JWTAuthGuard)
+  @UseGuards(new JWTAuthGuard())
   @Post('authenticate')
   async authenticate(@Req() requestWithUser, @Body() { code }: TwoFactorCodeDTO, @Res({ passthrough: true}) res) {
     const isCodeValid = this.twoFactorAuthService.isTwoFactorAuthCodeValid(
@@ -56,7 +56,7 @@ export class TwoFactorAuthController {
       throw new UnauthorizedException('Wrong authentication code');
 
     // Set-Cookie with 2fa enabled into cookie
-    const accessToken = this.authService.login(requestWithUser.user, true);
+    const accessToken = await this.authService.login(requestWithUser.user, true);
     res.cookie('Authentication', accessToken);
   }
 }

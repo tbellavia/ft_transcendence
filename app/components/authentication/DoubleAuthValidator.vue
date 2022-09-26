@@ -26,9 +26,10 @@
 </template>
 
 <script setup lang="ts">
-const { $apiFetch } = useNuxtApp();
+const { $apiFetch, $eventBus } = useNuxtApp();
 
 let enableDialog = ref<boolean>(true);
+$eventBus.$on('connect', () => enableDialog.value = true);
 async function disconnect() {
   await $apiFetch("/auth/disconnect")
     .then(() => {
@@ -43,25 +44,24 @@ async function disconnect() {
 
 let errorMessage = ref('');
 async function checkValidation(code: string) {
-  try {
-    errorMessage.value = '';
-    await $apiFetch("2fa/authenticate", {
-      method: 'POST',
-      body: {
-        code
-      }
-    });
-
+  errorMessage.value = '';
+  await $apiFetch("2fa/authenticate", {
+    method: 'POST',
+    body: {
+      code
+    }
+  })
+  .then(async () => {
     // Load new user
     const user = await getRefreshedUserAuthenticate();
     await redirectIfConnected(`/${user.value.username}`, '/');
-
-  } catch (error) {
+  })
+  .catch(error => {
     if (Array.isArray(error.data))
       errorMessage.value = error.data.messsage.join(' ');
     else
       errorMessage.value = error.data.messsage;
-  }
+  });
 }
 </script>
 

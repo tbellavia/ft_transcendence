@@ -51,7 +51,7 @@ export class AuthController {
    * @param res the response object for clearing the cookie
    */
   @Public()
-  @UseGuards(JWTAuthGuard) // 2fa not full connected can disconnect
+  @UseGuards(new JWTAuthGuard()) // 2fa not full connected can disconnect
   @Get('disconnect')
   disconnectCookie(@Res({ passthrough: true }) res) {
     res.clearCookie('Authentication')
