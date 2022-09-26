@@ -80,7 +80,6 @@ export class UsersService {
   async updateTwoFactorSecret(two_factor_secret: string, user_id: string) {
     const user = await this.findOneById(user_id);
     user.two_factor_auth_secret = two_factor_secret;
-    user.double_auth_enabled = true;
     await user.save();
   }
 
