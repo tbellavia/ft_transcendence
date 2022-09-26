@@ -18,7 +18,6 @@
 let input = ref([]);
 
 function clickEvent(current_id: string, next_id: string, event) {
-	
 	// event.key we don't want to pass to another input
 	if (event.key === "Shift" || event.key === "Tab" || event.key === "Backspace") {
 		// if backspace and actual input empty return to before input
@@ -32,9 +31,9 @@ function clickEvent(current_id: string, next_id: string, event) {
 		checkKey();
 	// pass to next_id input only if input is a number else reset value
 	else if ( (event.keyCode >= 97 && event.keyCode <= 105) 
-	|| (event.keyCode >= 48 && event.keyCode <= 57) 
-	&& next_id) {
-		document.getElementById(next_id).focus();
+	|| (event.keyCode >= 48 && event.keyCode <= 57)) {
+		if (next_id)
+			document.getElementById(next_id).focus();
 	}
 	else
 		input.value[Number(current_id)] = '';
@@ -42,17 +41,11 @@ function clickEvent(current_id: string, next_id: string, event) {
 
 
 const emit = defineEmits({
-DoubleAuthValidate: null,
-})
+	DoubleAuthValidate: null
+});
 
 function checkKey() {
-	if (input.value.join() === "123456")
-		emit("DoubleAuthValidate", input.value.join(''));
-	else {
-		// clean input and focus to first element input
-		input.value = [];
-		document.getElementById('0').focus();
-	}
+	emit("DoubleAuthValidate", input.value.join(''));
 }
 </script>
 
