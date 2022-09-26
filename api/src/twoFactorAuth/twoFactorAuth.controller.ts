@@ -1,5 +1,7 @@
-import { Body, Controller, Post, Req, Res, UnauthorizedException } from "@nestjs/common";
+import { Body, Controller, Post, Req, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { AuthService } from "src/auth/auth.service";
+import { JWTAuthGuard } from "src/auth/guards/jwtauth.guard";
+import { Public } from "src/common/decorators/public.decorator";
 import { UsersService } from "src/users/users.service";
 import { TwoFactorCodeDTO } from "./dto/twoFactorCodeDTO";
 import { TwoFactorAuthService } from "./twoFactorAuth.service";
@@ -42,6 +44,8 @@ export class TwoFactorAuthController {
     await this.userService.turnOnTwoFactorAuth(requestWithUser.user.user_id);
   }
 
+  @Public()
+  @UseGuards(JWTAuthGuard)
   @Post('authenticate')
   async authenticate(@Req() requestWithUser, @Body() { code }: TwoFactorCodeDTO, @Res({ passthrough: true}) res) {
     const isCodeValid = this.twoFactorAuthService.isTwoFactorAuthCodeValid(
