@@ -1,7 +1,7 @@
 <template>
   <!-- Pop windows with Qr Code here -->
   <v-dialog>
-    <template v-slot:activator="{ on: true}">
+    <template v-slot:activator="{ on: enableDialog }">
     </template>
 
     <v-card density="comfortable" class="v-card-2fa">
@@ -31,12 +31,13 @@
 <script setup lang="ts">
 const { $apiFetch } = useNuxtApp();
 
+let enableDialog = ref(true);
 async function disconnect() {
   await $apiFetch("/auth/disconnect")
     .then(() => {
       const { $eventBus } = useNuxtApp();
       $eventBus.$emit('disconnect');
-      
+      enableDialog.value = false;
     })
     .catch(error => {
       console.warn(error);
@@ -65,7 +66,6 @@ async function checkValidation(code: string) {
       errorMessage.value = error.data.messsage;
   }
 }
-
 </script>
 
 <style scoped>
