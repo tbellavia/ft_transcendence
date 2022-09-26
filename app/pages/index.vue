@@ -20,10 +20,11 @@ import { UserInfos } from '~~/classes/User.class';
 import { getRefreshedUserAuthenticate } from '~~/composables/useUserAuthentified';
 
 onMounted(async () => {
-  useRefreshUser();
-  const user = await useGetUser();
-  if (user.value?.username)
+  const route = useRoute();
+  if (route.fullPath == '/') {
+    const user = await getRefreshedUserAuthenticate();
     await redirectIfConnected('/' + user.value.username, '/');
+  }
 })
 
 let double_auth_enabled = ref(false);
