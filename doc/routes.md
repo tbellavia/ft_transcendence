@@ -9,8 +9,7 @@ Users :
     - GET       /api/v1/users?limit=<int>
     - GET       /api/v1/users/:username
     - GET       /api/v1/users/:username/avatar
-    - PUT       /api/v1/users/:username/avatar
-    - PUT       /api/v1/users/:username
+    - PUT       /api/v1/users/me/avatar
     - PUT       /api/v1/users/me
         - Body
         {

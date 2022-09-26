@@ -63,9 +63,11 @@ export class User {
 			game_won: 0,
 			rank: 'WOOD',
 		}
-		const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`);
-		if (stats)
+		try {
+			const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`);
 			this.stats = stats;
+		}
+		catch {}
 		return this.stats;
 	}
 

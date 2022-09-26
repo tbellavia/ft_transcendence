@@ -22,20 +22,20 @@
 			</div>
 
 			<!-- ADD or REMOVE FRIENDSHIP -->
-			<button v-else-if="props.isFriend === false" class="OptionsProfile_sub"
+			<button v-show="!isBlocked" v-else-if="props.isFriend === false" class="OptionsProfile_sub"
 				@click="useAction('addFriend')"> add friend
 			</button>
-			<button v-else-if="props.isFriend === true" class="OptionsProfile_sub"
+			<button v-show="!isBlocked" v-else-if="props.isFriend === true" class="OptionsProfile_sub"
 				@click="useAction('removeFriend')"> remove friend
 			</button>
 
 			<!-- SEND MESSAGE -->
-			<div class="OptionsProfile_sub">
+			<div v-show="!isBlocked" class="OptionsProfile_sub">
 				<NuxtLink :href="messageLink">message </NuxtLink>
 			</div>
 
 			<!-- SUGGEST MATCH -->
-			<button class="OptionsProfile_sub">  suggest a match </button>
+			<button v-show="!isBlocked" class="OptionsProfile_sub">  suggest a match </button>
 
 			<!-- SEE PROFILE PAGE -->
 			<button class="OptionsProfile_sub" @click='navigateTo("/" + userAuthenticate.username + "/profile_" + props.target.username)'> Profile Page </button>

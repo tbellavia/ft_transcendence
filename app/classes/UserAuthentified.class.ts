@@ -36,25 +36,29 @@ export class UserAuthentified extends User {
   /* -------------------------------------------------------------- */
   public async updateAvatar(newAvatar: any) { //TODO modif type
     await this.fetchingMethod(`/avatar/me`,
-    {method: 'PUT',
-    body: newAvatar, 
-  }
-  );
-  
-}
+      {
+        method: 'PUT',
+        body: newAvatar,
+      }
+    );
 
-public async updateUsername(newUsername: string) {
-  console.log(newUsername),
-  await this.fetchingMethod(`/me`,
-    {method: 'PUT',
-    body: {
-      'username': newUsername,
-    }, 
-  }
-  );
   }
 
-  public async updateDoubleAuth(enable: boolean) {}
+  public async updateUsername(newUsername: string) {
+    console.log(newUsername),
+      await this.fetchingMethod(`/me`, {
+        method: 'PUT',
+        body: {
+          username: newUsername,
+        },
+      }
+      ).then(async () => {
+        this.username = newUsername;
+        await this.fetchAll()
+      })
+  }
+
+  public async updateDoubleAuth(enable: boolean) { }
 
 
   /* FRIEND INTERFACE */
@@ -62,27 +66,27 @@ public async updateUsername(newUsername: string) {
   public async addFriend(target: User | string) {
     await this.fetchingMethod(
       `/friends/me/${this.extractUsername(target)}`,
-      {method: 'POST'}
+      { method: 'POST' }
     );
   }
 
   public async acceptFriend(target: User | string) {
     await this.fetchingMethod(
-      `/friends/me/${this.extractUsername(target)}`, { 
-        method: 'PUT',
-        body: {
-          pending: false
-        }
+      `/friends/me/${this.extractUsername(target)}`, {
+      method: 'PUT',
+      body: {
+        pending: false
       }
+    }
     );
   }
 
   public async deleteFriend(username: User | string) {
-		await this.fetchingMethod(
+    await this.fetchingMethod(
       `/friends/me/${this.extractUsername(username)}`,
-      {method: 'DELETE'}
+      { method: 'DELETE' }
     );
-	}
+  }
 
   public async getFriends(pending: boolean = false) {
     return await this.fetchingMethod(`/friends/me?pending=${pending}`);
@@ -98,14 +102,14 @@ public async updateUsername(newUsername: string) {
   public async blockUser(target: User | string) {
     await this.fetchingMethod(
       `/blocked/me/${this.extractUsername(target)}`,
-      {method: 'POST'}
+      { method: 'POST' }
     );
   }
 
   public async unblockUser(target: User | string) {
     await this.fetchingMethod(
       `/blocked/me/${this.extractUsername(target)}`,
-      {method: 'DELETE'}
+      { method: 'DELETE' }
     );
   }
 
@@ -114,14 +118,14 @@ public async updateUsername(newUsername: string) {
     return booleanString === 'true';
   }
 
-	  /* UTILS */
+  /* UTILS */
   /* -------------------------------------------------------------- */
   // Extract username if User
   private extractUsername(target: User | string) {
-    return typeof(target) == 'string' ? target : target.username;
+    return typeof (target) == 'string' ? target : target.username;
   }
 
-  public  extractFriend(relation: FriendRelation) {
+  public extractFriend(relation: FriendRelation) {
     return relation.user_2.username != this.username ? relation.user_2 : relation.user_1;
   }
 }
