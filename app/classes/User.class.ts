@@ -60,10 +60,3 @@ export class User {
 	}
 
 }
-
-export async function createAndInitUser(username: string, fetchingMethod: $Fetch) {
-	const user = new User(username, fetchingMethod);
-	// await user.fetchAll();
-	return user;
-}
-
