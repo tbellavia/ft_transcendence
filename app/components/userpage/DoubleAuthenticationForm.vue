@@ -9,7 +9,7 @@
 			<input v-model="input[4]" maxlength="1" @keyup="clickEvent('4', '5', $event)" class="inputOtp" type="text" id="4" placeholder="-" />
 			<input v-model="input[5]" maxlength="1" @keyup="clickEvent('5', '', $event)" class="inputOtp" type="text" id="5" placeholder="-" />
 		</form>
-		<v-space></v-space>
+		<v-spacer></v-spacer>
 		<button @click="checkKey"> validate </button>
 	</div>
 </template>
@@ -54,7 +54,7 @@ function checkKey() {
 	console.log(Number(input.value.join('')));
 
 	if (input.value.join() === "123456")
-		emit("DoubleAuthValidate")
+		emit("DoubleAuthValidate", input.value);
 	else {
 		// clean input and focus to first element input
 		input.value = [];

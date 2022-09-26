@@ -10,8 +10,8 @@
              <span class="line-sub"> Double Authentication :</span>
               <v-switch class="line-sub"
               v-model="userChoice"
-              v-bind="userChoice"
-              v-on="activatePopup" >
+              v-on:click="activatePopup" >
+              <!-- Handle connection -->
               </v-switch>
            </template>
 
@@ -42,7 +42,7 @@
               <!-- formulaire pour recuperer la clé (component) -->
             <userpageDoubleAuthenticationForm 
               justify="center" 
-              @DoubleAuthValidate="printOk; activatePopup=false"/>
+              @DoubleAuthValidate="printOk"/>
             </v-card-actions>
 
           </v-card>
@@ -53,13 +53,13 @@
 
 	
 <script setup lang="ts">
-import Xmark from '../svg/Xmark.vue';
 
 /*
 ** test for form 
 */
 function printOk(){
-  activatePopup = false;
+  
+  activatePopup.value = false;
 };
 
 let svg = ref();

@@ -7,6 +7,7 @@
       </div>
       <div class="auth-page">
         <NuxtPage />
+        <AuthenticationDoubleAuthValidator />
       </div>
     </div>
   </nuxtLayout>
