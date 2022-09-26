@@ -81,6 +81,7 @@ async function generateQrCode() {
 /*
 ** Watcher of switch activator for Double Authentication
 */
+let errorMessage = ref('');
 let userAuthentified = getUserAuthenticate();
 let activatePopup = ref(false);
 let userChoice = ref(userAuthentified.value.double_auth_enabled);  // TODO: a recuperer sur l'api.
@@ -91,6 +92,8 @@ watch(userChoice, (newUserChoice) => {
  		  .catch(error => console.warn(error));
   } else {
     // TODO: Disable 2fa for auth user
+    $apiFetch('/2fa/turn-off', {method: 'DELETE'})
+      .catch(error => errorMessage.value = error.data?.message || 'Unknown Error');
     userChoice.value = false;
   }
 });
@@ -100,7 +103,6 @@ watch(userChoice, (newUserChoice) => {
 /*
 ** Activate 2fa if code is valide
 */
-let errorMessage = ref('');
 async function validateTwoFactorAuthentication(code: string) {
   errorMessage.value = '';
   try {

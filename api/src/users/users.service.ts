@@ -102,8 +102,17 @@ export class UsersService {
         is_two_factor_auth_enabled: true,
       },
       user_id
-      );
-    }
+    );
+  }
+
+  async turnOffTwoFactorAuth(user_id: string) {
+    return this.update(
+      {
+        is_two_factor_auth_enabled: false,
+      },
+      user_id
+    );
+  }
     
     async update(updateUserDto: UpdateUserDTO, user_id: string) {
       const { password, is_two_factor_auth_enabled } = updateUserDto;

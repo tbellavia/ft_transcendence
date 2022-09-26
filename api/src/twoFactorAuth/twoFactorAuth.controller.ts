@@ -1,6 +1,7 @@
-import { Body, Controller, Post, Req, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Post, Req, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { AuthService } from "src/auth/auth.service";
 import { JWTAuthGuard } from "src/auth/guards/jwtauth.guard";
+import { RequestWithUser } from "src/auth/interfaces/requestWithUser.interface";
 import { Public } from "src/common/decorators/public.decorator";
 import { UsersService } from "src/users/users.service";
 import { TwoFactorCodeDTO } from "./dto/twoFactorCodeDTO";
@@ -38,10 +39,14 @@ export class TwoFactorAuthController {
       code,
       requestWithUser.user
     );
-    console.log('Code:', code, 'is', isCodeValid ? 'valid' : 'invalid');
     if (!isCodeValid)
       throw new UnauthorizedException('Wrong authentication code');
     await this.userService.turnOnTwoFactorAuth(requestWithUser.user.user_id);
+  }
+
+  @Delete('turn-off')
+  async turnOffTwoFactorAuth(@Req() request: RequestWithUser) {
+    await this.userService.turnOffTwoFactorAuth(request.user.user_id);
   }
 
   @Public()
