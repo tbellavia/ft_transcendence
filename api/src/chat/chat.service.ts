@@ -11,7 +11,7 @@ import { SendMessageDTO } from "./dto/sendMessage.dto";
 import { ChannelEntity } from "./entities/channel.entity";
 import { MessageEntity } from "./entities/message.entity";
 import { WsBlockedByUserException } from "./exceptions/wsBlockedByUser.exception";
-import { WsInternalError } from "./exceptions/wsInternalError";
+import { WsInternalError } from "src/socket/exceptions/bases/wsInternalError";
 import { WsUserNotInChannelException } from "./exceptions/channel/wsUserNotInChannel.exception";
 
 @Injectable()

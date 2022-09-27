@@ -19,8 +19,8 @@ import { WsUserUnauthorizeException } from "./exceptions/channel/wsUserNotInvite
 import { InviteUserDTO } from "./dto/inviteUser.dto";
 import { UsersService } from "src/users/users.service";
 import { UserNotFoundException } from "src/users/exceptions/userNotFound.exception";
-import { WsUserNotFoundException } from "./exceptions/wsUserNotFound";
-import { WsInternalError } from "./exceptions/wsInternalError";
+import { WsUserNotFoundException } from "src/socket/exceptions/wsUserNotFound";
+import { WsInternalError } from "src/socket/exceptions/bases/wsInternalError";
 import { WsUserHasNotModPermissionsException } from "./exceptions/channel/wsUserHasNoModPermissions.exception";
 
 
