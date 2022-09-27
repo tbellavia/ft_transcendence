@@ -10,7 +10,7 @@
       </li>
     </ul>
     <h3>Channels invitations</h3>
-    <input type="password" placeholder="channel password" />
+    <input type="password" placeholder="channel password" v-model="channelPassword" />
     <ul class="list-channels">
       <li v-for="channel in channelsInvited">
         <button @click="acceptInvite(channel)">{{ channel }}</button>
@@ -50,7 +50,7 @@ const channelPassword = ref('');
 function acceptInvite(channel: string) {
   socket.value.emit('join_channel', {
     name: channel,
-    password: channelPassword
+    password: channelPassword.value
     },
     () => channelsInvited.value.splice(channelsInvited.value.findIndex(channelName => channelName == channel), 1)
   );
