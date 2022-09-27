@@ -1,5 +1,6 @@
 <template>
   <div class="chat-page">
+    <ChatErrorPopup />
     <ChatLists class="chat-list" />
     <div class="chat-target-page">
       <NuxtPage />

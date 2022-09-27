@@ -10,7 +10,6 @@
     <input class="channel-validate-create" type="submit" value="Create" @click="event = 'create_channel'"/>
   </form>
   <div class="channel-create-error">
-    <p v-if="channelError" style="color: var(--error-color); background-color: var(--background-error-color);">{{ channelError }}</p>
   </div>
 </template>
 
@@ -23,7 +22,6 @@ const channelIsPrivate = ref(false);
 const socket = useSocketChat();
 
 function joinOrCreateChannel() {
-  channelError.value = '';
   socket.value.emit(
     event.value,
     {
@@ -37,12 +35,6 @@ function joinOrCreateChannel() {
   );
 }
 
-// Captures errors on exception and display them
-const channelError = ref<string>('');
-socket.value.on('exception', ({ status, message }) => {
-  if (status == 'CHANNEL_NOT_FOUND' || status == 'CHANNEL_CREATION_FAILED')
-    channelError.value = message;
-});
 </script>
 
 <style scoped>
