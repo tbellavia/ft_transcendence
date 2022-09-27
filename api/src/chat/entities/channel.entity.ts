@@ -16,13 +16,17 @@ export class ChannelEntity {
   @Column({ nullable: true })
   password: string;
 
+  @Expose()
+  @Column()
+  private: boolean
+
   // Users relations
   @Expose()
   @Transform(({ value }) => value.username )
-  @ManyToOne(() => UserEntity, (creator => creator.channels_created), {
+  @ManyToOne(() => UserEntity, (owner => owner.channels_owned), {
     eager: true
   })
-  creator: UserEntity;
+  owner: UserEntity;
 
   @Expose()
   @Type(() => UserEntity)
@@ -42,9 +46,16 @@ export class ChannelEntity {
   @JoinTable()
   users: UserEntity[];
 
+  @ManyToMany(() => UserEntity, invited_user => invited_user.channels_invited, {
+    eager: true
+  })
+  @JoinTable()
+  invited_users: UserEntity[];
+
   // Messages relations
   @OneToMany(() => MessageEntity, message => message.channel_target, {
     eager: true,
+    onDelete: 'CASCADE'
   })
-  messages?: MessageEntity[];
+  messages: MessageEntity[];
 }

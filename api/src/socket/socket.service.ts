@@ -4,7 +4,7 @@ import { Socket } from "socket.io";
 import { WsException } from "@nestjs/websockets";
 import { parse } from "cookie";
 import { UsersService } from "src/users/users.service";
-import { WsUserNotFoundException } from "src/chat/exceptions/wsUserNotFound";
+import { WsUserNotFoundException } from "./exceptions/wsUserNotFound";
 
 @Injectable()
 export class SocketService {

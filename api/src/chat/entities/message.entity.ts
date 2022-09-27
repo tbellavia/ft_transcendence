@@ -28,7 +28,8 @@ export class MessageEntity {
   user_target?: UserEntity;
 
   @ManyToOne(() => ChannelEntity, {
-    nullable: true
+    nullable: true,
+    onDelete: 'CASCADE'
   })
   channel_target?: ChannelEntity
 

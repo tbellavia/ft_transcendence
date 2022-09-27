@@ -66,19 +66,22 @@ export class UserEntity extends BaseEntity {
     opponents: MatchEntity[];
 
     // Message History
-    @OneToMany(() => MessageEntity, (message) => message.author, { cascade: true })
+    @OneToMany(() => MessageEntity, (message) => message.author, { onDelete: 'CASCADE' })
     messages_author: MessageEntity[];
 
-    @OneToMany(() => MessageEntity, (message) => message.user_target, { cascade: true })
+    @OneToMany(() => MessageEntity, (message) => message.user_target, { onDelete: 'CASCADE' })
     messages_target: MessageEntity[];
 
     // Channels created, joined, moderated
-    @OneToMany(() => ChannelEntity, channel => channel.creator, { cascade: true })
-    channels_created: ChannelEntity[];
+    @OneToMany(() => ChannelEntity, channel => channel.owner, { cascade: true })
+    channels_owned: ChannelEntity[];
 
     @ManyToMany(() => ChannelEntity, channel => channel.moderators)
     channels_moderated: ChannelEntity[];
 
     @ManyToMany(() => ChannelEntity, channel_joined => channel_joined.users)
     channels_joined: ChannelEntity[];
+
+    @ManyToMany(() => ChannelEntity, channel_invited => channel_invited.invited_users)
+    channels_invited: ChannelEntity[];
 }
