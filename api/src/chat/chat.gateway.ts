@@ -7,8 +7,9 @@ import { GetAllMessagesDTO } from "./dto/getAllMessages.dto";
 import { SendMessageDTO } from "./dto/sendMessage.dto";
 import { JoinChannelDTO } from "./dto/joinChannel.dto";
 import { ChannelsService } from "./channels.service";
-import { instanceToPlain } from "class-transformer";
+import { WsUserNotInChannelException } from "./exceptions/channel/wsUserNotInChannel.exception";
 import { CreateChannelDTO } from "./dto/createChannel.dto";
+import { InviteUserDTO } from "./dto/inviteUser.dto";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
@@ -90,11 +91,7 @@ export class ChatGateway implements OnGatewayConnection {
     const channel = await this.channelService.createChannel(author, channelAuth);
     this.server
       .to(author.username)
-      .emit('receive_create_channel', instanceToPlain(channel, {
-        strategy: 'excludeAll',
-        exposeUnsetFields: false,
-        excludeExtraneousValues: true
-      }));
+      .emit('receive_create_channel', channel.channelName);
   }
 
   @SubscribeMessage('join_channel')
@@ -104,19 +101,22 @@ export class ChatGateway implements OnGatewayConnection {
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
 
-    const channel = await this.channelService.joinChannel(author, joinChannelDto);
-    this.server.to(author.username).emit('receive_join_channel', {
-      user: instanceToPlain(author, { strategy: 'excludeAll' }),
-      channel: instanceToPlain(channel, {
-        strategy: 'excludeAll',
-        exposeUnsetFields: false,
-        excludeExtraneousValues: true
-      })
-    });// For all client sockets
-    this.server.to(channel.name).emit('receive_join_channel', {
-      user: author.username,
-      channel: channel.name
-    });
+    const response = await this.channelService.joinChannel(author, joinChannelDto);
+    this.server.to(author.username).socketsJoin(response.channelName);
+    this.server.to(response.channelName).emit('receive_join_channel', response);
+  }
+
+  @SubscribeMessage('invite_user_in_channel')
+  async inviteUserInChannel(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() inviteUser: InviteUserDTO
+  ) {
+    const author = await this.socketService.getUserFromSocket(socket);
+    const target = await this.channelService.inviteUserInChannel(author, inviteUser);
+
+    // Notify target of invite
+    if (target)
+      this.server.to(target.username).emit('receive_invite_channel', inviteUser.channelName);
   }
 
   @SubscribeMessage('leave_channel')
@@ -130,13 +130,48 @@ export class ChatGateway implements OnGatewayConnection {
     this.server.to(author.username).socketsLeave(channel);
   }
 
-  @SubscribeMessage('get_all_channels')
+  @SubscribeMessage('get_all_channels_joined')
   async getAllChannels(
     @ConnectedSocket() socket
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
 
-    const channels = await this.channelService.getAllChannels(author);
-    return channels;
+    const channels = await this.channelService.getAllChannelsJoined(author);
+    return channels.map(channel => channel.name);
+  }
+
+  @SubscribeMessage('get_all_channels_invited')
+  async getAllChannelInvited(
+    @ConnectedSocket() socket
+  ) {
+    const author = await this.socketService.getUserFromSocket(socket);
+
+    const channels = await this.channelService.getAllChannelsInvited(author);
+    return channels.map(channel => channel.name);
+  }
+
+  //Channel infos
+  @SubscribeMessage('get_channel_infos')
+  async getChannelInfos(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() channel_name: string
+  ) {
+    const author = await this.socketService.getUserFromSocket(socket);
+    const channel = await this.channelService.getChannel(channel_name);
+    if (channel.users.findIndex(channelUser => author.username == channelUser.username) == -1) {
+      throw new WsUserNotInChannelException(author.username, channel_name);
+    }
+    return channel;
+  }
+
+  @SubscribeMessage('is_channel_moderator')
+  async isModerator(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() channel_name: string
+  ) {
+    const author = await this.socketService.getUserFromSocket(socket);
+    const channel = await this.channelService.getChannel(channel_name);
+
+    return this.channelService.hasModeratorRights(author, channel);
   }
 }

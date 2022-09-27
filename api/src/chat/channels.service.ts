@@ -4,6 +4,7 @@ import { WsException } from "@nestjs/websockets";
 import { PostgresErrorCode } from "src/database/postgresErrorCode.enum";
 import { UserEntity } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
+import { JoinChannel } from "./classes/joinChannel.class";
 import { LeaveChannel } from "./classes/leaveChannel.class";
 import { JoinChannelDTO } from "./dto/joinChannel.dto";
 import { ChannelEntity } from "./entities/channel.entity";
@@ -14,20 +15,25 @@ import * as bcrypt from 'bcrypt';
 import { CreateChannelDTO } from "./dto/createChannel.dto";
 import { WsPasswordMissingException } from "./exceptions/channel/wsPasswordMissing.exception";
 import { WsInvalidCredentials } from "./exceptions/channel/wsInvalidCredentials.exception";
-
+import { WsUserUnauthorizeException } from "./exceptions/channel/wsUserNotInvited.exception";
+import { InviteUserDTO } from "./dto/inviteUser.dto";
+import { UsersService } from "src/users/users.service";
+import { UserNotFoundException } from "src/users/exceptions/userNotFound.exception";
+import { WsUserNotFoundException } from "src/socket/exceptions/wsUserNotFound";
+import { WsInternalError } from "src/socket/exceptions/bases/wsInternalError";
+import { WsUserHasNotModPermissionsException } from "./exceptions/channel/wsUserHasNoModPermissions.exception";
 
 @Injectable()
 export class ChannelsService {
   constructor(
     @InjectRepository(ChannelEntity)
     private channelRepository: Repository<ChannelEntity>,
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>
+    private readonly userService: UsersService
   ) {}
 
   // Create, Join and Leave channel
 
-  async createChannel(creator: UserEntity, channelRegister: CreateChannelDTO) {
+  async createChannel(owner: UserEntity, channelRegister: CreateChannelDTO) {
     try {
       let hashedPassword: string | null = null;
       if (channelRegister.password) {
@@ -37,11 +43,12 @@ export class ChannelsService {
       const newChannel = this.channelRepository.create({
         ...channelRegister,
         password: hashedPassword,
-        creator,
-        users: [creator]
+        owner,
+        users: [owner]
       })
       await this.channelRepository.save(newChannel);
-      return await this.getChannel(channelRegister.name);
+      const channel = await this.getChannel(channelRegister.name);
+      return new JoinChannel(owner.username, channel.name);
     }
     catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation)
@@ -55,6 +62,9 @@ export class ChannelsService {
 
     if (channel.users.findIndex(chanUser => user.username == chanUser.username) != -1)
       throw new WsUserAlreadyInChannelException(user.username, joinChannelDto.name);
+    const inviteIndex = channel.invited_users.findIndex(chanUser => user.username == chanUser.username);
+    if (channel.private && inviteIndex == -1)
+      throw new WsUserUnauthorizeException(user.username, channel.name);
     if (channel.password) {
       if (!joinChannelDto.password)
         throw new WsPasswordMissingException(channel.name);
@@ -63,50 +73,78 @@ export class ChannelsService {
         throw new WsInvalidCredentials(channel.name);
     }
 
+    // Delete user of list of invites when joining
+    if (inviteIndex != -1)
+      channel.invited_users.splice(inviteIndex, 1);
+
     channel.users.push(user);
     await this.channelRepository.save(channel);
-    return channel;
+    return new JoinChannel(user.username, channel.name);
+  }
+
+  async inviteUserInChannel(user: UserEntity, inviteUser: InviteUserDTO) {
+    const channel = await this.getChannel(inviteUser.channelName);
+
+    if (!this.isUserInChannel(user, channel))
+      throw new WsUserNotInChannelException(user.username, channel.name);
+    if (!this.hasModeratorRights(user, channel))
+      throw new WsUserHasNotModPermissionsException(user.username, channel.name);
+    try {
+      const target = await this.userService.findOneByName(inviteUser.username);
+      if (await this.isUserInChannel(target, channel))
+        throw new WsUserAlreadyInChannelException(target.username, channel.name);
+      if (channel.invited_users.find(invited => invited.username == target.username))
+        return null;
+
+      channel.invited_users.push(target);
+      await this.channelRepository.save(channel);
+      return target;
+    } catch (error) {
+      if (error instanceof UserNotFoundException)
+        throw new WsUserNotFoundException(inviteUser.username);
+      else if (error instanceof WsUserAlreadyInChannelException)
+        throw error;
+      console.warn(error);
+      throw new WsInternalError();
+    }
   }
 
   async leaveChannel(user: UserEntity, channel_name: string) {
     let channel = await this.getChannel(channel_name);
     
-    if (channel.creator.username == user.username) {
+    const index = channel.users.findIndex(chanUser => chanUser.username == user.username);
+    if (index == -1)
+      throw new WsUserNotInChannelException(user.username, channel_name);
+    channel.users.splice(index, 1);
+    if (channel.owner.username == user.username) {
       //If user is creator transfer ownership if not the last user
-      if (channel.users.length != 1)
+      if (channel.users.length)
         this.transferOwnership(channel);
       //Or if last user destroy the channel
       else {
         await this.destroyChannel(channel);
-        return new LeaveChannel(user.username, channel);
+        return new LeaveChannel(user.username, channel_name);
       }
     }
 
-    // Remove user from the list of users
-    if (channel.users.findIndex(channelUser => channelUser.username == user.username) == -1)
-      throw new WsUserNotInChannelException(user.username, channel_name);
-      
-    channel.users = channel.users.filter(channelUser => channelUser.username != user.username);
     await this.channelRepository.save(channel);
-
-    return new LeaveChannel(user.username, channel);
+    return new LeaveChannel(user.username, channel_name);
   }
 
   private async destroyChannel(channel: ChannelEntity) {
     await this.channelRepository.remove(channel);
-    
   }
 
   // Channel Moderators and ownership
 
   private async transferOwnership(channel: ChannelEntity) {
-    channel.creator = channel.moderators[0] || channel.users[0];
+    channel.owner = channel.moderators[0] || channel.users[0];
     await this.channelRepository.save(channel);
   }
 
   // Getters
 
-  async getAllChannels(user: UserEntity) {
+  async getAllChannelsJoined(user: UserEntity) {
     const channels = await this.channelRepository
       .createQueryBuilder('channel')
       .leftJoinAndSelect(
@@ -115,7 +153,21 @@ export class ChannelsService {
       )
       .where('users.user_id = :user_id', { user_id: user.user_id })
       .leftJoinAndSelect('channel.moderators', 'moderators')
-      .leftJoinAndSelect('channel.creator', 'creator')
+      .leftJoinAndSelect('channel.owner', 'owner')
+      .getMany();
+    return channels;
+  }
+
+  async getAllChannelsInvited(user: UserEntity) {
+    const channels = await this.channelRepository
+      .createQueryBuilder('channel')
+      .leftJoinAndSelect(
+        'channel.invited_users', 
+        'users',
+      )
+      .where('users.user_id = :user_id', { user_id: user.user_id })
+      .leftJoinAndSelect('channel.moderators', 'moderators')
+      .leftJoinAndSelect('channel.owner', 'owner')
       .getMany();
     return channels;
   }
@@ -125,5 +177,15 @@ export class ChannelsService {
     if (!channel)
       throw new WsChannelNotFoundException(name);
     return channel;
+  }
+
+  // Checker
+  async isUserInChannel(user: UserEntity, channel: ChannelEntity) {
+    return channel.users.findIndex(chanUser => chanUser.username == user.username) != -1;
+  }
+
+  async hasModeratorRights(user: UserEntity, channel: ChannelEntity) {
+    return user.username == channel.owner.username ||
+      channel.moderators.find(moderator => moderator.username == user.username)
   }
 }

@@ -1,35 +1,45 @@
 <template>
-  <fieldset>
-    <button @click="leaveChannel">Leave Channel</button>
-  </fieldset>
+  <div>
+    <fieldset>
+      <button @click="leaveChannel">Leave Channel</button>
+      <div v-if="isModerator">
+        <hr />
+        <form  @submit.prevent="inviteUser" class="channel-invite-user">
+          <input type="text" placeholder="username" v-model="userInvited" />
+          <input type="submit" value="Invite User" />
+        </form>
+      </div>
+    </fieldset>
+  </div>
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  target: {
-    required: true,
-    type: String
-  }
+const props = defineProps<{channelName: string}>();
+
+const socket = useSocketChat();
+// Fetch if is channel moderator
+const isModerator = ref(false);
+socket.value.emit('is_channel_moderator', props.channelName, (isChanModerator: boolean) => {
+  isModerator.value = isChanModerator;
 });
 
-const route = useRoute();
-const socket = useSocketChat();
+// Leave channel method
 function leaveChannel() {
   socket.value.emit(
     'leave_channel',
-    props.target
+    props.channelName
   );
 }
 
-const user = await useGetUser();
-
-// When user leave channel if it's currently load channel, load the main chat page
-socket.value.on(
-  'receive_leave_channel',
-  async ({username, channel}) => {
-    if (user.value.username == username && channel.name == props.target)
-      await navigateTo(route.fullPath.slice(0, route.fullPath.lastIndexOf('/')));
-  }
-)
+const userInvited = ref('');
+function inviteUser() {
+  socket.value.emit(
+    'invite_user_in_channel',
+    {
+      channelName: props.channelName,
+      username: userInvited.value
+    }
+  );
+}
 
 </script>

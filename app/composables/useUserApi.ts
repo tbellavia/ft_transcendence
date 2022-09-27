@@ -1,6 +1,3 @@
-import { Ref } from 'vue';
-import { User } from '../interfaces/user.interface';
-
 class UserApi {
 	public user: string;
 

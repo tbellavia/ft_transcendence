@@ -1,0 +1,6 @@
+export enum SocketExceptionCodes {
+  NOT_FOUND = 'NOT_FOUND',
+  UNHAUTHORIZE = 'UNHAUTORIZE',
+  BAD_REQUEST = 'BAD_REQUEST',
+  INTERNAL_ERROR = 'INTERNAL_ERROR'
+}
