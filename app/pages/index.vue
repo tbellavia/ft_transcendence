@@ -21,8 +21,8 @@ import { getRefreshedUserAuthenticate } from '~~/composables/useUserAuthentified
 
 onMounted(async () => {
   const route = useRoute();
+  const user = await getRefreshedUserAuthenticate();
   if (route.fullPath == '/') {
-    const user = await getRefreshedUserAuthenticate();
     await redirectIfConnected('/' + user.value.username, '/');
   }
 })

@@ -2,7 +2,7 @@
   <nav class="navbar">
     <!-- TODO User name  -->
   <div class="link">
-    <NuxtLink v-for="link in links" :to="`/${username}/${link.link}`">{{ link.name }}</NuxtLink>
+    <NuxtLink v-for="(link, index) in links" :key="`${link.name}${index}`" :to="`/${username}/${link.link}`">{{ link.name }}</NuxtLink>
   </div>
 
     <div class="navbar-right">
@@ -14,12 +14,12 @@
 
 <script setup lang="ts">
   const links = ref([
-    {name: 'PROFILE', link: 'profileParameters'},
+    {name: 'PROFILE', link: 'profileParams'},
     {name: 'FRIENDS', link: 'friendsList'},
     {name: 'CHAT', link: 'chat'}
   ]);
-  const user = await useGetUser();
-  const username = user.value ? user.value.username : 'Default';
+  const user =  await getRefreshedUserAuthenticate();
+  const username = user.value.username ? user.value.username : 'Default';
 </script>
 
 <style scoped>

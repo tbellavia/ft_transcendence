@@ -23,6 +23,7 @@
 // Try to load user in all app
 try {
    await getRefreshedUserAuthenticate();
+   await refreshUrl()
 } catch {}
 
 const { $eventBus } = useNuxtApp();
@@ -35,11 +36,5 @@ $eventBus.$on('disconnect', () => {
    layout.value = 'default'
 });
 
-// async function changeLayout() {
-//   const { $apiFetch } = useNuxtApp();
-//   await $apiFetch("/auth/isConnected")
-//     .then(async () => layout.name = 'home')
-//     .catch(async () => layout.name = 'default');
-// }
 
 </script>

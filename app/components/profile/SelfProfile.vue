@@ -17,10 +17,10 @@
 					<div class="user-parameters-sub"> GAME LOOSE: {{ user.stats.game_total - user.stats.game_won -
 					user.stats.game_abandonned }} </div>
 					<v-space></v-space>
-					<!-- <div class="user-parameters-sub"><authenticationDoubleAuthentication /></div>  -->
 					<div v-show="props.isUserAuth">
 						<input v-model="newName" type="text" placeholder="new username" />
 						<button @click="submitName()"> CLICK </button>
+						<div class="user-parameters-sub"> <authenticationDoubleAuthentication /></div> 
 					</div>
 				</div>
 
@@ -57,7 +57,7 @@ async function submitName() {
 	await user.value.updateUsername(newName.value);
 	await user.value.fetchAll()
 	newName.value = "";
-
+	await refreshUrl();
 }
 </script>
 
