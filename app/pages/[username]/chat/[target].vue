@@ -1,16 +1,16 @@
 <template>
   <div class="chat-target-page">
-    <ChatDialog class="chat-dialog" :target="username" :isChannel="isChannel"></ChatDialog>
-    <ChatChannelOptions class="chat-channel-parameters" v-if="isChannel" :channelName="username" />
+    <ChatDialog class="chat-dialog" :target="target" :isChannel="isChannel"></ChatDialog>
+    <ChatChannelOptions class="chat-channel-parameters" v-if="isChannel" :channelName="target" />
   </div>
 </template>
 
 <script setup lang="ts">
 const route = useRoute();
-let username = ref('');
+let target = ref('');
 let isChannel = ref(false);
 
-username.value = String(route.params.username);
+target.value = String(route.params.target);
 if ('isChannel' in route.query) {
   isChannel.value = true;
 }
@@ -30,5 +30,4 @@ if ('isChannel' in route.query) {
   .chat-channel-parameters {
     min-width: max-content;
   }
-
 </style>
