@@ -4,7 +4,10 @@
       <button @click="leaveChannel">Leave Channel</button>
       <div v-if="isModerator">
         <hr />
-        <h2>Moderator options</h2>
+        <div class="channel-invite-user">
+          <input type="text" placeholder="username" v-model="userInvited" />
+          <button type="button" @click="inviteUser">Invite User</button>
+        </div>
       </div>
     </fieldset>
   </div>
@@ -14,7 +17,6 @@
 const props = defineProps<{channelName: string}>();
 
 const socket = useSocketChat();
-
 // Fetch if is channel moderator
 const isModerator = ref(false);
 socket.value.emit('is_channel_moderator', props.channelName, (isChanModerator: boolean) => {
@@ -28,4 +30,6 @@ function leaveChannel() {
     props.channelName
   );
 }
+
+
 </script>

@@ -107,8 +107,8 @@ export class ChatGateway implements OnGatewayConnection {
     this.server.to(response.channelName).emit('receive_join_channel', response);
   }
 
-  @SubscribeMessage('invite_channel')
-  async inviteChannel(
+  @SubscribeMessage('invite_user_in_channel')
+  async inviteUserInChannel(
     @ConnectedSocket() socket: Socket,
     @MessageBody() inviteUser: InviteUserDTO
   ) {
