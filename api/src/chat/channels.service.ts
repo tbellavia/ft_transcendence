@@ -1,7 +1,6 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { WsException } from "@nestjs/websockets";
-import e from "express";
 import { PostgresErrorCode } from "src/database/postgresErrorCode.enum";
 import { UserEntity } from "src/users/entities/user.entity";
 import { Repository } from "typeorm";
@@ -12,6 +11,11 @@ import { ChannelEntity } from "./entities/channel.entity";
 import { WsChannelNotFoundException } from "./exceptions/channel/wsChannelNotFound.exception";
 import { WsUserAlreadyInChannelException } from "./exceptions/channel/wsUserAlreadyInChannel.exception";
 import { WsUserNotInChannelException } from "./exceptions/channel/wsUserNotInChannel.exception";
+import * as bcrypt from 'bcrypt';
+import { CreateChannelDTO } from "./dto/createChannel.dto";
+import { WsPasswordMissingException } from "./exceptions/channel/wsPasswordMissing.exception";
+import { WsInvalidCredentials } from "./exceptions/channel/wsInvalidCredentials.exception";
+
 
 @Injectable()
 export class ChannelsService {
@@ -24,10 +28,16 @@ export class ChannelsService {
 
   // Create, Join and Leave channel
 
-  async createChannel(owner: UserEntity, channelRegister: JoinChannelDTO) {
+  async createChannel(owner: UserEntity, channelRegister: CreateChannelDTO) {
     try {
+      let hashedPassword: string | null = null;
+      if (channelRegister.password) {
+        hashedPassword = await bcrypt.hash(channelRegister.password, 10);
+      }  
+
       const newChannel = this.channelRepository.create({
         ...channelRegister,
+        password: hashedPassword,
         owner,
         users: [owner]
       })
@@ -47,6 +57,13 @@ export class ChannelsService {
 
     if (channel.users.findIndex(chanUser => user.username == chanUser.username) != -1)
       throw new WsUserAlreadyInChannelException(user.username, joinChannelDto.name);
+    if (channel.password) {
+      if (!joinChannelDto.password)
+        throw new WsPasswordMissingException(channel.name);
+      const isValidPassword: boolean = await bcrypt.compare(joinChannelDto.password, channel.password);
+      if (!isValidPassword)
+        throw new WsInvalidCredentials(channel.name);
+    }
 
     channel.users.push(user);
     await this.channelRepository.save(channel);
@@ -55,18 +72,13 @@ export class ChannelsService {
 
   async leaveChannel(user: UserEntity, channel_name: string) {
     let channel = await this.getChannel(channel_name);
-
-    // Check if user is in the channel, remove him from the user's list.
-    const index = channel.users.findIndex(channelUser => channelUser.username == user.username);
-    if (index == -1)
-      throw new WsUserNotInChannelException(user.username, channel_name);
-    channel.users.splice(index, 1);
-    // Check if user is owner of the channel, and if is the last user of it
+    
     if (channel.owner.username == user.username) {
-      //Transfer ownership if other users are presents
-      if (channel.users.length) {
-        this.transferOwnership(user, channel);
-      } else {
+      //If user is creator transfer ownership if not the last user
+      if (channel.users.length != 1)
+        this.transferOwnership(channel);
+      //Or if last user destroy the channel
+      else {
         await this.destroyChannel(channel);
         return new LeaveChannel(user.username, channel_name);
       }
@@ -82,7 +94,7 @@ export class ChannelsService {
 
   // Channel Moderators and ownership
 
-  private async transferOwnership(previousOwner: UserEntity, channel: ChannelEntity) {
+  private async transferOwnership(channel: ChannelEntity) {
     channel.owner = channel.moderators[0] || channel.users[0];
     await this.channelRepository.save(channel);
   }

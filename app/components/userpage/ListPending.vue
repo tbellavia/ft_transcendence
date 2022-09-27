@@ -1,22 +1,25 @@
 <script setup lang="ts">
-	const userApi = await useUserApi();
-	let pendingFriends = ref(await userApi.getPendingFriends());
+let userAuthenticate = await getUserAuthenticate();
+let pendingFriends = ref(await userAuthenticate.value.getFriendsRequest());
 
-	async function refreshList() {
-		pendingFriends.value = await userApi.getPendingFriends();
-	}
+async function refreshList() {
+	userAuthenticate = await getRefreshedUserAuthenticate();
+	pendingFriends.value = await userAuthenticate.value.getFriendsRequest();
+}
 </script>
+
+<!-- -------------------------------------------------------------- -->
 	
-	<template>
-	<div>
-    <div class="all" v-for="user in pendingFriends">
-			<Suspense v-if="userApi.username !== user.user_1.username">
-				<userpageListItem 
-					@refreshList="refreshList"
-					:username="user.user_1.username"
-					:isFriend="false"
-					:pendingFriend="true" />
-			</Suspense>
-		</div>
-	</div>
-	</template>
+<template>
+<div>
+<div class="all" v-for="pending in pendingFriends">
+	<Suspense >
+		<userpageListItem 
+			@refreshList="refreshList()"
+			:target="pending.user_1"
+			:isFriend="false"
+			:pendingFriend="true" />
+	</Suspense>
+</div>
+</div>
+</template>

@@ -32,8 +32,7 @@
 
 <script setup lang="ts">
 import { Ref } from 'vue';
-
-const emits = defineEmits(['connect']);
+import { UserInfos } from '~~/classes/User.class';
 
 const isRegistering: Ref<boolean> = ref(false);
 const password: Ref<string> = ref('');
@@ -46,7 +45,7 @@ async function authenticateApi() {
   const apiRoute = isRegistering.value ? '/auth/register' : '/auth/connect';
 
   try {
-    const user = await $apiFetch(apiRoute, {
+    const userInfos: UserInfos = await $apiFetch(apiRoute, {
       method: 'POST',
       body: {
         password: password.value,
@@ -57,7 +56,7 @@ async function authenticateApi() {
     password.value = '';
 
     const { $eventBus } = useNuxtApp();
-    $eventBus.$emit('connect');
+    $eventBus.$emit('connect', userInfos);
   } catch (error) {
     errorMessage.value = error.data.message;
     password.value = '';

@@ -10,14 +10,6 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
-
-// const emit = defineEmits(["disconnect"]);
-
-// async function disconnect() {
-//   const { $apiFetch } = useNuxtApp();
-//   await $apiFetch("/auth/disconnect").then(() => emit("disconnect"));
-// }
-
 async function disconnect() {
   const { $apiFetch } = useNuxtApp();
   await $apiFetch("/auth/disconnect")
@@ -26,11 +18,10 @@ async function disconnect() {
       $eventBus.$emit('disconnect');
       await navigateTo("/")
     })
-    .catch((error) => {
+    .catch(async error => {
       console.warn(error);
-      navigateTo("/");
-    })
-    //TODO navigateTo / 
+      await navigateTo("/");
+    });
 }
 </script>
 

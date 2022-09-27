@@ -1,5 +1,8 @@
-import { Body, Controller, Post, Req, Res, UnauthorizedException } from "@nestjs/common";
+import { Body, Controller, Delete, Post, Req, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { AuthService } from "src/auth/auth.service";
+import { JWTAuthGuard } from "src/auth/guards/jwtauth.guard";
+import { RequestWithUser } from "src/auth/interfaces/requestWithUser.interface";
+import { Public } from "src/common/decorators/public.decorator";
 import { UsersService } from "src/users/users.service";
 import { TwoFactorCodeDTO } from "./dto/twoFactorCodeDTO";
 import { TwoFactorAuthService } from "./twoFactorAuth.service";
@@ -32,7 +35,7 @@ export class TwoFactorAuthController {
    */
   @Post('turn-on')
   async turnOnTwoFactorAuth(@Req() requestWithUser, @Body() { code }: TwoFactorCodeDTO) {
-    const isCodeValid = this.twoFactorAuthService.isTwoFactorAuthCodeValid(
+    const isCodeValid = await this.twoFactorAuthService.isTwoFactorAuthCodeValid(
       code,
       requestWithUser.user
     );
@@ -41,6 +44,13 @@ export class TwoFactorAuthController {
     await this.userService.turnOnTwoFactorAuth(requestWithUser.user.user_id);
   }
 
+  @Delete('turn-off')
+  async turnOffTwoFactorAuth(@Req() request: RequestWithUser) {
+    await this.userService.turnOffTwoFactorAuth(request.user.user_id);
+  }
+
+  @Public()
+  @UseGuards(new JWTAuthGuard())
   @Post('authenticate')
   async authenticate(@Req() requestWithUser, @Body() { code }: TwoFactorCodeDTO, @Res({ passthrough: true}) res) {
     const isCodeValid = this.twoFactorAuthService.isTwoFactorAuthCodeValid(
@@ -51,7 +61,7 @@ export class TwoFactorAuthController {
       throw new UnauthorizedException('Wrong authentication code');
 
     // Set-Cookie with 2fa enabled into cookie
-    const accessToken = this.authService.login(requestWithUser.user, true);
+    const accessToken = await this.authService.login(requestWithUser.user, true);
     res.cookie('Authentication', accessToken);
   }
 }

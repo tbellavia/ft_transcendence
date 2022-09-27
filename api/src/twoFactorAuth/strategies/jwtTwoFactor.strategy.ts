@@ -3,10 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 import { UsersService } from 'src/users/users.service';
-import { TokenPayload } from '../interfaces/tokenPayload.interface';
+import { TokenPayload } from 'src/auth/interfaces/tokenPayload.interface';
 
 @Injectable()
-export class JWTStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class JWTTwoFactorStrategy extends PassportStrategy(Strategy, 'jwt-two-factor') {
   constructor(
     config: ConfigService,
     private readonly userService: UsersService
@@ -25,6 +25,10 @@ export class JWTStrategy extends PassportStrategy(Strategy, 'jwt') {
 
   // Populate req.user with user's entity
   async validate(payload: TokenPayload) {
-    return await this.userService.findOneById(payload.uuid);
+    const user = await this.userService.findOneById(payload.uuid);
+    if (!user.double_auth_enabled)
+      return user;
+    if (payload.isTwoFactorAuthenticated)
+      return user;
   }
 }

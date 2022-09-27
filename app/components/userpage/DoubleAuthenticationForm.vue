@@ -9,7 +9,7 @@
 			<input v-model="input[4]" maxlength="1" @keyup="clickEvent('4', '5', $event)" class="inputOtp" type="text" id="4" placeholder="-" />
 			<input v-model="input[5]" maxlength="1" @keyup="clickEvent('5', '', $event)" class="inputOtp" type="text" id="5" placeholder="-" />
 		</form>
-		<v-space></v-space>
+		<v-spacer></v-spacer>
 		<button @click="checkKey"> validate </button>
 	</div>
 </template>
@@ -18,7 +18,6 @@
 let input = ref([]);
 
 function clickEvent(current_id: string, next_id: string, event) {
-	
 	// event.key we don't want to pass to another input
 	if (event.key === "Shift" || event.key === "Tab" || event.key === "Backspace") {
 		// if backspace and actual input empty return to before input
@@ -31,10 +30,10 @@ function clickEvent(current_id: string, next_id: string, event) {
 	else if (event.key === "Enter")
 		checkKey();
 	// pass to next_id input only if input is a number else reset value
-	else if ( (event.keyCode >= 97 && event.keyCode <= 105) 
-	|| (event.keyCode >= 48 && event.keyCode <= 57) 
-	&& next_id) {
-		document.getElementById(next_id).focus();
+	else if ( (event.keyCode >= 96 && event.keyCode <= 105) 
+	|| (event.keyCode >= 48 && event.keyCode <= 57)) {
+		if (next_id)
+			document.getElementById(next_id).focus();
 	}
 	else
 		input.value[Number(current_id)] = '';
@@ -42,24 +41,11 @@ function clickEvent(current_id: string, next_id: string, event) {
 
 
 const emit = defineEmits({
-DoubleAuthValidate: null,
-})
+	DoubleAuthValidate: null
+});
 
 function checkKey() {
-	// LYLIAN: YOU CAN CHOOSE string or numbers:
-	// join() make a string of all number
-	console.log(input.value.join(''));
-
-	// you can Number(input.value.join(''))
-	console.log(Number(input.value.join('')));
-
-	if (input.value.join() === "123456")
-		emit("DoubleAuthValidate")
-	else {
-		// clean input and focus to first element input
-		input.value = [];
-		document.getElementById('0').focus();
-	}
+	emit("DoubleAuthValidate", input.value.join(''));
 }
 </script>
 

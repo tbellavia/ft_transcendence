@@ -1,9 +1,10 @@
 <template>
   <form @submit.prevent="joinOrCreateChannel" class="channel-join-or-create">
-    <input class="channel-create" type="text" placeholder="channel name" v-model=channelName />
-    <input class="channel-create" type="password" placeholder="channel password" v-model=channelPassword />
+    <input class="channel-create" type="text" required placeholder="channel name" v-model="channelName" />
+    <input class="channel-create" type="password" placeholder="channel password" v-model="channelPassword" />
     <input class="channel-validate-create" type="submit" value="Join" @click="event = 'join_channel'"/>
     <input class="channel-validate-create" type="submit" value="Create" @click="event = 'create_channel'"/>
+    <input class="channel-checkbox" type="checkbox" v-model="channelIsPrivate" />
   </form>
   <div class="channel-create-error">
     <p v-if="channelError" style="color: var(--error-color); background-color: var(--background-error-color);">{{ channelError }}</p>
@@ -14,6 +15,7 @@
 const event = ref('join_channel');
 const channelName = ref('');
 const channelPassword = ref('');
+const channelIsPrivate = ref(false);
 
 const socket = useSocketChat();
 
@@ -23,7 +25,8 @@ function joinOrCreateChannel() {
     event.value,
     {
       name: channelName.value,
-      password: channelPassword.value ? channelPassword.value : undefined
+      password: channelPassword.value ? channelPassword.value : undefined,
+      isPrivate: channelIsPrivate
     },
     () => {
       //TODO: redirect to the newly created or joined chat
@@ -52,7 +55,6 @@ socket.value.on('exception', ({ message }) => {
   }
 
   .channel-validate-create {
-
   }
 
   .channel-create {

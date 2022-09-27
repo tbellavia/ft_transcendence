@@ -1,10 +1,11 @@
 <template>
-	<div v-if="props.username" class=Profile > 
+	<div v-if="props.target" class=Profile > 
 		
 		<!--  AVATAR and NAME -->
 		<div class="userDatas">
-			<div class="userImage"> <img :src="urlAvatar"/> </div>
-			<div class="userName"> {{ props.username }}</div>
+			
+			<div class="userImage"> <img :src="targetAvatar"/> </div>
+			<div class="userName"> {{ props.target.username }}</div>
 		</div> 
 
 		<!-- Buttons of all options -->
@@ -13,38 +14,38 @@
 			<!-- PENDING FRIENDS: accept or refuse friendship -->
 			<div v-if="props.pendingFriend">
 				<button class="OptionsProfile_sub" 
-					@click="acceptFriend()"> accept friend
+					@click="useAction('acceptFriend')"> accept friend
 				</button>
 				<button class="OptionsProfile_sub" 
-					@click="deleteFriend()"> refuse friend
+					@click="useAction('removeFriend')"> refuse friend
 				</button>
 			</div>
 
 			<!-- ADD or REMOVE FRIENDSHIP -->
 			<button v-else-if="props.isFriend === false" class="OptionsProfile_sub"
-				@click="addFriend()"> add friend
+				@click="useAction('addFriend')"> add friend
 			</button>
 			<button v-else-if="props.isFriend === true" class="OptionsProfile_sub"
-				@click="deleteFriend()"> remove friend
+				@click="useAction('removeFriend')"> remove friend
 			</button>
 
 			<!-- SEND MESSAGE -->
 			<div class="OptionsProfile_sub">
-				<a :href="messageLink">message</a>
+				<NuxtLink :href="messageLink">message </NuxtLink>
 			</div>
 
 			<!-- SUGGEST MATCH -->
 			<button class="OptionsProfile_sub">  suggest a match </button>
 
 			<!-- SEE PROFILE PAGE -->
-			<button class="OptionsProfile_sub">  see Profile Page </button>
+			<button class="OptionsProfile_sub"> Profile Page </button>
 
 			<!-- BLOCK or UNBLOCK USER -->
-			<button v-if="isBlockedUser" class="OptionsProfile_sub"
-				@click="unblock()"> unblock
+			<button v-if="isBlocked" class="OptionsProfile_sub"
+				@click="useAction('unblock')"> unblock
 			</button>
 			<button v-else class="OptionsProfile_sub" 
-				@click="block()"> block
+				@click="useAction('block')"> block
 			</button>
 		</div> 
 	</div>
@@ -53,74 +54,37 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
+const userAuthenticate = await getRefreshedUserAuthenticate();
+const targetAvatar = ref(await getAvatar(props.target.username))
+const isBlocked = ref(await userAuthenticate.value.isBlockUser(props.target));
+const messageLink = `/${userAuthenticate.value.username}/chat/${props.target.username}`;
+const emit = defineEmits(['refreshList']);
 
 const props = defineProps({
-	username: {
-		required: true,
-		type: String,
-	},
+	target: Object,
 	isFriend: Boolean,
 	isBlocked: Boolean,
 	pendingFriend: Boolean,
 })
 
-const authUsername = (await useGetUser()).value.username;
-const messageLink = `/${authUsername}/chat/${props.username}`;
-
-const userApi = await useUserApi(props.username);
-const emit = defineEmits(['refreshList']);
-
-async function acceptFriend() {
-	await userApi.acceptFriend(props.username)
-	.then (() => {
-		emit('refreshList')
-	})
+async function useAction(action: string) {
+	console.log(action);
+	if (action === 'acceptFriend')
+		await userAuthenticate.value.acceptFriend(props.target);
+	else if (action === 'addFriend')
+		await userAuthenticate.value.addFriend(props.target);
+	else if (action === 'removeFriend')
+		await userAuthenticate.value.deleteFriend(props.target);
+	else if (action === 'block') {
+		await userAuthenticate.value.blockUser(props.target);
+		isBlocked.value = await userAuthenticate.value.isBlockUser(props.target);
+	}
+	else if (action === 'unblock') {
+		await userAuthenticate.value.unblockUser(props.target);
+		isBlocked.value = await userAuthenticate.value.isBlockUser(props.target);
+	}
+	emit('refreshList');
 }
-
-async function deleteFriend() {
-	await userApi.deleteFriend(props.username)
-	.then (() => {
-		emit('refreshList')
-	})
-}
-
-async function addFriend() {
-	await userApi.addFriend(props.username)
-	.then (() => {
-		emit('refreshList')
-	})
-}
-
-async function block() {
-	await userApi.block(props.username)
-	.then (() => {
-		emit('refreshList')
-		isBlockedUser.value = true;
-	}).catch( (error) => console.warn(error))
-}
-
-async function unblock() {
-	await userApi.unblock(props.username)
-	.then (() => {
-		emit('refreshList')
-		isBlockedUser.value = false;
-	}).catch( (error) => console.warn(error))
-}
-
-
-async function isBlocked() {
-	return await userApi.isBlocked(props.username);
-}
-
-const isBlockedUser = ref(await isBlocked());
-console.log("isBlocked: ", typeof(isBlockedUser.value));
-
-async function displayAvatar() {
-	let avatar = await getAvatar(props.username);
-	return URL.createObjectURL(avatar);
-}
-
-const urlAvatar = ref(await displayAvatar());
 </script>
 
 <!-- -------------------------------------------------------------- -->

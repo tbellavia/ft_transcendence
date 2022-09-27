@@ -4,21 +4,22 @@
     <p class="authentication-item">Click for login with 42</p>
     <a
       class="authentication-item"
-      href="https://api.intra.42.fr/oauth/authorize?client_id=4cdd93e38d50fce3af5d817a430542b75506fbacf0b777ba6dc3a2312730d18d&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi42&response_type=code
-">
+      href="https://api.intra.42.fr/oauth/authorize?client_id=4cdd93e38d50fce3af5d817a430542b75506fbacf0b777ba6dc3a2312730d18d&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi42&response_type=code">
       <svgBoy style="width: 100%"
     /></a>
   </div>
 </template>
 
 <script setup lang="ts">
+import { UserInfos } from '~~/classes/User.class';
+
 async function oauth42(code: string) {
   const { $apiFetch } = useNuxtApp();
   await $apiFetch(`/auth/api42?code=${code}`)
-    .then(() => {
+    .then(async (userInfos: UserInfos) => { 
       const { $eventBus } = useNuxtApp();
-      $eventBus.$emit('connect');
-    }) //Emit global connection event when success)
+      $eventBus.$emit('connect', userInfos);
+    })
     .catch((error) => console.warn(error));
 }
 
