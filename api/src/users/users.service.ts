@@ -8,6 +8,7 @@ import { UserEntity } from "./entities/user.entity";
 import { UserNotFoundException } from "./exceptions/userNotFound.exception";
 import { readFileSync } from "fs";
 import * as path from "path";
+import { UsernameCollision } from "./exceptions/usernameCollision";
 
 const STATIC_DIR = path.join(path.resolve(__dirname, ".."), "static"); 
 
@@ -99,6 +100,15 @@ export class UsersService {
   async changeUsername(username: string, newUsername: string) {
     const user = await this.findOneByName(username);
 
+    try {
+      const other = await this.findOneByName(newUsername);
+
+      throw new UsernameCollision(newUsername);
+    } catch {
+      console.log("Username valid!");
+    }
+
+
     user.username = newUsername;
     await user.save();
   }
@@ -121,26 +131,25 @@ export class UsersService {
     );
   }
     
-    async update(updateUserDto: UpdateUserDTO, user_id: string) {
-      const {username, password, is_two_factor_auth_enabled } = updateUserDto;
-      const user = await this.findOneById(user_id);
-      
-      if(username) {
-        try {
-          await this.findOneByName(username)
-        }
-        catch {
-          user.username = username;
-        }
+  async update(updateUserDto: UpdateUserDTO, user_id: string) {
+    const {username, password, is_two_factor_auth_enabled } = updateUserDto;
+    const user = await this.findOneById(user_id);
+    
+    if(username) {
+      const collide = await this.usernameCollide(username);
+      if ( collide ){
+        throw new UsernameCollision(username);
       }
-      if (password !== undefined)
-        user.two_factor_auth_secret = password;
-      if (is_two_factor_auth_enabled !== undefined)
-        user.double_auth_enabled = is_two_factor_auth_enabled;
-
-      await user.save();
-      return await this.findOneById(user_id);
+      user.username = username;
     }
+    if (password !== undefined)
+      user.two_factor_auth_secret = password;
+    if (is_two_factor_auth_enabled !== undefined)
+      user.double_auth_enabled = is_two_factor_auth_enabled;
+
+    await user.save();
+    return await this.findOneById(user_id);
+  }
 
   async findAll(limit?: number | undefined) {
     const options: FindManyOptions<UserEntity> = {
@@ -180,5 +189,11 @@ export class UsersService {
   async delete(user_id: string) {
     const user = await this.findOneById(user_id);
     await user.remove();
+  }
+
+  async usernameCollide(username: string) {
+    const user = await this.userRepository.findOneBy({ username });
+
+    return user !== null;
   }
 }
