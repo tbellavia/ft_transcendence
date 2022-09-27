@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
   const links = ref([
-    {name: 'PROFILE', link: 'profileParams'},
+    {name: 'PROFILE', link: 'profile'},
     {name: 'FRIENDS', link: 'friendsList'},
     {name: 'CHAT', link: 'chat'}
   ]);

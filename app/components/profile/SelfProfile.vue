@@ -57,7 +57,7 @@ const props = defineProps({
 	}
 })
 
-const user = await(props.isUserAuth ? getUserAuthenticate() : useUser(props.username))
+const user = await(useUser(props.username))
 let newName = ref();
 let imageError = ref();
 
