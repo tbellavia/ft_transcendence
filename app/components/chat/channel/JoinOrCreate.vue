@@ -2,7 +2,10 @@
   <form @submit.prevent="joinOrCreateChannel" class="channel-join-or-create">
     <input class="channel-create" type="text" required placeholder="channel name" v-model="channelName" />
     <input class="channel-create" type="password" placeholder="channel password" v-model="channelPassword" />
-    <input class="channel-checkbox" type="checkbox" v-model="channelIsPrivate" />
+    <label class="channel-option" >
+      <p>private channel</p>
+      <input type="checkbox" v-model="channelIsPrivate" />
+    </label>
     <input class="channel-validate-create" type="submit" value="Join" @click="event = 'join_channel'"/>
     <input class="channel-validate-create" type="submit" value="Create" @click="event = 'create_channel'"/>
   </form>
@@ -42,6 +45,26 @@ socket.value.on('exception', ({ message }) => {
 </script>
 
 <style scoped>
+
+  .channel-join-or-create {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .channel-option {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .channel-option input[type="checkbox"] {
+    flex: 2;
+    margin: 0.2em 2em;
+  }
+
   input {
     padding-left: 0.8rem;
     width: 100%;
