@@ -48,12 +48,12 @@ socket.value.on('receive_join_channel', ({ username, channelName }: {username: s
 socket.value.on('receive_invite_channel', (channel: string) => channelsInvited.value.push(channel));
 const channelPassword = ref('');
 function acceptInvite(channel: string) {
-  socket.value.emit('join_channel', {
+  socket.value.emit(
+    'join_channel', {
     name: channel,
     password: channelPassword.value
     },
     () => {
-      console.log('VALIDATE INVITE CHANNEL: ', channel);
       channelsInvited.value.splice(channelsInvited.value.findIndex(channelName => channelName == channel), 1);
     }
   );

@@ -104,6 +104,7 @@ export class ChatGateway implements OnGatewayConnection {
     const response = await this.channelService.joinChannel(author, joinChannelDto);
     this.server.to(author.username).socketsJoin(response.channelName);
     this.server.to(response.channelName).emit('receive_join_channel', response);
+    return response.channelName;
   }
 
   @SubscribeMessage('invite_user_in_channel')
@@ -117,7 +118,6 @@ export class ChatGateway implements OnGatewayConnection {
     // Notify target of invite
     if (target)
       this.server.to(target.username).emit('receive_invite_channel', inviteUser.channelName);
-    return '';
   }
 
   @SubscribeMessage('leave_channel')
