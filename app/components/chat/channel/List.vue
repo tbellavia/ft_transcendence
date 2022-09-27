@@ -52,7 +52,9 @@ function acceptInvite(channel: string) {
     name: channel,
     password: channelPassword.value
     },
-    () => channelsInvited.value.splice(channelsInvited.value.findIndex(channelName => channelName == channel), 1)
+    () => {
+      channelsInvited.value.splice(channelsInvited.value.findIndex(channelName => channelName == channel), 1);
+    }
   );
 }
 

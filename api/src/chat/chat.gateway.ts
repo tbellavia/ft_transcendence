@@ -115,7 +115,8 @@ export class ChatGateway implements OnGatewayConnection {
     const target = await this.channelService.inviteUserInChannel(author, inviteUser);
 
     // Notify target of invite
-    this.server.to(target.username).emit('receive_invite_channel', inviteUser.channelName);
+    if (target)
+      this.server.to(target.username).emit('receive_invite_channel', inviteUser.channelName);
   }
 
   @SubscribeMessage('leave_channel')

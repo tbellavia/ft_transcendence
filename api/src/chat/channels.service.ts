@@ -93,6 +93,8 @@ export class ChannelsService {
       const target = await this.userService.findOneByName(inviteUser.username);
       if (await this.isUserInChannel(target, channel))
         throw new WsUserAlreadyInChannelException(target.username, channel.name);
+      if (channel.invited_users.find(invited => invited.username == target.username))
+        return null;
 
       channel.invited_users.push(target);
       await this.channelRepository.save(channel);
