@@ -15,6 +15,7 @@ import * as bcrypt from 'bcrypt';
 import { CreateChannelDTO } from "./dto/createChannel.dto";
 import { WsPasswordMissingException } from "./exceptions/channel/wsPasswordMissing.exception";
 import { WsInvalidCredentials } from "./exceptions/channel/wsInvalidCredentials.exception";
+import { WsUserNotFoundException } from "./exceptions/wsUserNotFound";
 
 
 @Injectable()
@@ -73,9 +74,13 @@ export class ChannelsService {
   async leaveChannel(user: UserEntity, channel_name: string) {
     let channel = await this.getChannel(channel_name);
     
+    const index = channel.users.findIndex(chanUser => chanUser.username == user.username);
+    if (index == -1)
+      throw new WsUserNotInChannelException(user.username, channel_name);
+    channel.users.splice(index, 1);
     if (channel.owner.username == user.username) {
       //If user is creator transfer ownership if not the last user
-      if (channel.users.length != 1)
+      if (channel.users.length)
         this.transferOwnership(channel);
       //Or if last user destroy the channel
       else {

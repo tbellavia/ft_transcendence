@@ -57,6 +57,7 @@ $eventBus.$on(
 socket.value.on(
   'receive_leave_channel',
   ({channelName}) => {
+    console.log('Channel leaving', channelName)
     if (channelName == props.channelName) {
       refreshChannelInfos();
     }
