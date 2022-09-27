@@ -37,15 +37,16 @@ export class UserAuthentified extends User {
   public async updateAvatar(newAvatar: any) { //TODO modif type
     await this.fetchingMethod(`/avatar/me`,
       {
-        method: 'PUT',
+        method: 'POST',
         body: newAvatar,
       }
-    );
+    ).then(async () => {
+        await this.fetchAll()
+      })
 
   }
 
   public async updateUsername(newUsername: string) {
-    console.log(newUsername),
       await this.fetchingMethod(`/me`, {
         method: 'PUT',
         body: {
@@ -126,6 +127,7 @@ export class UserAuthentified extends User {
   }
 
   public extractFriend(relation: FriendRelation) {
-    return relation.user_2.username != this.username ? relation.user_2 : relation.user_1;
+	console.log("RELATION: ", relation) // TODO ?
+    return relation.user_2.username !== this.username ? relation.user_2 : relation.user_1;
   }
 }

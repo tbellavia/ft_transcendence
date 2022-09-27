@@ -1,5 +1,5 @@
 <script setup lang="ts">
-let userAuthenticate = await getUserAuthenticate();
+let userAuthenticate = await getRefreshedUserAuthenticate();
 let users = ref(await getAllUsers());
 
 async function refreshList() {
