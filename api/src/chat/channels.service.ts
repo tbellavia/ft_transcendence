@@ -16,6 +16,7 @@ import { CreateChannelDTO } from "./dto/createChannel.dto";
 import { WsPasswordMissingException } from "./exceptions/channel/wsPasswordMissing.exception";
 import { WsInvalidCredentials } from "./exceptions/channel/wsInvalidCredentials.exception";
 import { WsUserNotFoundException } from "./exceptions/wsUserNotFound";
+import { WsUserUnauthorizeException } from "./exceptions/channel/wsUserNotInvited.exception";
 
 
 @Injectable()
@@ -58,6 +59,8 @@ export class ChannelsService {
 
     if (channel.users.findIndex(chanUser => user.username == chanUser.username) != -1)
       throw new WsUserAlreadyInChannelException(user.username, joinChannelDto.name);
+    if (channel.private && channel.invited_users.findIndex(chanUser => user.username == chanUser.username) == -1)
+      throw new WsUserUnauthorizeException(user.username, channel.name);
     if (channel.password) {
       if (!joinChannelDto.password)
         throw new WsPasswordMissingException(channel.name);

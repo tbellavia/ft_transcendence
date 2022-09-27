@@ -16,6 +16,10 @@ export class ChannelEntity {
   @Column({ nullable: true })
   password: string;
 
+  @Expose()
+  @Column()
+  private: boolean
+
   // Users relations
   @Expose()
   @Transform(({ value }) => value.username )
@@ -41,6 +45,12 @@ export class ChannelEntity {
   })
   @JoinTable()
   users: UserEntity[];
+
+  @ManyToMany(() => UserEntity, invited_user => invited_user.channels_invited, {
+    eager: true
+  })
+  @JoinTable()
+  invited_users: UserEntity[];
 
   // Messages relations
   @OneToMany(() => MessageEntity, message => message.channel_target, {

@@ -29,7 +29,7 @@ function joinOrCreateChannel() {
     {
       name: channelName.value,
       password: channelPassword.value ? channelPassword.value : undefined,
-      isPrivate: channelIsPrivate
+      private: channelIsPrivate.value
     },
     () => {
       //TODO: redirect to the newly created or joined chat
