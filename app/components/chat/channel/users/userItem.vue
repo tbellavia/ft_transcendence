@@ -44,9 +44,7 @@ const props = defineProps({
   isModerator: Boolean
 });
 
-const user = await useUser(props.name);
-await user.value.fetchAll();
-const avatarUrl = user.value.avatar_url;
+const avatarUrl = ref(await getAvatar(props.name));
 
 </script>
 
