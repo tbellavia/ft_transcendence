@@ -4,10 +4,10 @@
       <button @click="leaveChannel">Leave Channel</button>
       <div v-if="isModerator">
         <hr />
-        <div class="channel-invite-user">
+        <form  @submit.prevent="inviteUser" class="channel-invite-user">
           <input type="text" placeholder="username" v-model="userInvited" />
-          <button type="button" @click="inviteUser">Invite User</button>
-        </div>
+          <input type="submit" value="Invite User" />
+        </form>
       </div>
     </fieldset>
   </div>
