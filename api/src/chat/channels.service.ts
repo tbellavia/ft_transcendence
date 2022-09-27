@@ -21,6 +21,7 @@ import { UsersService } from "src/users/users.service";
 import { UserNotFoundException } from "src/users/exceptions/userNotFound.exception";
 import { WsUserNotFoundException } from "./exceptions/wsUserNotFound";
 import { WsInternalError } from "./exceptions/wsInternalError";
+import { WsUserHasNotModPermissionsException } from "./exceptions/channel/wsUserHasNoModPermissions.exception";
 
 
 @Injectable()
@@ -83,6 +84,8 @@ export class ChannelsService {
 
     if (!this.isUserInChannel(user, channel))
       throw new WsUserNotInChannelException(user.username, channel.name);
+    if (!this.hasModeratorRights(user, channel))
+      throw new WsUserHasNotModPermissionsException(user.username, channel.name);
 
     try {
       const user = await this.userService.findOneByName(inviteUser.username);
@@ -167,7 +170,12 @@ export class ChannelsService {
   }
 
   // Checker
-  async isUserInChannel(user: UserEntity, channel: ChannelEntity) {
+  private async isUserInChannel(user: UserEntity, channel: ChannelEntity) {
     return channel.users.findIndex(chanUser => chanUser.username == user.username) != -1;
+  }
+
+  private async hasModeratorRights(user: UserEntity, channel: ChannelEntity) {
+    return user.username == channel.owner.username ||
+      channel.moderators.find(moderator => moderator.username == user.username)
   }
 }
