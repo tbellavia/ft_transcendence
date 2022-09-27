@@ -52,12 +52,13 @@ socket.value.on(
   }
 );
 
+const user = getUserAuthenticate();
 socket.value.on(
   'receive_leave_channel',
-  ({channelName}) => {
-    console.log('Channel leaving', channelName)
-    if (channelName == props.channelName) {
-      refreshChannelInfos();
+  ({username, channelName}) => {
+    if (user.value && user.value.username != username && channelName == props.channelName) {
+      if (users.value.length != 1)
+        refreshChannelInfos();
     }
   }
 );
