@@ -117,6 +117,7 @@ export class ChatGateway implements OnGatewayConnection {
     // Notify target of invite
     if (target)
       this.server.to(target.username).emit('receive_invite_channel', inviteUser.channelName);
+    return '';
   }
 
   @SubscribeMessage('leave_channel')

@@ -53,6 +53,7 @@ function acceptInvite(channel: string) {
     password: channelPassword.value
     },
     () => {
+      console.log('VALIDATE INVITE CHANNEL: ', channel);
       channelsInvited.value.splice(channelsInvited.value.findIndex(channelName => channelName == channel), 1);
     }
   );
