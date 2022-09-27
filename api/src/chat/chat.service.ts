@@ -12,7 +12,7 @@ import { ChannelEntity } from "./entities/channel.entity";
 import { MessageEntity } from "./entities/message.entity";
 import { WsBlockedByUserException } from "./exceptions/wsBlockedByUser.exception";
 import { WsInternalError } from "./exceptions/wsInternalError";
-import { WsUserNotInChannelException } from "./exceptions/channel/wsUserNotInChannel.exception"
+import { WsUserNotInChannelException } from "./exceptions/channel/wsUserNotInChannel.exception";
 
 @Injectable()
 export class ChatService {

@@ -13,6 +13,9 @@ export class ChannelEntity {
   @Column({ unique: true })
   name: string;
 
+  @Column({ nullable: true })
+  password: string;
+
   // Users relations
   @Expose()
   @Transform(({ value }) => value.username )
