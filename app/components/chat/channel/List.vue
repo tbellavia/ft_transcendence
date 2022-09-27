@@ -31,7 +31,7 @@ socket.value.emit('get_all_channels_joined', {}, (channelsFetched: string[]) => 
   channelsJoined.value = channelsJoined.value.concat(channelsFetched);
 })
 
-socket.value.emit('get_all_channels_joined', {}, (channelsFetched: string[]) => {
+socket.value.emit('get_all_channels_invited', {}, (channelsFetched: string[]) => {
   channelsInvited.value = channelsInvited.value.concat(channelsFetched);
 })
 

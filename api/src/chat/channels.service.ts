@@ -22,6 +22,9 @@ import { UserNotFoundException } from "src/users/exceptions/userNotFound.excepti
 import { WsUserNotFoundException } from "src/socket/exceptions/wsUserNotFound";
 import { WsInternalError } from "src/socket/exceptions/bases/wsInternalError";
 import { WsUserHasNotModPermissionsException } from "./exceptions/channel/wsUserHasNoModPermissions.exception";
+import { WsChannelException } from "./exceptions/channel/baseExceptions/wsChannel.exception";
+import { ChannelExceptionCodes } from "./exceptions/channel/enums/channelExceptionsCode.enum";
+import e from "express";
 
 
 @Injectable()
@@ -85,15 +88,19 @@ export class ChannelsService {
       throw new WsUserNotInChannelException(user.username, channel.name);
     if (!this.hasModeratorRights(user, channel))
       throw new WsUserHasNotModPermissionsException(user.username, channel.name);
-
     try {
       const target = await this.userService.findOneByName(inviteUser.username);
+      if (this.isUserInChannel(target, channel))
+        throw new WsUserAlreadyInChannelException(target.username, channel.name);
+
       channel.invited_users.push(target);
       await this.channelRepository.save(channel);
       return target;
     } catch (error) {
       if (error instanceof UserNotFoundException)
         throw new WsUserNotFoundException(inviteUser.username);
+      else if (error instanceof WsUserAlreadyInChannelException)
+        throw error;
       console.warn(error);
       throw new WsInternalError();
     }
