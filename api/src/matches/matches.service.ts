@@ -17,7 +17,7 @@ export class MatchesService {
         private matchRepositoy: Repository<MatchEntity>
     ) { }
 
-    async create(username1: string, username2: string, matchCreationDto: MatchCreationDto) {
+    async create(username1: string, username2: string) {
         const user1 = await this.userRepository.findOneBy({ username: username1 });
         const user2 = await this.userRepository.findOneBy({ username: username2 });
 
@@ -31,7 +31,7 @@ export class MatchesService {
 
         match.user_1 = user1;
         match.user_2 = user2;
-        match.begin_date = matchCreationDto.begin_date;
+        match.begin_date = new Date();
         await match.save();
         return await this.findLatest(username1, username2);
     }
