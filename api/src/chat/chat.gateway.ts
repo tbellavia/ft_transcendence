@@ -10,7 +10,6 @@ import { ChannelsService } from "./channels.service";
 import { WsUserNotInChannelException } from "./exceptions/channel/wsUserNotInChannel.exception";
 import { CreateChannelDTO } from "./dto/createChannel.dto";
 import { InviteUserDTO } from "./dto/inviteUser.dto";
-import { channel } from "diagnostics_channel";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({

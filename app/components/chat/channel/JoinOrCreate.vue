@@ -39,8 +39,9 @@ function joinOrCreateChannel() {
 
 // Captures errors on exception and display them
 const channelError = ref<string>('');
-socket.value.on('exception', ({ message }) => {
-  channelError.value = message;
+socket.value.on('exception', ({ status, message }) => {
+  if (status == 'CHANNEL_NOT_FOUND' || status == 'CHANNEL_CREATION_FAILED')
+    channelError.value = message;
 });
 </script>
 

@@ -31,5 +31,15 @@ function leaveChannel() {
   );
 }
 
+const userInvited = ref('');
+function inviteUser() {
+  socket.value.emit(
+    'invite_user_in_channel',
+    {
+      channelName: props.channelName,
+      username: userInvited
+    }
+  );
+}
 
 </script>

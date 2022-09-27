@@ -1,7 +1,8 @@
-import { WsException } from "@nestjs/websockets";
+import { WsChannelException } from "./baseExceptions/wsChannel.exception";
+import { ChannelExceptionCodes } from "./enums/channelExceptionsCode.enum";
 
-export class WsUserAlreadyInChannelException extends WsException {
-  constructor(username: string, channel_name: string) {
-    super(`${username} is already in ${channel_name}`);
+export class WsUserAlreadyInChannelException extends WsChannelException {
+  constructor(username: string, channelName: string) {
+    super(ChannelExceptionCodes.CHANNEL_JOIN_FAILED, `${username} is already in ${channelName}`);
   }
 }
