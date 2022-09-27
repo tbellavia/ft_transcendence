@@ -37,7 +37,7 @@ function inviteUser() {
     'invite_user_in_channel',
     {
       channelName: props.channelName,
-      username: userInvited
+      username: userInvited.value
     }
   );
 }

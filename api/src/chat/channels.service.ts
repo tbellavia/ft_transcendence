@@ -29,7 +29,6 @@ export class ChannelsService {
   constructor(
     @InjectRepository(ChannelEntity)
     private channelRepository: Repository<ChannelEntity>,
-    @InjectRepository(UserEntity)
     private readonly userService: UsersService
   ) {}
 
@@ -88,13 +87,14 @@ export class ChannelsService {
       throw new WsUserHasNotModPermissionsException(user.username, channel.name);
 
     try {
-      const user = await this.userService.findOneByName(inviteUser.username);
-      channel.invited_users.push(user);
+      const target = await this.userService.findOneByName(inviteUser.username);
+      channel.invited_users.push(target);
       await this.channelRepository.save(channel);
-      return user;
+      return target;
     } catch (error) {
       if (error instanceof UserNotFoundException)
         throw new WsUserNotFoundException(inviteUser.username);
+      console.warn(error);
       throw new WsInternalError();
     }
   }
