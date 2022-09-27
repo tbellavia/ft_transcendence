@@ -170,11 +170,11 @@ export class ChannelsService {
   }
 
   // Checker
-  private async isUserInChannel(user: UserEntity, channel: ChannelEntity) {
+  async isUserInChannel(user: UserEntity, channel: ChannelEntity) {
     return channel.users.findIndex(chanUser => chanUser.username == user.username) != -1;
   }
 
-  private async hasModeratorRights(user: UserEntity, channel: ChannelEntity) {
+  async hasModeratorRights(user: UserEntity, channel: ChannelEntity) {
     return user.username == channel.owner.username ||
       channel.moderators.find(moderator => moderator.username == user.username)
   }

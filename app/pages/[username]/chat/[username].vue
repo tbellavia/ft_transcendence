@@ -1,7 +1,7 @@
 <template>
   <div class="chat-target-page">
     <ChatDialog class="chat-dialog" :target="username" :isChannel="isChannel"></ChatDialog>
-    <ChatChannelParameters class="chat-channel-parameters" v-if="isChannel" :channelName="username" />
+    <ChatChannelOptions class="chat-channel-parameters" v-if="isChannel" :channelName="username" />
   </div>
 </template>
 

@@ -1,8 +1,11 @@
 <template>
-  <div id="chat" class="chat-channel-parameters">
-    <ChatChannelUsersList :channelName="channelName" />
+  <div>
     <fieldset>
       <button @click="leaveChannel">Leave Channel</button>
+      <div v-if="isModerator">
+        <hr />
+        <h2>Moderator options</h2>
+      </div>
     </fieldset>
   </div>
 </template>
@@ -10,31 +13,19 @@
 <script setup lang="ts">
 const props = defineProps<{channelName: string}>();
 
-// Leave channel method
 const socket = useSocketChat();
+
+// Fetch if is channel moderator
+const isModerator = ref(false);
+socket.value.emit('is_channel_moderator', props.channelName, (isChanModerator: boolean) => {
+  isModerator.value = isChanModerator;
+});
+
+// Leave channel method
 function leaveChannel() {
   socket.value.emit(
     'leave_channel',
     props.channelName
   );
 }
-
-// When user leave channel if it's currently load channel, load the main chat page
-const user = getUserAuthenticate();
-const route = useRoute();
-socket.value.on(
-  'receive_leave_channel',
-  async ({username, channelName}) => {
-    if (user.value && user.value.username == username && channelName == props.channelName)
-      await navigateTo(route.fullPath.slice(0, route.fullPath.lastIndexOf('/')));
-  }
-);
-
 </script>
-
-<style scoped>
-  .chat-channel-parameters {
-    display: flex;
-    flex-direction: column;
-  }
-</style>

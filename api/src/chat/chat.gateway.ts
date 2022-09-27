@@ -163,4 +163,15 @@ export class ChatGateway implements OnGatewayConnection {
     }
     return channel;
   }
+
+  @SubscribeMessage('is_channel_moderator')
+  async isModerator(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() channel_name: string
+  ) {
+    const author = await this.socketService.getUserFromSocket(socket);
+    const channel = await this.channelService.getChannel(channel_name);
+
+    return this.channelService.hasModeratorRights(author, channel);
+  }
 }
