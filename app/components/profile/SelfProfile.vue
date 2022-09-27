@@ -1,5 +1,4 @@
 <template>
-	<suspense>
 		<!-- <profilePublic :user=userAuthenticate/> -->
 		<div class="profile-page">
 			<!-- <profileSelfProfileHeader /> -->
@@ -32,7 +31,6 @@
 			</div>
 
 		</div>
-	</suspense>
 </template>
 	
 
