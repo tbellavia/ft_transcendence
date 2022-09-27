@@ -9,6 +9,8 @@ import { JoinChannelDTO } from "./dto/joinChannel.dto";
 import { ChannelsService } from "./channels.service";
 import { WsUserNotInChannelException } from "./exceptions/channel/wsUserNotInChannel.exception";
 import { CreateChannelDTO } from "./dto/createChannel.dto";
+import { InviteUserDTO } from "./dto/inviteUser.dto";
+import { channel } from "diagnostics_channel";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
@@ -105,6 +107,18 @@ export class ChatGateway implements OnGatewayConnection {
     this.server.to(response.channelName).emit('receive_join_channel', response);
   }
 
+  @SubscribeMessage('invite_channel')
+  async inviteChannel(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() inviteUser: InviteUserDTO
+  ) {
+    const author = await this.socketService.getUserFromSocket(socket);
+    const target = await this.channelService.inviteUserInChannel(author, inviteUser);
+
+    // Notify target of invite
+    this.server.to(target.username).emit('receive_invite_channel', inviteUser.channelName);
+  }
+
   @SubscribeMessage('leave_channel')
   async leaveChannel(
     @ConnectedSocket() socket: Socket,
@@ -116,13 +130,23 @@ export class ChatGateway implements OnGatewayConnection {
     this.server.to(author.username).socketsLeave(channel);
   }
 
-  @SubscribeMessage('get_all_channels')
+  @SubscribeMessage('get_all_channels_joined')
   async getAllChannels(
     @ConnectedSocket() socket
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
 
-    const channels = await this.channelService.getAllChannels(author);
+    const channels = await this.channelService.getAllChannelsJoined(author);
+    return channels.map(channel => channel.name);
+  }
+
+  @SubscribeMessage('get_all_channels_invited')
+  async getAllChannelInvited(
+    @ConnectedSocket() socket
+  ) {
+    const author = await this.socketService.getUserFromSocket(socket);
+
+    const channels = await this.channelService.getAllChannelsInvited(author);
     return channels.map(channel => channel.name);
   }
 

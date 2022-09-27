@@ -15,8 +15,12 @@ import * as bcrypt from 'bcrypt';
 import { CreateChannelDTO } from "./dto/createChannel.dto";
 import { WsPasswordMissingException } from "./exceptions/channel/wsPasswordMissing.exception";
 import { WsInvalidCredentials } from "./exceptions/channel/wsInvalidCredentials.exception";
-import { WsUserNotFoundException } from "./exceptions/wsUserNotFound";
 import { WsUserUnauthorizeException } from "./exceptions/channel/wsUserNotInvited.exception";
+import { InviteUserDTO } from "./dto/inviteUser.dto";
+import { UsersService } from "src/users/users.service";
+import { UserNotFoundException } from "src/users/exceptions/userNotFound.exception";
+import { WsUserNotFoundException } from "./exceptions/wsUserNotFound";
+import { WsInternalError } from "./exceptions/wsInternalError";
 
 
 @Injectable()
@@ -25,7 +29,7 @@ export class ChannelsService {
     @InjectRepository(ChannelEntity)
     private channelRepository: Repository<ChannelEntity>,
     @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>
+    private readonly userService: UsersService
   ) {}
 
   // Create, Join and Leave channel
@@ -74,6 +78,24 @@ export class ChannelsService {
     return new JoinChannel(user.username, channel.name);
   }
 
+  async inviteUserInChannel(user: UserEntity, inviteUser: InviteUserDTO) {
+    const channel = await this.getChannel(inviteUser.channelName);
+
+    if (!this.isUserInChannel(user, channel))
+      throw new WsUserNotInChannelException(user.username, channel.name);
+
+    try {
+      const user = await this.userService.findOneByName(inviteUser.username);
+      channel.invited_users.push(user);
+      await this.channelRepository.save(channel);
+      return user;
+    } catch (error) {
+      if (error instanceof UserNotFoundException)
+        throw new WsUserNotFoundException(inviteUser.username);
+      throw new WsInternalError();
+    }
+  }
+
   async leaveChannel(user: UserEntity, channel_name: string) {
     let channel = await this.getChannel(channel_name);
     
@@ -109,11 +131,25 @@ export class ChannelsService {
 
   // Getters
 
-  async getAllChannels(user: UserEntity) {
+  async getAllChannelsJoined(user: UserEntity) {
     const channels = await this.channelRepository
       .createQueryBuilder('channel')
       .leftJoinAndSelect(
         'channel.users', 
+        'users',
+      )
+      .where('users.user_id = :user_id', { user_id: user.user_id })
+      .leftJoinAndSelect('channel.moderators', 'moderators')
+      .leftJoinAndSelect('channel.owner', 'owner')
+      .getMany();
+    return channels;
+  }
+
+  async getAllChannelsInvited(user: UserEntity) {
+    const channels = await this.channelRepository
+      .createQueryBuilder('channel')
+      .leftJoinAndSelect(
+        'channel.invited_users', 
         'users',
       )
       .where('users.user_id = :user_id', { user_id: user.user_id })
@@ -128,5 +164,10 @@ export class ChannelsService {
     if (!channel)
       throw new WsChannelNotFoundException(name);
     return channel;
+  }
+
+  // Checker
+  async isUserInChannel(user: UserEntity, channel: ChannelEntity) {
+    return channel.users.findIndex(chanUser => chanUser.username == user.username) != -1;
   }
 }

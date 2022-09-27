@@ -18,7 +18,7 @@ const authUser = await useGetUser();
 const socket = useSocketChat();
 
 //fetch all existing channels
-socket.value.emit('get_all_channels', {}, (channelsFetched: string[]) => {
+socket.value.emit('get_all_channels_joined', {}, (channelsFetched: string[]) => {
   channels.value = channels.value.concat(channelsFetched);
 })
 
