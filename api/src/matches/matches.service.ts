@@ -2,11 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PaginationQueryDto } from "src/common/dto/pagination.query-dto";
 import { UserEntity } from "src/users/entities/user.entity";
+import { UserNotFoundException } from "src/users/exceptions/userNotFound.exception";
 import { selectUserOption } from "src/users/options/user-select.option";
+import { UsersService } from "src/users/users.service";
 import { Repository } from "typeorm";
 import { MatchCreationDto } from "./dto/match-creation.dto";
 import { UpdateMatchDto } from "./dto/match-update.dto";
 import { MatchEntity } from "./entity/match.entity";
+import { MatchConstrainException } from "./exceptions/matchContrainException";
 
 @Injectable()
 export class MatchesService {
@@ -14,19 +17,18 @@ export class MatchesService {
         @InjectRepository(UserEntity)
         private userRepository: Repository<UserEntity>,
         @InjectRepository(MatchEntity)
-        private matchRepositoy: Repository<MatchEntity>
+        private matchRepositoy: Repository<MatchEntity>,
+        private userService: UsersService
     ) { }
 
-    async create(username1: string, username2: string) {
-        const user1 = await this.userRepository.findOneBy({ username: username1 });
-        const user2 = await this.userRepository.findOneBy({ username: username2 });
-
+    async create(username1: string, username2: string) : Promise<MatchEntity> {
+        // TODO: Throw custom errors
         if ( username1 == username2 ){
-            return { msg: "User cannot play with himself" };
+            throw new MatchConstrainException(username1);
         }
-        if ( !user1 || !user2 ){
-            return { msg: "One or more user does not exists!" };
-        }
+        const user1 = await this.userService.findOneByName( username1 );
+        const user2 = await this.userService.findOneByName( username2 );
+
         const match = MatchEntity.create();
 
         match.user_1 = user1;
