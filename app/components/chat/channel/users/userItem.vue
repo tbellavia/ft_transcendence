@@ -1,21 +1,39 @@
 <template>
-  <article class="user-card">
-    <img :src="avatarUrl" alt="user's avatar" />
-    <div class="user-content">
-      <header>
-        <h3>{{ name }}</h3>
-      </header>
+	<div class=Profile > 
+		
+		<!--  AVATAR and NAME -->
+		<div class="userDatas">
+			
+			<div class="userImage"> <img :src="avatarUrl"/> </div>
+			<div class="userName"> {{ props.name }}</div>
+		</div> 
 
-      <main>
-        <fieldset>
-          <button type="button">Invite to game</button>
-          <button v-if="isModerator" type="button">Ban user</button>
-          <button v-if="isModerator" type="button">Mute user</button>
-        </fieldset>
-      </main>
-    </div>
-  </article>
+		<!-- Buttons of all options -->
+		<div class="OptionsProfile">
+
+			<!-- SEND MESSAGE
+			<div class="OptionsProfile_sub">
+				<NuxtLink :href="messageLink">message </NuxtLink>
+			</div> -->
+
+			<!-- SUGGEST MATCH -->
+			<button class="OptionsProfile_sub">  suggest a match </button>
+
+			<!-- SEE PROFILE PAGE -->
+			<button class="OptionsProfile_sub"> Profile Page </button>
+		</div> 
+	</div>
 </template>
+<!-- -------------------------------------------------------------- -->
+
+<style scoped>
+	button, a {
+		width: 100%;
+		text-align: left;
+		padding-left: 15px;
+	}
+</style>
+
 
 <script setup lang="ts">
 const props = defineProps({
@@ -26,8 +44,9 @@ const props = defineProps({
   isModerator: Boolean
 });
 
-const user = await useUserApi(props.name);
-const avatarUrl = await user.getAvatar();
+const user = await useUser(props.name);
+await user.value.fetchAll();
+const avatarUrl = user.value.avatar_url;
 
 </script>
 

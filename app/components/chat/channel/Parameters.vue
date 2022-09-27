@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-channel-parameters">
+  <div id="chat" class="chat-channel-parameters">
     <ChatChannelUsersList :channelName="channelName" />
     <fieldset>
       <button @click="leaveChannel">Leave Channel</button>

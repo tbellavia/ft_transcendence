@@ -1,10 +1,7 @@
 <template>
   <ul>
     <li v-for="user in users">
-      <p>{{ user.username }}
-        <span v-if="user.isOwner">Is Owner</span>
-        <span v-else-if="user.isModerator">Is Moderator</span>
-      </p>
+      <ChatChannelUsersUserItem :name="user.username" :is-moderator="user.isModerator" />
     </li>
   </ul>
 </template>
@@ -23,9 +20,9 @@ interface ChannelUser {
 const users = ref<ChannelUser[]>([]);
 const socket = useSocketChat();
 
-onBeforeMount(async () => await refreshUserInfos());
+onBeforeMount(async () => refreshChannelInfos());
 
-function refreshUserInfos() {
+function refreshChannelInfos() {
   socket.value.emit(
     'get_channel_infos',
     props.channelName,
@@ -59,10 +56,9 @@ $eventBus.$on(
 
 socket.value.on(
   'receive_leave_channel',
-  ({channel}) => {
-    if (channel == props.channelName) {
-      // Since owner may have change we fetch all infos again
-      refreshUserInfos();
+  ({channelName}) => {
+    if (channelName == props.channelName) {
+      refreshChannelInfos();
     }
   }
 );
