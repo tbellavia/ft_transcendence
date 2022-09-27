@@ -27,11 +27,9 @@ socket.value.on('receive_create_channel', (channel: string) => {
   channels.value.push(channel);
 });
 
-const { $eventBus } = useNuxtApp();
 socket.value.on('receive_join_channel', ({ username, channelName }: {username: string, channelName: string}) => {
   if (username == authUser.value.username)
     channels.value.push(channelName);
-  $eventBus.$emit('receive_join_channel', {username, channelName});
 });
 
 </script>

@@ -38,10 +38,8 @@ function refreshChannelInfos() {
   );
 }
 
-const { $eventBus } = useNuxtApp();
-
 // Update list of users when joining or leaving
-$eventBus.$on(
+socket.value.on(
   'receive_join_channel',
   ({username, channelName}) => {
     if (channelName == props.channelName) {

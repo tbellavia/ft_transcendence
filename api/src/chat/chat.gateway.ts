@@ -101,7 +101,6 @@ export class ChatGateway implements OnGatewayConnection {
     const author = await this.socketService.getUserFromSocket(socket);
 
     const response = await this.channelService.joinChannel(author, joinChannelDto);
-    this.server.to(author.username).emit('receive_join_channel', response);
     this.server.to(response.channelName).emit('receive_join_channel', response);
   }
 
