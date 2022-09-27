@@ -2,9 +2,9 @@
   <form @submit.prevent="joinOrCreateChannel" class="channel-join-or-create">
     <input class="channel-create" type="text" required placeholder="channel name" v-model="channelName" />
     <input class="channel-create" type="password" placeholder="channel password" v-model="channelPassword" />
+    <input class="channel-checkbox" type="checkbox" v-model="channelIsPrivate" />
     <input class="channel-validate-create" type="submit" value="Join" @click="event = 'join_channel'"/>
     <input class="channel-validate-create" type="submit" value="Create" @click="event = 'create_channel'"/>
-    <input class="channel-checkbox" type="checkbox" v-model="channelIsPrivate" />
   </form>
   <div class="channel-create-error">
     <p v-if="channelError" style="color: var(--error-color); background-color: var(--background-error-color);">{{ channelError }}</p>

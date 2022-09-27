@@ -20,12 +20,12 @@ function leaveChannel() {
 }
 
 // When user leave channel if it's currently load channel, load the main chat page
-const user = await useGetUser();
+const user = getUserAuthenticate();
 const route = useRoute();
 socket.value.on(
   'receive_leave_channel',
-  async ({username, channel}) => {
-    if (user.value && user.value.username == username && channel == props.channelName)
+  async ({username, channelName}) => {
+    if (user.value && user.value.username == username && channelName == props.channelName)
       await navigateTo(route.fullPath.slice(0, route.fullPath.lastIndexOf('/')));
   }
 );
