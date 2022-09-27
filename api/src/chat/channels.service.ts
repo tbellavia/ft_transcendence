@@ -66,7 +66,8 @@ export class ChannelsService {
 
     if (channel.users.findIndex(chanUser => user.username == chanUser.username) != -1)
       throw new WsUserAlreadyInChannelException(user.username, joinChannelDto.name);
-    if (channel.private && channel.invited_users.findIndex(chanUser => user.username == chanUser.username) == -1)
+    const inviteIndex = channel.invited_users.findIndex(chanUser => user.username == chanUser.username);
+    if (channel.private && inviteIndex == -1)
       throw new WsUserUnauthorizeException(user.username, channel.name);
     if (channel.password) {
       if (!joinChannelDto.password)
@@ -75,6 +76,10 @@ export class ChannelsService {
       if (!isValidPassword)
         throw new WsInvalidCredentials(channel.name);
     }
+
+    // Delete user of list of invites when joining
+    if (inviteIndex != -1)
+      channel.invited_users.splice(inviteIndex, 1);
 
     channel.users.push(user);
     await this.channelRepository.save(channel);
