@@ -15,6 +15,8 @@ import GameCanvas1 from '../../components/game/GameCanvas.vue';
 
 
 const user = await getRefreshedUserAuthenticate();
+const socket = user.value.gameSocket;
+
 console.log(user.value.isInGame())
 console.log("SOCKET: ",user.value.gameSocket)
 async function subscribeMatchmaking() {
@@ -30,7 +32,7 @@ async function subscribeMatchmaking() {
 // 	console.log("waiting_players")
 // // })
 
-user.value.gameSocket?.on("matched", ({username, id}) => {
+socket.on("matched", ({username, id}) => {
 	console.log(`${id} : Matched with ${username}`); //
 
 	user.value.matchId = id;
