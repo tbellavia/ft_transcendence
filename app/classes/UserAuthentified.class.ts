@@ -1,3 +1,4 @@
+import { Socket } from "engine.io-client";
 import { $Fetch } from "ohmyfetch";
 import { User, UserInfos } from "./User.class";
 
@@ -18,6 +19,8 @@ export class UserAuthentified extends User {
   public friends: User[] = [];
   public pendingFriends: User[] = [];
   public blockedUsers: User[] = [];
+  public matchId: Number;
+  public gameSocket: any;
 
   constructor(username: string, fetchingMethod: $Fetch) {
     super(username, fetchingMethod);
@@ -117,15 +120,24 @@ export class UserAuthentified extends User {
     const booleanString = await this.fetchingMethod(`/blocked/me/${this.extractUsername(target)}`);
     return booleanString === 'true';
   }
+  
+  
+  /* GAME */
+  /* -------------------------------------------------------------- */
+  public generateGameSocket() {
+    this.gameSocket = useSocketGame();
+  }
 
   /* UTILS */
   /* -------------------------------------------------------------- */
-  // Extract username if User
-  private extractUsername(target: User | string) {
-    return typeof (target) == 'string' ? target : target.username;
-  }
+
 
   public extractFriend(relation: FriendRelation) {
     return relation.user_2.username != this.username ? relation.user_2 : relation.user_1;
   }
+
+  public isInGame() : Boolean {
+    return (this.gameSocket && this.matchId ? true : false)
+  }
+
 }

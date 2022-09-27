@@ -57,17 +57,19 @@ export class User {
 	}
 
 	public async fetchStats() {
-		this.stats = {
-			game_abandonned: 0,
-			game_total: 0,
-			game_won: 0,
-			rank: 'WOOD',
-		}
-		try {
-			const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`);
+
+		const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`).catch(() => {});
+		if (stats)
 			this.stats = stats;
+		else {
+
+			this.stats = {
+				game_abandonned: 0,
+				game_total: 0,
+				game_won: 0,
+				rank: 'WOOD',
+			}
 		}
-		catch {}
 		return this.stats;
 	}
 
@@ -88,7 +90,7 @@ export class User {
 	  /* UTILS */
   /* -------------------------------------------------------------- */
   // Extract username if User
-  	private extractUsername(target: User | string) {
+  	protected extractUsername(target: User | string) {
     return typeof(target) == 'string' ? target : target.username;
   }
 

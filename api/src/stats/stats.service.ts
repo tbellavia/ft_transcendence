@@ -50,9 +50,6 @@ export class StatsService {
                 user: { username }
             }
         });
-        if (!stat) {
-            throw new StatsNotFoundException(username);
-        }
         return stat;
     }
 

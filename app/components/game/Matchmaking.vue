@@ -10,6 +10,10 @@ import { UserAuthentified } from '~~/classes/UserAuthentified.class';
 
 const user = await getRefreshedUserAuthenticate();
 const socket = useSocketGame();
+const socket1 = useSocketGame();
+const socket2 = useSocketGame();
+const socket3 = useSocketGame();
+const socket4 = useSocketGame();
 
 
 async function subscribeMatchmaking() {
@@ -26,7 +30,8 @@ async function subscribeMatchmaking() {
 
 socket.value.on("matched", ({username, id}) => {
 	console.log(`${id} : Matched with ${username}`);
-	
+	navigateTo(`/${user.value.username}/game/${username}`)
+
 });
 
 
