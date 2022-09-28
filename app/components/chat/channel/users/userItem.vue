@@ -22,14 +22,20 @@
 			<!-- SEE PROFILE PAGE -->
 			<button class="OptionsProfile_sub">Profile Page</button>
 
-			<div v-if="authUserIsOwner">
-				<button v-if="!isModerator" @click="setModerator" class="OptionsProfile_sub">Updgrade as moderator</button>
-				<button v-else-if="name != authUser.username" @click="unsetModerator" class="OptionsProfile_sub">Downgrade as simple user</button>
+			<div v-if="authUser.username != name">
+
+				<!-- Owner can set other users in channel as moderator or not -->
+				<div v-if="authUserIsOwner">
+					<button v-if="!isModerator" @click="setModerator" class="OptionsProfile_sub">Updgrade as moderator</button>
+					<button v-else @click="unsetModerator" class="OptionsProfile_sub">Downgrade as simple user</button>
+				</div>
+
+				<!-- Can ban other user that is not owner -->
+				<div v-if="isModerator && !targetIsOwner">
+					<button @click="banUser">Ban User</button>
+				</div>
 			</div>
 
-			<div v-if="isModerator && !targetIsOwner">
-				<button @click="banUser">Ban User</button>
-			</div>
 		</div> 
 	</div>
 </template>
@@ -80,7 +86,7 @@ socket.value.emit(
 		username: props.name
 	},
 	(isChanOwner: boolean) => {
-		targetIsOwner.value = true;
+		targetIsOwner.value = isChanOwner;
 	}
 )
 

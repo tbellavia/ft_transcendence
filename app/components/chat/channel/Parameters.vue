@@ -82,8 +82,6 @@ function updatePassword() {
 
 <style scoped>
 
-  fieldset > button {}
-
   .channel-update-password {
     display: flex;
     flex-direction: column;
