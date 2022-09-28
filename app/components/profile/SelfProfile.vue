@@ -60,16 +60,15 @@ const props = defineProps({
 const user = await(useUser(props.username))
 let newName = ref();
 let imageError = ref();
+let nameError = ref();
 
 async function submitName() {
-	if (!newName.value)
-	{
-		return
+	nameError = await user.value.updateUsername(newName.value);
+	if (nameError == false) {
+		await user.value.fetchAll()
+		await refreshUrl();
 	}
-	await user.value.updateUsername(newName.value);
-	await user.value.fetchAll()
 	newName.value = "";
-	await refreshUrl();
 }
 
 async function submitAvatar(event) {

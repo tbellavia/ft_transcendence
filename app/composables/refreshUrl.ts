@@ -6,6 +6,7 @@ export async function refreshUrl() {
 			console.log("refresh page");
 			await redirectIfConnected (route.fullPath.replace(String(route?.params?.username), user.value.username), '/');
 		}
+		// TODO see this after to get 404 error 
 	}
 	catch {
 		navigateTo('/');

@@ -47,6 +47,7 @@ export class UserAuthentified extends User {
   }
 
   public async updateUsername(newUsername: string) {
+    try {
       await this.fetchingMethod(`/me`, {
         method: 'PUT',
         body: {
@@ -57,6 +58,8 @@ export class UserAuthentified extends User {
         this.username = newUsername;
         await this.fetchAll()
       })
+      return false
+    } catch { return true }
   }
 
   public async updateDoubleAuth(enable: boolean) { }
