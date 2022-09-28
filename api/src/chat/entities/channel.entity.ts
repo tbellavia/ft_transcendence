@@ -3,7 +3,7 @@ import { UserEntity } from "src/users/entities/user.entity";
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { MessageEntity } from "./message.entity";
 
-@Entity()
+@Entity("channels")
 export class ChannelEntity {
   // Identity informations (unique)
   @PrimaryGeneratedColumn()

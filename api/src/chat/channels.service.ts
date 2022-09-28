@@ -30,6 +30,7 @@ import { WsUserIsAlreadyModeratorException } from "./exceptions/channel/wsUserIs
 import { WsUserIsNotModeratorException } from "./exceptions/channel/wsUserIsNotModerator.exception";
 import { WsUserIsOwnerException } from "./exceptions/channel/wsUserIsOwner.exception";
 import { WsUserIsAlreadyBannedException } from "./exceptions/channel/wsUserIsAlreadyBanned.exception";
+import { WsUserIsBannedOfChannel } from "./exceptions/channel/wsUserIsBanOfChannel.exception";
 
 @Injectable()
 export class ChannelsService {
@@ -71,6 +72,8 @@ export class ChannelsService {
 
     if (channel.users.findIndex(chanUser => user.username == chanUser.username) != -1)
       throw new WsUserAlreadyInChannelException(user.username, joinChannelDto.name);
+    if (channel.banned_users.find(bannedUser => bannedUser.username == user.username))
+      throw new WsUserIsBannedOfChannel(user.username, channel.name);
     const inviteIndex = channel.invited_users.findIndex(chanUser => user.username == chanUser.username);
     if (channel.private && inviteIndex == -1)
       throw new WsUserUnauthorizeException(user.username, channel.name);
@@ -248,12 +251,12 @@ export class ChannelsService {
     if (target.username == channel.owner.username)
       throw new WsUserIsOwnerException(target.username, channel.name);
     const index = channel.users.findIndex(chanUser => chanUser.username == target.username);
-    if (index == -1)
-      throw new WsUserNotInChannelException(target.username, channel.name);
     if (channel.banned_users.find(chanUser => chanUser.username == target.username))
       throw new WsUserIsAlreadyBannedException(target.username, channel.name);
 
-    channel.banned_users.push(channel.users.splice(index, 1)[0]);
+    if (index != -1)
+      channel.users.splice(index, 1);
+    channel.banned_users.push(target);
     await this.channelRepository.save(channel);
   }
 }

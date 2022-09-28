@@ -168,25 +168,27 @@ export class ChatGateway implements OnGatewayConnection {
   }
 
   @SubscribeMessage('is_channel_moderator')
-  async isModerator(
+  async isChannelModerator(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() channel_name: string
+    @MessageBody() isModerator: ChannelUserTargetDTO
   ) {
-    const author = await this.socketService.getUserFromSocket(socket);
-    const channel = await this.channelService.getChannel(channel_name);
+    await this.socketService.getUserFromSocket(socket);
+    const channel = await this.channelService.getChannel(isModerator.name);
+    const user = await this.socketService.getUserByName(isModerator.username);
 
-    return this.channelService.hasModeratorRights(author, channel);
+    return this.channelService.hasModeratorRights(user, channel);
   }
 
   @SubscribeMessage('is_channel_owner')
-  async isOwner(
+  async isChannelOwner(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() channelName: string
+    @MessageBody() isModerator: ChannelUserTargetDTO
   ) {
-    const author = await this.socketService.getUserFromSocket(socket);
-    const channel = await this.channelService.getChannel(channelName);
+    await this.socketService.getUserFromSocket(socket);
+    const channel = await this.channelService.getChannel(isModerator.name);
+    const user = await this.socketService.getUserByName(isModerator.username);
 
-    return author.username == channel.owner.username;
+    return channel.owner.username == user.username;
   }
 
   //Channel Parameters
