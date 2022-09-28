@@ -52,14 +52,6 @@ socket.value.on(
   }
 );
 
-socket.value.on(
-  'receive_add_channel_moderator',
-  ({username, channelName}) => {
-    if (channelName == props.channelName)
-      users.value.find(chanUser => chanUser == username).isModerator = true;
-  }
-)
-
 const user = getUserAuthenticate();
 socket.value.on(
   'receive_leave_channel',

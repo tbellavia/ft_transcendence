@@ -63,6 +63,14 @@ socket.value.emit('is_channel_owner', props.channelName, (isChanOwner: boolean) 
 function setModerator() {
 	socket.value.emit('add_channel_moderator', {name: props.channelName, username: props.name});
 }
+const isModerator = ref(props.isModerator);
+socket.value.on(
+  'receive_add_channel_moderator',
+  ({username, channelName}) => {
+    if (channelName == props.channelName && username == props.name)
+			isModerator.value = true;
+  }
+)
 
 function unsetModerator() {
 
