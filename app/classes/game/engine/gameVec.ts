@@ -45,4 +45,7 @@ export class GameVec {
 		return new GameVec(1, 0);
 	}
 
+	copy() {
+		return new GameVec( this.x, this.y);
+	}
 }

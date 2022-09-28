@@ -62,10 +62,10 @@ export class Ball {
 	}
 
 	getDimension(): GameDimension {
-		return this.dimension;
+		return this.dimension.copy();
 	}
 
 	getPos(): GameVec {
-		return this.pos;
+		return this.pos.copy()
 	}
 }

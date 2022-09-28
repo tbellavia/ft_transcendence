@@ -7,5 +7,9 @@ export class GameDimension {
 		this.height = height;
 	}
 
+	copy() {
+		return new GameDimension(this.width, this.height);
+	}
+
 	// TODO: Add scale
 }

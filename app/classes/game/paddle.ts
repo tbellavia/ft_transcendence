@@ -69,12 +69,15 @@ export class Paddle {
 
 	isInsideHeight (ball: Ball): number {
 		const ball_pos = ball.getPos();
-		
+		const ball_dim = ball.getDimension();
+
+		ball_pos.y += (this.isLeft() ? 0 : ball_dim.height ); 
+
 		if (ball_pos.y >= this.pos.y && ball_pos.y <= this.pos.y + this.dimension.height) {
 			if( ball_pos.y < this.pos.y + this.third)
-			return(1);
+				return(1);
 			if (ball_pos.y > this.pos.y + this.dimension.height - this.third)
-			return (2);
+				return (2);
 			return (3)
 		} 
 		return (0);
