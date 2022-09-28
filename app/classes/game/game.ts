@@ -12,6 +12,7 @@ export class Game {
 	private paddleRight: Paddle;
 	private ball: Ball;
 	private keyPressed: String;
+	private playerTurn: boolean;
 
 	constructor(canva: HTMLCanvasElement) {
 
@@ -31,12 +32,33 @@ export class Game {
 		this.ball = new Ball(this.canva, this.ctx);
 		this.ctx.fillStyle = "white";
 		this.ctx.strokeStyle = "white";
-
-		this.ball.start(true);
+		this.playerTurn = true;
+		this.ball.start(this.playerTurn);
 	}
 
 	update() {
 		this.ball.update();
+		if ( this.ball.isOut() ){
+
+		}
+		if (this.ball.isOut()) {
+			this.ball.start(true);
+		}
+		if ( this.ball.wallCollide() ) {
+			this.ball.start(true);
+		}
+		const left_collide = this.paddleLeft.collide(this.ball);
+		const right_collide = this.paddleRight.collide(this.ball);
+		if ( left_collide ) {
+			console.log(`Collide on ${right_collide}`);
+			this.playerTurn = !this.playerTurn;
+			this.ball.start(this.playerTurn);
+		}
+		if ( right_collide ) {
+			console.log(`Collide on ${left_collide}`);
+			this.playerTurn = !this.playerTurn;
+			this.ball.start(this.playerTurn);
+		}
 	}
 
 	draw() {
@@ -69,7 +91,6 @@ export class Game {
 	}
 
 	drawMoving() {
-		console.log(`drawMoving: ${this.keyPressed}`)
 		if ( this.keyPressed == "ArrowUp" ) {
 			this.upLeft();
 		} else if ( this.keyPressed == "ArrowDown" ) {

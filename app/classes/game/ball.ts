@@ -1,5 +1,6 @@
 import { GameDimension } from "./engine/dimension";
 import { GameVec } from "./engine/gameVec";
+import { Paddle } from "./paddle";
 
 export class Ball {
 	private canva: HTMLCanvasElement;
@@ -27,23 +28,20 @@ export class Ball {
 
 	update() {
 		this.pos.add(this.direction.mult_vec(this.velocity))
-		if (this.isOut()) {
-			this.start_side = !this.start_side;
-			this.start(this.start_side);
-		}
-		if ( this.collide() ) {
-			this.start(this.start_side);
-		}
 	}
 
 	start(left: boolean) {
 		this.pos.x = Math.floor(this.canva.width / 2  - this.dimension.width / 2);
 		this.pos.y = Math.floor(this.canva.height / 2 - this.dimension.height / 2);
 		if ( left ){
-			this.direction = GameVec.up();
+			this.direction = GameVec.left();
 		} else {
-			this.direction = GameVec.down();
+			this.direction = GameVec.right();
 		}
+	}
+
+	getSide() {
+		return this.start_side;
 	}
 
 	draw() {
@@ -59,8 +57,15 @@ export class Ball {
 		return this.pos.x <= 0 || (this.pos.x > (this.canva.width - this.dimension.width));
 	}
 
-	collide() {
+	wallCollide() {
 		return this.pos.y <= 0 || (this.pos.y > (this.canva.height - this.dimension.height));
 	}
 
+	getDimension(): GameDimension {
+		return this.dimension;
+	}
+
+	getPos(): GameVec {
+		return this.pos;
+	}
 }
