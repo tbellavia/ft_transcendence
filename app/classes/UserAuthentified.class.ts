@@ -34,7 +34,7 @@ export class UserAuthentified extends User {
 
   /* USER INTERFACE */
   /* -------------------------------------------------------------- */
-  public async updateAvatar(newAvatar: any) { //TODO modif type
+  public async updateAvatar(newAvatar: any) { //TODO png only eithan
     await this.fetchingMethod(`/avatar/me`,
       {
         method: 'POST',
@@ -43,7 +43,6 @@ export class UserAuthentified extends User {
     ).then(async () => {
         await this.fetchAll()
       })
-
   }
 
   public async updateUsername(newUsername: string) {

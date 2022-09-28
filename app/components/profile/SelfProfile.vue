@@ -22,12 +22,13 @@
 						</div>
 						<div class="profile-change-name-and-avatar">
 							<form @submit.prevent="submitName" class="profile-change-name">
-								<input v-model="newName" type="text" required placeholder="new username" />
+								<input @keypress="lettersAndNumbersOnly" v-model="newName" type="text" required placeholder="new username" maxlength="16" />
 								<input type="submit" value="Change username" class="submit">
+								<p v-show="nameError == true" class="error">Invalid username</p>
 							</form>
 							<label for="newAvatar">Choose a new profile picture:</label>
 							<input type="file" name="newAvatar" id="newAvatar" @change="submitAvatar" accept="image/png">
-							<p v-show="imageError == true">Image too large (max 90 KB)</p>
+							<p v-show="imageError == true" class="error">Image too large (max 90 KB)</p>
 						</div>
 					</div>
 				</div>
@@ -62,16 +63,32 @@ let newName = ref();
 let imageError = ref();
 let nameError = ref();
 
-async function submitName() {
-	nameError = await user.value.updateUsername(newName.value);
-	if (nameError == false) {
-		await user.value.fetchAll()
-		await refreshUrl();
+const lettersAndNumbersOnly = (event: any) => {
+	event = (event) ? event : window.event;
+	var charCode = (event.which) ? event.which : event.keyCode;
+	if ((charCode < 48 || charCode > 57)
+		 && (charCode < 65 || charCode > 90)
+		 && (charCode < 97 || charCode > 122)
+		 && charCode !== 13 && charCode !== 95) {
+		event.preventDefault();
+	} else {
+		return true;
 	}
-	newName.value = "";
 }
 
-async function submitAvatar(event) {
+async function submitName() {
+	nameError.value = await user.value.updateUsername(newName.value);
+	newName.value = ""
+	if (nameError.value == true) {
+		return
+	}
+	await user.value.fetchAll() // TODO fix this eithan
+	await refreshUrl()
+	const route = useRoute()
+	await redirectIfConnected(route.fullPath.replace(String(route?.params?.username), user.value.username), '/');
+}
+
+async function submitAvatar(event) { // TODO check si png eithan
 	event.preventDefault();
 	let file = event.target.files[0];
 	document.getElementById('newAvatar').value = "";
@@ -129,6 +146,10 @@ div.user-parameters-sub {
 .profile-change-name .submit {
 	width: 180px;
 	align-self: center;
+}
+
+.error {
+	color: #da0000;;
 }
 
 </style>
