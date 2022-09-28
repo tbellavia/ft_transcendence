@@ -24,11 +24,14 @@ import { WsInternalError } from "src/socket/exceptions/bases/wsInternalError";
 import { WsUserHasNotModPermissionsException } from "./exceptions/channel/wsUserHasNoModPermissions.exception";
 import { UpdateChannelDto } from "./dto/updateChannel.dto";
 import { WsUserNotChannelOwnerException } from "./exceptions/channel/wsUserNotChannelOwner.exception";
-import { AddChannelModeratorDTO } from "./dto/addChannelModerator.dto";
+import { ChannelUserTargetDTO } from "./dto/channelUserTarget.dto";
 import { SocketService } from "src/socket/socket.service";
 import { WsUserIsAlreadyModeratorException } from "./exceptions/channel/wsUserIsAlreadyModerator.exception";
 import { WsUserIsNotModeratorException } from "./exceptions/channel/wsUserIsNotModerator.exception";
 import { WsUserIsOwnerException } from "./exceptions/channel/wsUserIsOwner.exception";
+import { WsUserIsAlreadyBannedException } from "./exceptions/channel/wsUserIsAlreadyBanned.exception";
+import { WsUserIsBannedOfChannel } from "./exceptions/channel/wsUserIsBanOfChannel.exception";
+import { WsBanHimselfException } from "./exceptions/channel/wsBanHimself.exception";
 
 @Injectable()
 export class ChannelsService {
@@ -70,6 +73,8 @@ export class ChannelsService {
 
     if (channel.users.findIndex(chanUser => user.username == chanUser.username) != -1)
       throw new WsUserAlreadyInChannelException(user.username, joinChannelDto.name);
+    if (channel.banned_users.find(bannedUser => bannedUser.username == user.username))
+      throw new WsUserIsBannedOfChannel(user.username, channel.name);
     const inviteIndex = channel.invited_users.findIndex(chanUser => user.username == chanUser.username);
     if (channel.private && inviteIndex == -1)
       throw new WsUserUnauthorizeException(user.username, channel.name);
@@ -208,30 +213,53 @@ export class ChannelsService {
     await this.channelRepository.save(channel);
   }
 
-  async addChannelModerator(user: UserEntity, addChannelModeratorDto: AddChannelModeratorDTO) {
+  async addChannelModerator(user: UserEntity, addChannelModeratorDto: ChannelUserTargetDTO) {
     const channel = await this.getChannel(addChannelModeratorDto.name);
     if (channel.owner.username != user.username)
       throw new WsUserNotChannelOwnerException(user.username, channel.name);
 
     const target = await this.socketService.getUserByName(addChannelModeratorDto.username);
+    if (!channel.users.find(chanUser => chanUser.username == target.username)) {
+      throw new WsUserNotInChannelException(target.username, channel.name);
+    }
     if (this.hasModeratorRights(target, channel))
       throw new WsUserIsAlreadyModeratorException(target.username, channel.name);
     channel.moderators.push(target);
     await this.channelRepository.save(channel);
   }
 
-  async removeChannelModerator(user: UserEntity, addChannelModeratorDto: AddChannelModeratorDTO) {
-    const channel = await this.getChannel(addChannelModeratorDto.name);
+  async removeChannelModerator(user: UserEntity, removeModerator: ChannelUserTargetDTO) {
+    const channel = await this.getChannel(removeModerator.name);
     if (channel.owner.username != user.username)
       throw new WsUserNotChannelOwnerException(user.username, channel.name);
 
-    const target = await this.socketService.getUserByName(addChannelModeratorDto.username);
+    const target = await this.socketService.getUserByName(removeModerator.username);
     const index = channel.moderators.findIndex(moderator => moderator.username == target.username);
     if (index == -1)
       throw new WsUserIsNotModeratorException(target.username, channel.name);
     if (target.username == channel.owner.username)
       throw new WsUserIsOwnerException(target.username, channel.name);
     channel.moderators.splice(index, 1);
+    await this.channelRepository.save(channel);
+  }
+
+  async banChannelUser(user: UserEntity, banUser: ChannelUserTargetDTO) {
+    const channel = await this.getChannel(banUser.name);
+    if (!this.hasModeratorRights(user, channel))
+      throw new WsUserHasNotModPermissionsException(user.username, channel.name);
+
+    const target = await this.socketService.getUserByName(banUser.username);
+    if (target.username == channel.owner.username)
+      throw new WsUserIsOwnerException(target.username, channel.name);
+    if (target.username == user.username)
+      throw new WsBanHimselfException(target.username, channel.name);
+    const index = channel.users.findIndex(chanUser => chanUser.username == target.username);
+    if (channel.banned_users.find(chanUser => chanUser.username == target.username))
+      throw new WsUserIsAlreadyBannedException(target.username, channel.name);
+
+    if (index != -1)
+      channel.users.splice(index, 1);
+    channel.banned_users.push(target);
     await this.channelRepository.save(channel);
   }
 }

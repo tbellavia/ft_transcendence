@@ -3,7 +3,7 @@ import { UserEntity } from "src/users/entities/user.entity";
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { MessageEntity } from "./message.entity";
 
-@Entity()
+@Entity("channels")
 export class ChannelEntity {
   // Identity informations (unique)
   @PrimaryGeneratedColumn()
@@ -45,6 +45,15 @@ export class ChannelEntity {
   })
   @JoinTable()
   users: UserEntity[];
+
+  @Expose()
+  @Type(() => UserEntity)
+  @Transform(({ value }) => value.map(user => user.username))
+  @ManyToMany(() => UserEntity, user => user.channels_banned, {
+    eager: true
+  })
+  @JoinTable()
+  banned_users: UserEntity[];
 
   @ManyToMany(() => UserEntity, invited_user => invited_user.channels_invited, {
     eager: true

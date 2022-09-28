@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from "class-validator";
 
-export class AddChannelModeratorDTO {
+export class ChannelUserTargetDTO {
   @IsString()
   @IsNotEmpty()
   name: string;

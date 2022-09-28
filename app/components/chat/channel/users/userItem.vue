@@ -22,10 +22,20 @@
 			<!-- SEE PROFILE PAGE -->
 			<button class="OptionsProfile_sub">Profile Page</button>
 
-			<div v-if="authUserIsOwner">
-				<button v-if="!isModerator" @click="setModerator" class="OptionsProfile_sub">Updgrade as moderator</button>
-				<button v-else-if="name != authUser.username" @click="unsetModerator" class="OptionsProfile_sub">Downgrade as simple user</button>
+			<div v-if="authUser.username != name">
+
+				<!-- Owner can set other users in channel as moderator or not -->
+				<div v-if="authUserIsOwner">
+					<button v-if="!isModerator" @click="setModerator" class="OptionsProfile_sub">Updgrade as moderator</button>
+					<button v-else @click="unsetModerator" class="OptionsProfile_sub">Downgrade as simple user</button>
+				</div>
+
+				<!-- Can ban other user that is not owner -->
+				<div v-if="authUserIsModerator && !targetIsOwner">
+					<button @click="banUser">Ban User</button>
+				</div>
 			</div>
+
 		</div> 
 	</div>
 </template>
@@ -57,10 +67,41 @@ const avatarUrl = ref(await getAvatar(props.name));
 
 const socket = useSocketChat();
 const authUser = getUserAuthenticate();
+const authUserIsModerator = ref(false);
 let authUserIsOwner = ref(false);
-socket.value.emit('is_channel_owner', props.channelName, (isChanOwner: boolean) => {
-	authUserIsOwner.value = isChanOwner;
-})
+socket.value.emit(
+	'is_channel_owner',
+	{
+		name: props.channelName,
+		username: authUser.value.username
+	},
+	(isChanOwner: boolean) => {
+		authUserIsOwner.value = isChanOwner;
+	});
+
+socket.value.emit(
+	'is_channel_moderator',
+	{
+		name: props.channelName,
+		username: authUser.value.username
+	},
+	(isChanOwner: boolean) => {
+		authUserIsModerator.value = isChanOwner;
+	}
+);
+
+const targetIsOwner = ref(false);
+socket.value.emit(
+	'is_channel_owner',
+	{
+		name: props.channelName,
+		username: props.name
+	},
+	(isChanOwner: boolean) => {
+		targetIsOwner.value = isChanOwner;
+	}
+)
+
 function setModerator() {
 	socket.value.emit('add_channel_moderator', {name: props.channelName, username: props.name});
 }
@@ -83,6 +124,10 @@ socket.value.on(
 
 function unsetModerator() {
 	socket.value.emit('remove_channel_moderator', {name: props.channelName, username: props.name});
+}
+
+function banUser() {
+	socket.value.emit('ban_channel_user', {name: props.channelName, username: props.name});
 }
 
 </script>

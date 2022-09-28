@@ -15,10 +15,22 @@ const route = useRoute();
 socket.value.on(
   'receive_leave_channel',
   async ({username, channelName}) => {
-    if (user.value && user.value.username == username && channelName == props.channelName)
-      await navigateTo(route.fullPath.slice(0, route.fullPath.lastIndexOf('/')));
+    await leaveChannelPage(username, channelName);
   }
 );
+
+socket.value.on(
+  'receive_ban_channel_user',
+  async ({username, channelName}) => {
+    await leaveChannelPage(username, channelName);
+  }
+);
+
+async function leaveChannelPage(username: string, channelName: string) {
+  if (user.value && user.value.username == username && channelName == props.channelName)
+      await navigateTo(route.fullPath.slice(0, route.fullPath.lastIndexOf('/')));
+}
+
 </script>
 
 <style scoped>
