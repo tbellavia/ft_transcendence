@@ -84,4 +84,7 @@ export class UserEntity extends BaseEntity {
 
     @ManyToMany(() => ChannelEntity, channel_invited => channel_invited.invited_users)
     channels_invited: ChannelEntity[];
+
+    @ManyToMany(() => ChannelEntity, channel_banned => channel_banned.banned_users)
+    channels_banned: ChannelEntity[];
 }

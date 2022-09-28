@@ -11,7 +11,7 @@ import { WsUserNotInChannelException } from "./exceptions/channel/wsUserNotInCha
 import { CreateChannelDTO } from "./dto/createChannel.dto";
 import { InviteUserDTO } from "./dto/inviteUser.dto";
 import { UpdateChannelDto } from "./dto/updateChannel.dto";
-import { AddChannelModeratorDTO } from "./dto/addChannelModerator.dto";
+import { ChannelUserTargetDTO } from "./dto/channelUserTarget.dto";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
@@ -202,7 +202,7 @@ export class ChatGateway implements OnGatewayConnection {
   @SubscribeMessage('add_channel_moderator')
   async addChannelModerator(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() addModerator: AddChannelModeratorDTO
+    @MessageBody() addModerator: ChannelUserTargetDTO
   ) {
     const user = await this.socketService.getUserFromSocket(socket);
     await this.channelService.addChannelModerator(user, addModerator);
@@ -220,18 +220,36 @@ export class ChatGateway implements OnGatewayConnection {
   @SubscribeMessage('remove_channel_moderator')
   async removeChannelModerator(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() addModerator: AddChannelModeratorDTO
+    @MessageBody() removeModerator: ChannelUserTargetDTO
   ) {
     const user = await this.socketService.getUserFromSocket(socket);
-    await this.channelService.removeChannelModerator(user, addModerator);
+    await this.channelService.removeChannelModerator(user, removeModerator);
 
-    this.server.to(addModerator.name)
+    this.server.to(removeModerator.name)
       .emit(
         'receive_remove_channel_moderator',
         {
-          channelName: addModerator.name,
-          username: addModerator.username
+          channelName: removeModerator.name,
+          username: removeModerator.username
         }
       );
+  }
+
+  @SubscribeMessage('ban_channel_user')
+  async banChannelUser(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() banUser: ChannelUserTargetDTO
+  ) {
+    const user = await this.socketService.getUserFromSocket(socket);
+    await this.channelService.banChannelUser(user, banUser);
+
+    this.server.to(banUser.name)
+    .emit(
+      'receive_ban_channel_user',
+      {
+        channelName: banUser.name,
+        username: banUser.username
+      }
+    );
   }
 }
