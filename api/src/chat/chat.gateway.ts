@@ -10,7 +10,7 @@ import { ChannelsService } from "./channels.service";
 import { WsUserNotInChannelException } from "./exceptions/channel/wsUserNotInChannel.exception";
 import { CreateChannelDTO } from "./dto/createChannel.dto";
 import { InviteUserDTO } from "./dto/inviteUser.dto";
-import { ReceiveMessage } from "./classes/receiveMessage.class";
+import { UpdateChannelDto } from "./dto/updateChannel.dto";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
@@ -175,5 +175,26 @@ export class ChatGateway implements OnGatewayConnection {
     const channel = await this.channelService.getChannel(channel_name);
 
     return this.channelService.hasModeratorRights(author, channel);
+  }
+
+  @SubscribeMessage('is_channel_owner')
+  async isOwner(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() channelName: string
+  ) {
+    const author = await this.socketService.getUserFromSocket(socket);
+    const channel = await this.channelService.getChannel(channelName);
+
+    return author.username == channel.owner.username;
+  }
+
+  //Channel Parameters
+  @SubscribeMessage('update_channel')
+  async updateChannel(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() updateParams: UpdateChannelDto
+  ) {
+    const user = await this.socketService.getUserFromSocket(socket);
+    await this.channelService.updateChannel(user, updateParams);
   }
 }

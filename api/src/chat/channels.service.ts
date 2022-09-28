@@ -22,6 +22,9 @@ import { UserNotFoundException } from "src/users/exceptions/userNotFound.excepti
 import { WsUserNotFoundException } from "src/socket/exceptions/wsUserNotFound";
 import { WsInternalError } from "src/socket/exceptions/bases/wsInternalError";
 import { WsUserHasNotModPermissionsException } from "./exceptions/channel/wsUserHasNoModPermissions.exception";
+import { UpdateChannelDto } from "./dto/updateChannel.dto";
+import { WsUnhautorizeException } from "src/socket/exceptions/bases/wsUnhautorize.exception";
+import { WsUserNotChannelOwnerException } from "./exceptions/channel/wsUserNotChannelOwner.exception";
 
 @Injectable()
 export class ChannelsService {
@@ -187,5 +190,16 @@ export class ChannelsService {
   async hasModeratorRights(user: UserEntity, channel: ChannelEntity) {
     return user.username == channel.owner.username ||
       channel.moderators.find(moderator => moderator.username == user.username)
+  }
+
+  // Parameters
+  async updateChannel(user: UserEntity, updateParams: UpdateChannelDto) {
+    const channel = await this.getChannel(updateParams.name);
+    if (channel.owner.username != user.username)
+      throw new WsUserNotChannelOwnerException(user.username, channel.name);
+
+    const hashedPassword = updateParams.password ? await bcrypt.hash(updateParams.password, 10) : null;
+    channel.password = hashedPassword
+    await this.channelRepository.save(channel);
   }
 }
