@@ -31,6 +31,7 @@ import { WsUserIsNotModeratorException } from "./exceptions/channel/wsUserIsNotM
 import { WsUserIsOwnerException } from "./exceptions/channel/wsUserIsOwner.exception";
 import { WsUserIsAlreadyBannedException } from "./exceptions/channel/wsUserIsAlreadyBanned.exception";
 import { WsUserIsBannedOfChannel } from "./exceptions/channel/wsUserIsBanOfChannel.exception";
+import { WsBanHimselfException } from "./exceptions/channel/wsBanHimself.exception";
 
 @Injectable()
 export class ChannelsService {
@@ -244,12 +245,14 @@ export class ChannelsService {
 
   async banChannelUser(user: UserEntity, banUser: ChannelUserTargetDTO) {
     const channel = await this.getChannel(banUser.name);
-    if (this.hasModeratorRights(user, channel))
+    if (!this.hasModeratorRights(user, channel))
       throw new WsUserHasNotModPermissionsException(user.username, channel.name);
 
     const target = await this.socketService.getUserByName(banUser.username);
     if (target.username == channel.owner.username)
       throw new WsUserIsOwnerException(target.username, channel.name);
+    if (target.username == user.username)
+      throw new WsBanHimselfException(target.username, channel.name);
     const index = channel.users.findIndex(chanUser => chanUser.username == target.username);
     if (channel.banned_users.find(chanUser => chanUser.username == target.username))
       throw new WsUserIsAlreadyBannedException(target.username, channel.name);
