@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li v-for="user in users">
-      <ChatChannelUsersUserItem :name="user.username" :is-moderator="user.isModerator" />
+      <ChatChannelUsersUserItem :name="user.username" :is-moderator="user.isModerator" :channel-name="channelName" />
     </li>
   </ul>
 </template>
@@ -51,6 +51,14 @@ socket.value.on(
     }
   }
 );
+
+socket.value.on(
+  'receive_add_channel_moderator',
+  ({username, channelName}) => {
+    if (channelName == props.channelName)
+      users.value.find(chanUser => chanUser == username).isModerator = true;
+  }
+)
 
 const user = getUserAuthenticate();
 socket.value.on(

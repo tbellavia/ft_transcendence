@@ -17,10 +17,15 @@
 			</div> -->
 
 			<!-- SUGGEST MATCH -->
-			<button class="OptionsProfile_sub">  suggest a match </button>
+			<button class="OptionsProfile_sub">suggest a match</button>
 
 			<!-- SEE PROFILE PAGE -->
-			<button class="OptionsProfile_sub"> Profile Page </button>
+			<button class="OptionsProfile_sub">Profile Page</button>
+
+			<div v-if="authUserIsOwner">
+				<button v-if="!isModerator" @click="setModerator" class="OptionsProfile_sub">Updgrade as moderator</button>
+				<button v-else @click="unsetModerator" class="OptionsProfile_sub">Downgrade as simple user</button>
+			</div>
 		</div> 
 	</div>
 </template>
@@ -41,10 +46,27 @@ const props = defineProps({
     required: true,
     type: String
   },
+	channelName: {
+		required: true,
+		type: String
+	},
   isModerator: Boolean
 });
 
 const avatarUrl = ref(await getAvatar(props.name));
+
+const socket = useSocketChat();
+let authUserIsOwner = ref(false);
+socket.value.emit('is_channel_owner', props.channelName, (isChanOwner: boolean) => {
+	authUserIsOwner.value = isChanOwner;
+})
+function setModerator() {
+	socket.value.emit('add_channel_moderator', {name: props.channelName, username: props.name});
+}
+
+function unsetModerator() {
+
+}
 
 </script>
 

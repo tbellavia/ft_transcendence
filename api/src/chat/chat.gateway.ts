@@ -11,6 +11,8 @@ import { WsUserNotInChannelException } from "./exceptions/channel/wsUserNotInCha
 import { CreateChannelDTO } from "./dto/createChannel.dto";
 import { InviteUserDTO } from "./dto/inviteUser.dto";
 import { UpdateChannelDto } from "./dto/updateChannel.dto";
+import { SocketModule } from "src/socket/socket.module";
+import { AddChannelModeratorDTO } from "./dto/addChannelModerator.dto";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
@@ -196,5 +198,23 @@ export class ChatGateway implements OnGatewayConnection {
   ) {
     const user = await this.socketService.getUserFromSocket(socket);
     await this.channelService.updateChannel(user, updateParams);
+  }
+
+  @SubscribeMessage('add_channel_moderator')
+  async addChannelModerator(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() addModerator: AddChannelModeratorDTO
+  ) {
+    const user = await this.socketService.getUserFromSocket(socket);
+    await this.channelService.addChannelModerator(user, addModerator);
+
+    this.server.to(addModerator.name)
+      .emit(
+        'receive_add_channel_moderator',
+        {
+          channelName: addModerator.name,
+          username: addModerator.username
+        }
+      );
   }
 }
