@@ -1,3 +1,4 @@
+import { Ball } from "./ball";
 import { GameVec } from "./engine/gameVec";
 import { Paddle } from "./paddle";
 
@@ -9,7 +10,8 @@ export class Game {
 	private middle: GameVec;
 	private paddleLeft: Paddle;
 	private paddleRight: Paddle;
-	private keyPressed: String ;
+	private ball: Ball;
+	private keyPressed: String;
 
 	constructor(canva: HTMLCanvasElement) {
 
@@ -26,8 +28,15 @@ export class Game {
 		);
 		this.paddleLeft = new Paddle(this.canva, this.ctx, true);
 		this.paddleRight = new Paddle(this.canva, this.ctx, false);
+		this.ball = new Ball(this.canva, this.ctx);
 		this.ctx.fillStyle = "white";
 		this.ctx.strokeStyle = "white";
+
+		this.ball.start(true);
+	}
+
+	update() {
+		this.ball.update();
 	}
 
 	draw() {
@@ -36,6 +45,7 @@ export class Game {
 		this.drawCenterLine();
 		this.paddleLeft.draw();
 		this.paddleRight.draw();
+		this.ball.draw();
 	}
 
     clear() {
@@ -51,11 +61,11 @@ export class Game {
 	}
 
 	keypressEvent(event: KeyboardEvent) {
-	this.keyPressed = event.key;
+		this.keyPressed = event.key;
 	}
 
 	keyupEvent() {
-	this.keyPressed = "";
+		this.keyPressed = "";
 	}
 
 	drawMoving() {

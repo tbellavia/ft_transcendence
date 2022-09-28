@@ -15,8 +15,8 @@ const props = defineProps({
 
 
 function gameLoop(game: Game) {
+	game.update()
 	game.draw();
-
 	window.requestAnimationFrame(() => {
 		gameLoop(game)
 	})
