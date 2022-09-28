@@ -62,6 +62,15 @@ socket.value.on(
     }
   }
 );
+
+socket.value.on(
+  'receive_ban_channel_user',
+  ({username, channelName}) => {
+    if (user.value && user.value.username != username && channelName == props.channelName) {
+      users.value.splice(users.value.findIndex(chanUser => chanUser.username == username), 1);
+    }
+  }
+)
 </script>
 
 <style scoped>

@@ -31,7 +31,7 @@
 				</div>
 
 				<!-- Can ban other user that is not owner -->
-				<div v-if="isModerator && !targetIsOwner">
+				<div v-if="authUserIsModerator && !targetIsOwner">
 					<button @click="banUser">Ban User</button>
 				</div>
 			</div>
@@ -67,6 +67,7 @@ const avatarUrl = ref(await getAvatar(props.name));
 
 const socket = useSocketChat();
 const authUser = getUserAuthenticate();
+const authUserIsModerator = ref(false);
 let authUserIsOwner = ref(false);
 socket.value.emit(
 	'is_channel_owner',
@@ -77,6 +78,17 @@ socket.value.emit(
 	(isChanOwner: boolean) => {
 		authUserIsOwner.value = isChanOwner;
 	});
+
+socket.value.emit(
+	'is_channel_moderator',
+	{
+		name: props.channelName,
+		username: authUser.value.username
+	},
+	(isChanOwner: boolean) => {
+		authUserIsModerator.value = isChanOwner;
+	}
+);
 
 const targetIsOwner = ref(false);
 socket.value.emit(
