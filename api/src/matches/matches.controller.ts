@@ -14,11 +14,10 @@ export class MatchesController {
     @Post("/:username1/matches/:username2")
     async create(
         @Param("username1") username1: string,
-        @Param("username2") username2: string,
-        @Body() matchCreationDto: MatchCreationDto
+        @Param("username2") username2: string
     )
     {
-        return this.matchesService.create(username1, username2, matchCreationDto);
+        return this.matchesService.create(username1, username2);
     }
     
     @Get("/matches/all")

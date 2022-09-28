@@ -20,7 +20,6 @@ let items = ref([
     svg.children[i].setAttribute('stroke', 'currentColor');
     svg.children[i].setAttribute('fill', 'none');
   }
-  console.log(svg);
 </script>
 
 <style>

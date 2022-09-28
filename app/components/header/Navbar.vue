@@ -16,7 +16,8 @@
   const links = ref([
     {name: 'PROFILE', link: 'profile'},
     {name: 'FRIENDS', link: 'friendsList'},
-    {name: 'CHAT', link: 'chat'}
+    {name: 'CHAT', link: 'chat'},
+    {name: 'GAME', link: 'game'}
   ]);
   const user =  await getRefreshedUserAuthenticate();
   const username = user.value.username ? user.value.username : 'Default';

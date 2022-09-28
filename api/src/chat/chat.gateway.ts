@@ -10,6 +10,8 @@ import { ChannelsService } from "./channels.service";
 import { WsUserNotInChannelException } from "./exceptions/channel/wsUserNotInChannel.exception";
 import { CreateChannelDTO } from "./dto/createChannel.dto";
 import { InviteUserDTO } from "./dto/inviteUser.dto";
+import { UpdateChannelDto } from "./dto/updateChannel.dto";
+import { AddChannelModeratorDTO } from "./dto/addChannelModerator.dto";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
@@ -104,6 +106,7 @@ export class ChatGateway implements OnGatewayConnection {
     const response = await this.channelService.joinChannel(author, joinChannelDto);
     this.server.to(author.username).socketsJoin(response.channelName);
     this.server.to(response.channelName).emit('receive_join_channel', response);
+    return response.channelName;
   }
 
   @SubscribeMessage('invite_user_in_channel')
@@ -173,5 +176,62 @@ export class ChatGateway implements OnGatewayConnection {
     const channel = await this.channelService.getChannel(channel_name);
 
     return this.channelService.hasModeratorRights(author, channel);
+  }
+
+  @SubscribeMessage('is_channel_owner')
+  async isOwner(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() channelName: string
+  ) {
+    const author = await this.socketService.getUserFromSocket(socket);
+    const channel = await this.channelService.getChannel(channelName);
+
+    return author.username == channel.owner.username;
+  }
+
+  //Channel Parameters
+  @SubscribeMessage('update_channel')
+  async updateChannel(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() updateParams: UpdateChannelDto
+  ) {
+    const user = await this.socketService.getUserFromSocket(socket);
+    await this.channelService.updateChannel(user, updateParams);
+  }
+
+  @SubscribeMessage('add_channel_moderator')
+  async addChannelModerator(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() addModerator: AddChannelModeratorDTO
+  ) {
+    const user = await this.socketService.getUserFromSocket(socket);
+    await this.channelService.addChannelModerator(user, addModerator);
+
+    this.server.to(addModerator.name)
+      .emit(
+        'receive_add_channel_moderator',
+        {
+          channelName: addModerator.name,
+          username: addModerator.username
+        }
+      );
+  }
+
+  @SubscribeMessage('remove_channel_moderator')
+  async removeChannelModerator(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() addModerator: AddChannelModeratorDTO
+  ) {
+    const user = await this.socketService.getUserFromSocket(socket);
+    await this.channelService.removeChannelModerator(user, addModerator);
+
+    this.server.to(addModerator.name)
+      .emit(
+        'receive_remove_channel_moderator',
+        {
+          channelName: addModerator.name,
+          username: addModerator.username
+        }
+      );
   }
 }

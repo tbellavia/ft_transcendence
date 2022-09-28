@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li v-for="user in users">
-      <ChatChannelUsersUserItem :name="user.username" :is-moderator="user.isModerator" />
+      <ChatChannelUsersUserItem :name="user.username" :is-moderator="user.isModerator" :channel-name="channelName" />
     </li>
   </ul>
 </template>

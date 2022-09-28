@@ -88,7 +88,7 @@ export class ChatService {
     const channel = await this.channelService.getChannel(targets.target);
     if (channel.users.findIndex(user => user.username == author.username) == -1)
       throw new WsUserNotInChannelException(author.username, channel.name);
-    return await this.getAllChannelMessages(channel);
+    return await this.getAllChannelMessages(author, channel);
   }
 
   private async getAllDirectMessages(user1: UserEntity, user2: UserEntity) {
@@ -127,8 +127,14 @@ export class ChatService {
     return messages;
   }
 
-  private async getAllChannelMessages(channel: ChannelEntity) {
+  private async getAllChannelMessages(user: UserEntity, channel: ChannelEntity) {
     const messages = channel.messages;
+
+    for (let i = 0; i < messages.length; ++i) {
+      if (await this.blockedService.exists(user.username, messages[i].author.username)) {
+        messages[i].content = `is blocked and you can not see its messages`;
+      }
+    }
     return messages;
   }
 }

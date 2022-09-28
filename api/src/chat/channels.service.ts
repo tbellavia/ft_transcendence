@@ -22,13 +22,21 @@ import { UserNotFoundException } from "src/users/exceptions/userNotFound.excepti
 import { WsUserNotFoundException } from "src/socket/exceptions/wsUserNotFound";
 import { WsInternalError } from "src/socket/exceptions/bases/wsInternalError";
 import { WsUserHasNotModPermissionsException } from "./exceptions/channel/wsUserHasNoModPermissions.exception";
+import { UpdateChannelDto } from "./dto/updateChannel.dto";
+import { WsUserNotChannelOwnerException } from "./exceptions/channel/wsUserNotChannelOwner.exception";
+import { AddChannelModeratorDTO } from "./dto/addChannelModerator.dto";
+import { SocketService } from "src/socket/socket.service";
+import { WsUserIsAlreadyModeratorException } from "./exceptions/channel/wsUserIsAlreadyModerator.exception";
+import { WsUserIsNotModeratorException } from "./exceptions/channel/wsUserIsNotModerator.exception";
+import { WsUserIsOwnerException } from "./exceptions/channel/wsUserIsOwner.exception";
 
 @Injectable()
 export class ChannelsService {
   constructor(
     @InjectRepository(ChannelEntity)
     private channelRepository: Repository<ChannelEntity>,
-    private readonly userService: UsersService
+    private readonly userService: UsersService,
+    private readonly socketService: SocketService
   ) {}
 
   // Create, Join and Leave channel
@@ -180,12 +188,50 @@ export class ChannelsService {
   }
 
   // Checker
-  async isUserInChannel(user: UserEntity, channel: ChannelEntity) {
+  isUserInChannel(user: UserEntity, channel: ChannelEntity) {
     return channel.users.findIndex(chanUser => chanUser.username == user.username) != -1;
   }
 
-  async hasModeratorRights(user: UserEntity, channel: ChannelEntity) {
+  hasModeratorRights(user: UserEntity, channel: ChannelEntity) {
     return user.username == channel.owner.username ||
       channel.moderators.find(moderator => moderator.username == user.username)
+  }
+
+  // Parameters
+  async updateChannel(user: UserEntity, updateParams: UpdateChannelDto) {
+    const channel = await this.getChannel(updateParams.name);
+    if (channel.owner.username != user.username)
+      throw new WsUserNotChannelOwnerException(user.username, channel.name);
+
+    const hashedPassword = updateParams.password ? await bcrypt.hash(updateParams.password, 10) : null;
+    channel.password = hashedPassword
+    await this.channelRepository.save(channel);
+  }
+
+  async addChannelModerator(user: UserEntity, addChannelModeratorDto: AddChannelModeratorDTO) {
+    const channel = await this.getChannel(addChannelModeratorDto.name);
+    if (channel.owner.username != user.username)
+      throw new WsUserNotChannelOwnerException(user.username, channel.name);
+
+    const target = await this.socketService.getUserByName(addChannelModeratorDto.username);
+    if (this.hasModeratorRights(target, channel))
+      throw new WsUserIsAlreadyModeratorException(target.username, channel.name);
+    channel.moderators.push(target);
+    await this.channelRepository.save(channel);
+  }
+
+  async removeChannelModerator(user: UserEntity, addChannelModeratorDto: AddChannelModeratorDTO) {
+    const channel = await this.getChannel(addChannelModeratorDto.name);
+    if (channel.owner.username != user.username)
+      throw new WsUserNotChannelOwnerException(user.username, channel.name);
+
+    const target = await this.socketService.getUserByName(addChannelModeratorDto.username);
+    const index = channel.moderators.findIndex(moderator => moderator.username == target.username);
+    if (index == -1)
+      throw new WsUserIsNotModeratorException(target.username, channel.name);
+    if (target.username == channel.owner.username)
+      throw new WsUserIsOwnerException(target.username, channel.name);
+    channel.moderators.splice(index, 1);
+    await this.channelRepository.save(channel);
   }
 }

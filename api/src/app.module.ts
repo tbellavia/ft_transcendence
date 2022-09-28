@@ -12,6 +12,7 @@ import { DataBaseModule } from './database/database.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { ChatModule } from './chat/chat.module';
 import { JwtTwoFactorAuthGuard } from './auth/guards/jwtTwoFactorAuth.guard';
+import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { JwtTwoFactorAuthGuard } from './auth/guards/jwtTwoFactorAuth.guard';
     MatchesModule,
     TwoFactorAuthModule,
     ChatModule,
+    GameModule
   ],
   providers: [
     {
