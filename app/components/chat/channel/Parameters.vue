@@ -28,14 +28,25 @@ const props = defineProps<{channelName: string}>();
 
 const socket = useSocketChat();
 // Fetch if is channel moderator and owner
+const authUser = getUserAuthenticate();
 const isModerator = ref(false);
 const isOwner = ref(false);
-socket.value.emit('is_channel_moderator', props.channelName, (isChanModerator: boolean) => {
+socket.value.emit('is_channel_moderator', {
+    name: props.channelName,
+    username: authUser.value.username
+  },
+  (isChanModerator: boolean) => {
   isModerator.value = isChanModerator;
 });
-socket.value.emit('is_channel_owner', props.channelName, (isChanOwner: boolean) => {
-  isOwner.value = isChanOwner;
-})
+socket.value.emit(
+  'is_channel_owner',
+  {
+    name: props.channelName,
+    username: authUser.value.username
+  },
+  (isChanOwner: boolean) => {
+    isOwner.value = isChanOwner;
+  })
 
 // Leave channel method
 function leaveChannel() {
