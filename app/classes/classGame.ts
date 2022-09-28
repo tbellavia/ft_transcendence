@@ -1,4 +1,3 @@
-import Paddle from "./classPaddle";
 
 export default class Game {
 	// H: number;

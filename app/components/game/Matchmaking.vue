@@ -6,33 +6,28 @@
 
 
 <script setup lang="ts">
-import { UserAuthentified } from '~~/classes/UserAuthentified.class';
+// import { UserAuthentified } from '~~/classes/UserAuthentified.class';
 
-const user = await getRefreshedUserAuthenticate();
-const socket = useSocketGame();
-const socket1 = useSocketGame();
-const socket2 = useSocketGame();
-const socket3 = useSocketGame();
-const socket4 = useSocketGame();
+// const user = await getRefreshedUserAuthenticate();
+// const socket = useSocketGame();
 
+// async function subscribeMatchmaking() {
+// 	socket.value.emit("subscribe");
 
-async function subscribeMatchmaking() {
-	socket.value.emit("subscribe");
-
-	console.log("Subscribe !");	
-}
+// 	console.log("Subscribe !");	
+// }
 
 
-// SOCKET EVENT 
-// socket.value.on("waiting_player", () => {
-// 	console.log("waiting_players")
-// })
+// // SOCKET EVENT 
+// // socket.value.on("waiting_player", () => {
+// // 	console.log("waiting_players")
+// // })
 
-socket.value.on("matched", ({username, id}) => {
-	console.log(`${id} : Matched with ${username}`);
-	navigateTo(`/${user.value.username}/game/${username}`)
+// socket.value.on("matched", ({username, id}) => {
+// 	console.log(`${id} : Matched with ${username}`);
+// 	navigateTo(`/${user.value.username}/game/${username}`)
 
-});
+// });
 
 
 
