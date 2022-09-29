@@ -17,8 +17,8 @@ export class Ball {
 		this.canva = canva;
 		this.ctx = ctx;
 		this.pos = new GameVec(0, 0);
-		this.dimension = new GameDimension(5, 5);
-		this.velocity = 1.5;
+		this.dimension = new GameDimension(10, 10);
+		this.velocity = 2;
 		this.start_margin = 10;
 		this.start_field = [
 			this.start_margin,
@@ -40,10 +40,12 @@ export class Ball {
 		}
 	}
 
+
+	
 	getSide() {
 		return this.start_side;
 	}
-
+	
 	draw() {
 		this.ctx.fillRect(
 			this.pos.x,
@@ -52,20 +54,31 @@ export class Ball {
 			this.dimension.height
 		)
 	}
-
+		
 	isOut() {
 		return this.pos.x <= 0 || (this.pos.x > (this.canva.width - this.dimension.width));
 	}
-
+	
 	wallCollide() {
 		return this.pos.y <= 0 || (this.pos.y > (this.canva.height - this.dimension.height));
 	}
-
+	
 	getDimension(): GameDimension {
 		return this.dimension.copy();
 	}
-
+	
 	getPos(): GameVec {
 		return this.pos.copy()
 	}
+
+	async debugStop() {
+		this.velocity = 0;
+		await delay(2000);
+		this.velocity = 2;
+	}
+} // end of class
+	
+	
+function delay(ms: number) {
+	return new Promise( resolve => setTimeout(resolve, ms) );
 }

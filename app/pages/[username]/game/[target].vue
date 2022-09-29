@@ -6,7 +6,6 @@
 <script setup lang="ts">
 const UserAuthentified = getUserAuthenticate();
 
-
 </script>
 
 

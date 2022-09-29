@@ -3,6 +3,12 @@ import { constrain } from "./engine/constrain";
 import { GameDimension } from "./engine/dimension";
 import { GameVec } from "./engine/gameVec";
 
+export enum PaddleStage {
+	UP = 1,
+	MIDDLE,
+	DOWN,
+}
+
 export class Paddle {
 	private canva: HTMLCanvasElement;
 	private ctx: CanvasRenderingContext2D;
@@ -16,9 +22,9 @@ export class Paddle {
 	constructor(canva: HTMLCanvasElement, ctx: CanvasRenderingContext2D, left: boolean){
 		this.canva = canva;
 		this.ctx = ctx;
-		this.margin = 7;
+		this.margin = 15;
 		this.pos = new GameVec(0, 0);
-		this.dimension = new GameDimension(5, 25);
+		this.dimension = new GameDimension(10, 55);
 		this.third = Math.floor(this.dimension.height / 3);
 		this.side = left;
 
@@ -28,9 +34,12 @@ export class Paddle {
 			this.pos.x = this.canva.width - this.margin - this.dimension.width;
 		}
 		this.pos.y = Math.floor(this.canva.height / 2 - this.dimension.height / 2);
-		this.velocity = 2;
+		this.velocity = 4;
 	}
 
+
+	// Draw and update position
+  /* -------------------------------------------------------------- */
 	draw() {
 		this.ctx.fillRect(
 			this.pos.x,
@@ -56,6 +65,8 @@ export class Paddle {
 		);
 	}
 
+	// Getter
+	/* -------------------------------------------------------------- */
 	getPos() : GameVec {
 		return this.pos;
 	}
@@ -67,19 +78,23 @@ export class Paddle {
 		return (this.side);
 	}
 
+	// Check Ball collide
+	/* -------------------------------------------------------------- */
 	isInsideHeight (ball: Ball): number {
 		const ball_pos = ball.getPos();
 		const ball_dim = ball.getDimension();
 
-		ball_pos.y += (this.isLeft() ? 0 : ball_dim.height ); 
-
-		if (ball_pos.y >= this.pos.y && ball_pos.y <= this.pos.y + this.dimension.height) {
-			if( ball_pos.y < this.pos.y + this.third)
-				return(1);
-			if (ball_pos.y > this.pos.y + this.dimension.height - this.third)
-				return (2);
-			return (3)
-		} 
+		// inside paddle
+		if (ball_pos.y + ball_dim.height > this.pos.y && ball_pos.y < this.pos.y + this.dimension.height) {
+				// higth part
+				if( ball_pos.y + ball_dim.height < this.pos.y + this.third )
+					return PaddleStage.UP;
+				// middle part
+				if (ball_pos.y + ball_dim.height > this.pos.y + this.dimension.height - this.third)
+					return PaddleStage.MIDDLE;
+				// down part
+				return PaddleStage.DOWN;
+			}
 		return (0);
 	}
 	
@@ -89,12 +104,13 @@ export class Paddle {
 		const inside_height = this.isInsideHeight(ball);
 
 		if (this.isLeft()) {
-			if (ball_pos.x <= this.pos.x + this.dimension.width) {
+			if (ball_pos.x < this.pos.x + this.dimension.width) {
 				return inside_height;
 			}
 		}
-		else if (ball_pos.x + this.dimension.width >= this.pos.x) {
-			return inside_height;
+		else {
+			if (ball_pos.x + ball_dim.width > this.pos.x)
+				return inside_height;
 		}
 		return 0;
 	}
