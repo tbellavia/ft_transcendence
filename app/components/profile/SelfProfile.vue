@@ -41,13 +41,10 @@
 			</div>
 
 		</div>
-		<div v-else >
-			unexisting !!!!
+		<div v-else class="undefined">
+			<h1>User not found</h1>
 		</div>
 </template>
-	
-
-
 
 <script setup lang="ts">
 const props = defineProps({
@@ -86,13 +83,13 @@ async function submitName() {
 	if (nameError.value == true) {
 		return
 	}
-	await user.value.fetchAll() // TODO fix this eithan
-	await refreshUrl()
+	await user.value.fetchAll() // TODO eithan see fix with virginie
+	user.value = await getRefreshedUserAuthenticate()
 	const route = useRoute()
 	await redirectIfConnected(route.fullPath.replace(String(route?.params?.username), user.value.username), '/');
 }
 
-async function submitAvatar(event) { // TODO check si png eithan
+async function submitAvatar(event) {
 	event.preventDefault();
 	let file = event.target.files[0];
 	document.getElementById('newAvatar').value = "";
@@ -100,7 +97,7 @@ async function submitAvatar(event) { // TODO check si png eithan
 	{
 		return
 	}
-	else if (file.size > 90000)
+	else if (file.size > 90000 || !file.name.endsWith(".png"))
 	{
 		imageError.value = true
 		return
@@ -110,7 +107,6 @@ async function submitAvatar(event) { // TODO check si png eithan
 
 	await user.value.updateAvatar(data)
 	await user.value.fetchAll()
-	await refreshUrl();
 	imageError.value = false
 }
 
@@ -154,6 +150,12 @@ div.user-parameters-sub {
 
 .error {
 	color: var(--error-color);;
+}
+
+.undefined {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 </style>
