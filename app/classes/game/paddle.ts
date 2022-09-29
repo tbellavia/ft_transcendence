@@ -24,7 +24,7 @@ export class Paddle {
 		this.ctx = ctx;
 		this.margin = 15;
 		this.pos = new GameVec(0, 0);
-		this.dimension = new GameDimension(10, 55);
+		this.dimension = new GameDimension(10, 60);
 		this.third = Math.floor(this.dimension.height / 3);
 		this.side = left;
 
@@ -90,7 +90,7 @@ export class Paddle {
 				if( ball_pos.y + ball_dim.height < this.pos.y + this.third )
 					return PaddleStage.UP;
 				// middle part
-				if (ball_pos.y + ball_dim.height > this.pos.y + this.dimension.height - this.third)
+				if (ball_pos.y + ball_dim.height < this.pos.y + this.dimension.height - this.third)
 					return PaddleStage.MIDDLE;
 				// down part
 				return PaddleStage.DOWN;

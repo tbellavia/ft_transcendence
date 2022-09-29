@@ -49,7 +49,8 @@ export class Game {
 
     }
     if (this.ball.isOut()) {
-      this.ball.start(true);
+      this.playerTurn = !this.playerTurn;
+      this.ball.start(this.playerTurn);
     }
     if ( this.ball.wallCollide() ) {
       this.ball.start(true);
@@ -57,15 +58,10 @@ export class Game {
     const left_collide = this.paddleLeft.collide(this.ball);
     const right_collide = this.paddleRight.collide(this.ball);
     if ( left_collide ) {
-      console.log(`Collide on ${left_collide}`);
-      this.playerTurn = !this.playerTurn;
-      // await this.ball.debugStop();
-      this.ball.start(this.playerTurn);
+      this.ball.bounceLeft(left_collide);
     }
-    if ( right_collide ) {
-      console.log(`Collide on ${right_collide}`);
-      this.playerTurn = !this.playerTurn;
-      this.ball.start(this.playerTurn);
+    else if ( right_collide ) {
+      this.ball.bounceRight(right_collide);
     }
   }
 

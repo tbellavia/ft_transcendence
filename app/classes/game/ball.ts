@@ -1,6 +1,6 @@
 import { GameDimension } from "./engine/dimension";
 import { GameVec } from "./engine/gameVec";
-import { Paddle } from "./paddle";
+import { Paddle, PaddleStage } from "./paddle";
 
 export class Ball {
 	private canva: HTMLCanvasElement;
@@ -18,7 +18,7 @@ export class Ball {
 		this.ctx = ctx;
 		this.pos = new GameVec(0, 0);
 		this.dimension = new GameDimension(10, 10);
-		this.velocity = 2;
+		this.velocity = 3;
 		this.start_margin = 10;
 		this.start_field = [
 			this.start_margin,
@@ -69,6 +69,29 @@ export class Ball {
 	
 	getPos(): GameVec {
 		return this.pos.copy()
+	}
+
+	bounceLeft(stage: PaddleStage) {
+		console.log(`Collide on ${stage}`);
+
+		if ( stage === PaddleStage.UP ) {
+			this.direction.reverse().rotate(-45);
+		} else if ( stage === PaddleStage.MIDDLE ) {
+			this.direction.reverse();
+		} else if ( stage === PaddleStage.DOWN ) {
+			this.direction.reverse().rotate(45);
+		}
+	}
+
+	bounceRight(stage: PaddleStage) {
+		console.log(`Collide on ${stage}`);
+		if ( stage === PaddleStage.UP ) {
+			this.direction.reverse().rotate(45);
+		} else if ( stage === PaddleStage.MIDDLE ) {
+			this.direction.reverse();
+		} else if ( stage === PaddleStage.DOWN ) {
+			this.direction.reverse().rotate(-45);
+		}
 	}
 
 	async debugStop() {
