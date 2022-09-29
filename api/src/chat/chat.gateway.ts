@@ -135,7 +135,7 @@ export class ChatGateway implements OnGatewayConnection {
 
   @SubscribeMessage('get_all_channels_joined')
   async getAllChannels(
-    @ConnectedSocket() socket
+    @ConnectedSocket() socket: Socket
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
 
