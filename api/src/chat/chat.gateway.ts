@@ -135,9 +135,12 @@ export class ChatGateway implements OnGatewayConnection {
 
   @SubscribeMessage('get_all_channels_joined')
   async getAllChannels(
-    @ConnectedSocket() socket
+    @ConnectedSocket() socket: Socket
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
+    console.log('Socket id:', socket.id);
+    console.log('Socket cookie:', socket.handshake.headers.cookie);
+    console.log('Get All channels joined', author.username)
 
     const channels = await this.channelService.getAllChannelsJoined(author);
     return channels.map(channel => channel.name);
