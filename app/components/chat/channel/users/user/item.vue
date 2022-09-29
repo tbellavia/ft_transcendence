@@ -35,7 +35,7 @@
 					<button v-if="!isBan" @click="banUser">Ban User</button>
 					<button v-else @click="unbanUser">Unban User</button>
 
-					<button v-if="!isMutedTarget">Mute User</button>
+					<ChatChannelUsersUserMutePopup v-if="!isMutedTarget && !isBan" :name="name" :channel-name="channelName" />
 				</div>
 			</div>
 

@@ -292,7 +292,7 @@ export class ChannelsService {
   }
 
   async muteChannelUser(user: UserEntity, muteUser: MuteUserOnChannelDTO) {
-    const channel = await this.getChannel(muteUser.username);
+    const channel = await this.getChannel(muteUser.name);
     if (!this.hasModeratorRights(user, channel))
       throw new WsUserHasNotModPermissionsException(user.username, channel.name);
 
