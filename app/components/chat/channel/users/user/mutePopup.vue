@@ -1,7 +1,7 @@
 <template>
   <v-dialog id="chat" v-model="mutePopup">
     <template v-slot:activator>
-      <button @click="mutePopup=true">Mute User</button>
+      <button class="OptionsProfile_sub" @click="mutePopup=true">Mute User</button>
     </template>
 
     <v-card>
