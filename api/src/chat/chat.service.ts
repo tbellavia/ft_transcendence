@@ -61,7 +61,8 @@ export class ChatService {
     if (channel.users.findIndex(user => user.username == author.username) == -1)
       throw new WsUserNotInChannelException(author.username, channel.name);
     if (await this.muteService.isUserMutedOnChannel(author, channel)) {
-      throw new WsUserIsMutedOnChannelException(author.username, channel.name);
+      const mute = await this.muteService.getUserMuteOnChannel(author, channel);
+      throw new WsUserIsMutedOnChannelException(author.username, channel.name, mute.until_date);
     }
     try {
       await this.saveMessage({
