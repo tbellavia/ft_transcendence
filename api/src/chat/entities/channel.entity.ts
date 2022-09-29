@@ -2,6 +2,7 @@ import { Expose, Transform, Type } from "class-transformer";
 import { UserEntity } from "src/users/entities/user.entity";
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { MessageEntity } from "./message.entity";
+import { MuteEntity } from "./mute.entity";
 
 @Entity("channels")
 export class ChannelEntity {
@@ -19,6 +20,7 @@ export class ChannelEntity {
   @Expose()
   @Column()
   private: boolean
+  @Type(() => UserEntity)
 
   // Users relations
   @Expose()
@@ -67,4 +69,10 @@ export class ChannelEntity {
     onDelete: 'CASCADE'
   })
   messages: MessageEntity[];
+
+  @OneToMany(() => MuteEntity, muted_user => muted_user.channel {
+    eager: true,
+    onDelete: 'CASCADE'
+  })
+  muted_users: MuteEntity[];
 }
