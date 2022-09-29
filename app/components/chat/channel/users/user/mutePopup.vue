@@ -37,6 +37,7 @@ const props = defineProps({
 
 let mutePopup = ref(false);
 const muteTimes = ref([
+  {text: '10 seconds', value: 10000},
   {text: '2 minutes', value: 120000},
   {text: '5 minutes', value: 300000},
   {text: '10 minutes', value: 600000},

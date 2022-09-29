@@ -14,7 +14,6 @@ export class MuteService {
   ) {}
   
   async muteUserOnChannel(user: UserEntity, channel: ChannelEntity, durationMs: number) {
-    console.log('Milliseconds', durationMs);
     let until_date = new Date(Date.now() + durationMs);
 
     const mute = this.muteRepository.create({

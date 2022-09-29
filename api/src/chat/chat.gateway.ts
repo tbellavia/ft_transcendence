@@ -287,6 +287,24 @@ export class ChatGateway implements OnGatewayConnection {
     const user = await this.socketService.getUserFromSocket(socket);
     await this.channelService.muteChannelUser(user, muteUser);
 
+
+    // Send back unmute notif when time has passed
+    setTimeout(async () => 
+    {
+      await this.channelService.unmuteChannelUser(user, {...muteUser});
+
+      this.server.emit(
+        'receive_unmute_channel_user',
+        {
+          channelName: muteUser.name,
+          username: muteUser.username
+        }
+      );
+    },
+      muteUser.durationMs
+    );
+
+
     this.server.to(muteUser.name)
       .emit(
         'receive_mute_channel_user',

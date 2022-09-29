@@ -154,6 +154,14 @@ socket.value.on(
 		if (channelName == props.channelName && username == props.name)
 			isMutedTarget.value = true;
 	}
+);
+
+socket.value.on(
+	'receive_unmute_channel_user',
+	({channelName, username}) => {
+		if (channelName == props.channelName && username == props.name)
+			isMutedTarget.value = false;
+	}
 )
 
 </script>
