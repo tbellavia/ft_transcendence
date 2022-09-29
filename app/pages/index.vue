@@ -16,6 +16,7 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
+import { Socket } from 'engine.io-client';
 import { UserInfos } from '~~/classes/User.class';
 import { getRefreshedUserAuthenticate } from '~~/composables/useUserAuthentified';
 onMounted(async () => {
