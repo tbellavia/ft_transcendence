@@ -129,7 +129,7 @@ export class UserAuthentified extends User {
   }
 
   public extractFriend(relation: FriendRelation) {
-	console.log("RELATION: ", relation) // TODO ?
+	console.log("RELATION: ", relation) // TODO eithan ?
     return relation.user_2.username !== this.username ? relation.user_2 : relation.user_1;
   }
 }

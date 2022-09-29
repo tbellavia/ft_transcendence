@@ -4,7 +4,6 @@ export async function refreshUrl() {
 		const route = useRoute();
 		// if (route.params.username !== user.value.username) {
 			const test = await redirectIfConnected(route.fullPath, '/');
-			console.log(test)
 			// }
 		// const goToUser = await this.findOneByName(route.params.username)
 		// await navigateTo(`/${route.params.username}/profile`)
