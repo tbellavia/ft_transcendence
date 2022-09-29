@@ -253,5 +253,25 @@ export class ChatGateway implements OnGatewayConnection {
         username: banUser.username
       }
     );
+
+    this.server.to(banUser.username).socketsLeave(banUser.name);
+  }
+
+  @SubscribeMessage('unban_channel_user')
+  async unbanChannelUser(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() unbanUser: ChannelUserTargetDTO
+  ) {
+    const user = await this.socketService.getUserFromSocket(socket);
+    await this.channelService.unbanChannelUser(user, unbanUser);
+
+    this.server.to(unbanUser.name)
+      .emit(
+        'receive_unban_channel_user',
+        {
+          channelName: unbanUser.name,
+          username: unbanUser.username
+        }
+      );
   }
 }

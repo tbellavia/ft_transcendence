@@ -32,6 +32,7 @@ import { WsUserIsOwnerException } from "./exceptions/channel/wsUserIsOwner.excep
 import { WsUserIsAlreadyBannedException } from "./exceptions/channel/wsUserIsAlreadyBanned.exception";
 import { WsUserIsBannedOfChannel } from "./exceptions/channel/wsUserIsBanOfChannel.exception";
 import { WsBanHimselfException } from "./exceptions/channel/wsBanHimself.exception";
+import { WsUserIsNotBanned } from "./exceptions/channel/wsUserIsNotBannedexception";
 
 @Injectable()
 export class ChannelsService {
@@ -253,13 +254,34 @@ export class ChannelsService {
       throw new WsUserIsOwnerException(target.username, channel.name);
     if (target.username == user.username)
       throw new WsBanHimselfException(target.username, channel.name);
-    const index = channel.users.findIndex(chanUser => chanUser.username == target.username);
     if (channel.banned_users.find(chanUser => chanUser.username == target.username))
       throw new WsUserIsAlreadyBannedException(target.username, channel.name);
 
+    let index = channel.users.findIndex(chanUser => chanUser.username == target.username);
     if (index != -1)
       channel.users.splice(index, 1);
+    index = channel.moderators.findIndex(chanUser => chanUser.username == target.username);
+    if (index != -1)
+      channel.moderators.splice(index, 1);
+    index = channel.invited_users.findIndex(chanUser => chanUser.username == target.username);
+    if (index != -1)
+      channel.invited_users.splice(index, 1);
+    
     channel.banned_users.push(target);
+    await this.channelRepository.save(channel);
+  }
+
+  async unbanChannelUser(user: UserEntity, unbanUser: ChannelUserTargetDTO) {
+    const channel = await this.getChannel(unbanUser.name);
+    if (!this.hasModeratorRights(user, channel))
+      throw new WsUserHasNotModPermissionsException(user.username, channel.name);
+
+    const target = await this.socketService.getUserByName(unbanUser.username);
+    const index = channel.banned_users.findIndex(chanUser => chanUser.username == target.username);
+    if (index == -1)
+      throw new WsUserIsNotBanned(target.username, channel.name);
+    
+    channel.banned_users.splice(index, 1);
     await this.channelRepository.save(channel);
   }
 }
