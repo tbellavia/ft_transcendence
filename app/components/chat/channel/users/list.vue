@@ -1,9 +1,37 @@
 <template>
-  <ul>
-    <li v-for="user in users">
-      <ChatChannelUsersUserItem :name="user.username" :is-moderator="user.isModerator" :channel-name="channelName" />
-    </li>
-  </ul>
+  <div id="chat" class="list-channel-users">
+
+    <div class="list-selectors">
+      <h2>
+        <button @click="displayBanUsers = false">
+          Channel Users
+        </button>
+      </h2>
+      <h2>
+        <button @click="displayBanUsers = true">
+          Ban Users
+        </button>
+      </h2>
+    </div>
+
+    <div v-if="!displayBanUsers">
+      <ul>
+        <li v-for="user in users">
+          <ChatChannelUsersUserItem :name="user.username" :is-moderator="user.isModerator" :channel-name="channelName" />
+        </li>
+      </ul>
+    </div>
+
+
+    <div v-else>
+      <ul>
+        <li v-for="user in bannedUsers">
+          <ChatChannelUsersUserItem :name="user" :channel-name="channelName" />
+        </li>
+      </ul>
+    </div>
+
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -17,6 +45,10 @@ interface ChannelUser {
   isOwner: boolean;
   isModerator: boolean;
 }
+const displayBanUsers = ref(false);
+
+
+const bannedUsers = ref<string[]>([]);
 const users = ref<ChannelUser[]>([]);
 const socket = useSocketChat();
 
@@ -34,6 +66,7 @@ function refreshChannelInfos() {
           isModerator: channel.moderators.find(moderator => moderator == chanUser) != undefined || chanUser == channel.owner
         };
       });
+      bannedUsers.value = channel.banned_users;
     }
   );
 }
@@ -70,9 +103,27 @@ socket.value.on(
       users.value.splice(users.value.findIndex(chanUser => chanUser.username == username), 1);
     }
   }
-)
+);
 </script>
 
 <style scoped>
+  .list-channel-users {
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  .list-channel-users > div {
+    flex: 1;
+  }
+
+  .list-selectors {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .list-selectors > h2 {
+    margin: 0 0.3em;
+  }
 
 </style>

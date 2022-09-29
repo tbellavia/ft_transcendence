@@ -3,4 +3,5 @@ export interface Channel {
   owner: string;
   moderators: string[];
   users: string[];
+  banned_users: string[];
 }
