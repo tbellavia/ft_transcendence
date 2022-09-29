@@ -33,6 +33,10 @@ import { WsUserIsAlreadyBannedException } from "./exceptions/channel/wsUserIsAlr
 import { WsUserIsBannedOfChannel } from "./exceptions/channel/wsUserIsBanOfChannel.exception";
 import { WsBanHimselfException } from "./exceptions/channel/wsBanHimself.exception";
 import { WsUserIsNotBanned } from "./exceptions/channel/wsUserIsNotBannedexception";
+import { MuteUserOnChannelDTO } from "./dto/muteUserOnChannel.dto";
+import { WsMuteHimselfException } from "./exceptions/channel/wsMuteHimself.exception";
+import { MuteService } from "./mute.service";
+import { WsUserIsAlreadyMutedOnChannelException } from "./exceptions/channel/wsUserIsAlreadyMutedOnChannel.exception";
 
 @Injectable()
 export class ChannelsService {
@@ -40,7 +44,8 @@ export class ChannelsService {
     @InjectRepository(ChannelEntity)
     private channelRepository: Repository<ChannelEntity>,
     private readonly userService: UsersService,
-    private readonly socketService: SocketService
+    private readonly socketService: SocketService,
+    private readonly muteService: MuteService
   ) {}
 
   // Create, Join and Leave channel
@@ -283,5 +288,21 @@ export class ChannelsService {
     
     channel.banned_users.splice(index, 1);
     await this.channelRepository.save(channel);
+  }
+
+  async muteChannelUser(user: UserEntity, muteUser: MuteUserOnChannelDTO) {
+    const channel = await this.getChannel(muteUser.username);
+    if (!this.hasModeratorRights(user, channel))
+      throw new WsUserHasNotModPermissionsException(user.username, channel.name);
+
+    const target = await this.socketService.getUserByName(muteUser.username);
+    if (target.username == user.username)
+      throw new WsMuteHimselfException(target.username, channel.name);
+    if (target.username == channel.owner.username)
+      throw new WsUserIsOwnerException(target.username, channel.name);
+    if (await this.muteService.isUserMutedOnChannel(target, channel))
+      throw new WsUserIsAlreadyMutedOnChannelException(target.username, channel.name);
+
+    await this.muteService.muteUserOnChannel(target, channel, muteUser.duration);
   }
 }

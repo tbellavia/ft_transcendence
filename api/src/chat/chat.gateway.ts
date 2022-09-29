@@ -12,6 +12,7 @@ import { CreateChannelDTO } from "./dto/createChannel.dto";
 import { InviteUserDTO } from "./dto/inviteUser.dto";
 import { UpdateChannelDto } from "./dto/updateChannel.dto";
 import { ChannelUserTargetDTO } from "./dto/channelUserTarget.dto";
+import { MuteUserOnChannelDTO } from "./dto/muteUserOnChannel.dto";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
@@ -274,6 +275,24 @@ export class ChatGateway implements OnGatewayConnection {
         {
           channelName: unbanUser.name,
           username: unbanUser.username
+        }
+      );
+  }
+
+  @SubscribeMessage('mute_channel_user')
+  async muteChannelUser(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() muteUser: MuteUserOnChannelDTO
+  ) {
+    const user = await this.socketService.getUserFromSocket(socket);
+    await this.channelService.muteChannelUser(user, muteUser);
+
+    this.server.to(muteUser.name)
+      .emit(
+        'receive_mute_channel_user',
+        {
+          channelName: muteUser.name,
+          username: muteUser.username
         }
       );
   }
