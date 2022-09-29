@@ -25,14 +25,15 @@
 			<div v-if="authUser.username != name">
 
 				<!-- Owner can set other users in channel as moderator or not -->
-				<div v-if="authUserIsOwner">
+				<div v-if="authUserIsOwner && !isBan">
 					<button v-if="!isModerator" @click="setModerator" class="OptionsProfile_sub">Updgrade as moderator</button>
 					<button v-else @click="unsetModerator" class="OptionsProfile_sub">Downgrade as simple user</button>
 				</div>
 
 				<!-- Can ban other user that is not owner -->
 				<div v-if="authUserIsModerator && !targetIsOwner">
-					<button @click="banUser">Ban User</button>
+					<button v-if="!isBan" @click="banUser">Ban User</button>
+					<button v-else @click="unbanUser">Unban User</button>
 				</div>
 			</div>
 
@@ -60,7 +61,8 @@ const props = defineProps({
 		required: true,
 		type: String
 	},
-  isModerator: Boolean
+  isModerator: Boolean,
+	isBan: Boolean
 });
 
 const avatarUrl = ref(await getAvatar(props.name));
@@ -128,6 +130,10 @@ function unsetModerator() {
 
 function banUser() {
 	socket.value.emit('ban_channel_user', {name: props.channelName, username: props.name});
+}
+
+function unbanUser() {
+	socket.value.emit('unban_channel_user', {name: props.channelName, username: props.name});
 }
 
 </script>

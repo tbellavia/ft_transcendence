@@ -26,7 +26,7 @@
     <div v-else>
       <ul>
         <li v-for="user in bannedUsers">
-          <ChatChannelUsersUserItem :name="user" :channel-name="channelName" />
+          <ChatChannelUsersUserItem is-ban :name="user" :channel-name="channelName" />
         </li>
       </ul>
     </div>
@@ -100,10 +100,22 @@ socket.value.on(
   'receive_ban_channel_user',
   ({username, channelName}) => {
     if (user.value && user.value.username != username && channelName == props.channelName) {
+      bannedUsers.value.push(username);
       users.value.splice(users.value.findIndex(chanUser => chanUser.username == username), 1);
     }
   }
 );
+
+socket.value.on(
+  'receive_unban_channel_user',
+  ({username, channelName}) => {
+    if (channelName == props.channelName) {
+      const index = bannedUsers.value.findIndex(bannedUser => bannedUser == username);
+      if (index != -1)
+        bannedUsers.value.splice(index, 1);
+    }
+  }
+)
 </script>
 
 <style scoped>
