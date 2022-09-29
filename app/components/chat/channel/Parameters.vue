@@ -1,25 +1,40 @@
 <template>
   <div>
-    <fieldset>
-      <button @click="leaveChannel">Leave Channel</button>
-      <div v-if="isModerator">
-        <h2>Moderation interface</h2>
-        <hr />
-        <form @submit.prevent="inviteUser" class="channel-invite-user">
-          <input type="text" placeholder="username" v-model="userInvited" />
-          <input type="submit" value="Invite User" />
-        </form>
-        <div v-if="isOwner">
-          <form @submit.prevent="updatePassword" class="channel-update-password">
-            <input type="password" placeholder="channel password" v-model="channelPassword" />
-            <div class="channel-submit-form">
-              <input type="submit" value="Update Password" />
-              <input type="submit" value="Reset Password" @click="clearPassword = true" />
-            </div>
-          </form>
+    <fieldset v-if="isModerator">
+      <h2>Moderation interface</h2>
+      <hr />
+
+      <!-- Invite form -->
+      <form @submit.prevent="inviteUser" class="channel-form">
+        <h3>Invites</h3>
+        <input type="text" placeholder="username" v-model="userInvited" />
+        <input type="submit" value="Invite User" />
+      </form>
+
+      <!-- Ban form -->
+      <form @submit.prevent="banOrUnbanUser" class="channel-form">
+        <h3>Bans</h3>
+        <input type="text" placeholder="username" v-model="userBanned" />
+        <div class="channel-form-submit">
+          <input type="submit" @click="banOrUnban = 'ban_channel_user'" value="Ban User" />
+          <input type="submit" @click="banOrUnban = 'unban_channel_user'" value="Unban User" />
         </div>
+      </form>
+
+      <!-- Owner interface -->
+      <div v-if="isOwner">
+        <!-- Channel Parameters / password form -->
+        <form @submit.prevent="updatePassword" class="channel-form">
+          <h3>Channel parameters</h3>
+          <input type="password" placeholder="channel password" v-model="channelPassword" />
+          <div class="channel-form-submit">
+            <input type="submit" value="Update Password" />
+            <input type="submit" value="Reset Password" @click="clearPassword = true" />
+          </div>
+        </form>
       </div>
     </fieldset>
+    <button id="leave-channel" @click="leaveChannel">Leave Channel</button>
   </div>
 </template>
 
@@ -68,6 +83,16 @@ function inviteUser() {
   );
 }
 
+// Ban / Unban user
+const banOrUnban = ref('ban_channel_user');
+const userBanned = ref('');
+function banOrUnbanUser() {
+  socket.value.emit(banOrUnban.value, {
+    name: props.channelName,
+    username: userBanned.value
+  });
+}
+
 // Update password methods
 let clearPassword = ref(false);
 let channelPassword = ref('');
@@ -78,19 +103,30 @@ function updatePassword() {
   });
   clearPassword.value = false;
 }
+
 </script>
 
 <style scoped>
-
-  .channel-update-password {
+  .channel-form {
     display: flex;
     flex-direction: column;
   }
-  .channel-submit-form {
+
+  .channel-form > * {
+    text-align: center;
+  }
+
+  .channel-form-submit {
     display: flex;
   }
 
-  .channel-submit-form > input {
+  .channel-form-submit > input[type="submit"] {
     flex: 1;
+  }
+
+  #leave-channel {
+    display: block;
+    margin: 0 auto;
+    height: 2em;
   }
 </style>
