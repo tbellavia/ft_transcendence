@@ -37,6 +37,7 @@ import { MuteUserOnChannelDTO } from "./dto/muteUserOnChannel.dto";
 import { WsMuteHimselfException } from "./exceptions/channel/wsMuteHimself.exception";
 import { MuteService } from "./mute.service";
 import { WsUserIsAlreadyMutedOnChannelException } from "./exceptions/channel/wsUserIsAlreadyMutedOnChannel.exception";
+import { channel } from "diagnostics_channel";
 
 @Injectable()
 export class ChannelsService {
@@ -296,6 +297,8 @@ export class ChannelsService {
       throw new WsUserHasNotModPermissionsException(user.username, channel.name);
 
     const target = await this.socketService.getUserByName(muteUser.username);
+    if (!channel.users.find(chanUser => chanUser.username == target.username))
+      throw new WsUserNotInChannelException(target.username, channel.name);
     if (target.username == user.username)
       throw new WsMuteHimselfException(target.username, channel.name);
     if (target.username == channel.owner.username)
@@ -304,5 +307,13 @@ export class ChannelsService {
       throw new WsUserIsAlreadyMutedOnChannelException(target.username, channel.name);
 
     await this.muteService.muteUserOnChannel(target, channel, muteUser.duration);
+  }
+
+  async isMutedChannelUser(user: UserEntity, isMutedUser: ChannelUserTargetDTO) {
+    const channel = await this.getChannel(isMutedUser.name);
+    const target = await this.socketService.getUserByName(isMutedUser.username);
+    if (!channel.users.find(chanUser => chanUser.username == target.username))
+      throw new WsUserNotInChannelException(target.username, channel.name);
+    return await this.muteService.isUserMutedOnChannel(target, channel);
   }
 }

@@ -34,6 +34,8 @@
 				<div v-if="authUserIsModerator && !targetIsOwner">
 					<button v-if="!isBan" @click="banUser">Ban User</button>
 					<button v-else @click="unbanUser">Unban User</button>
+
+					<button v-if="!isMutedTarget">Mute User</button>
 				</div>
 			</div>
 
@@ -135,6 +137,24 @@ function banUser() {
 function unbanUser() {
 	socket.value.emit('unban_channel_user', {name: props.channelName, username: props.name});
 }
+
+const isMutedTarget = ref(false);
+socket.value.emit(
+	'is_muted_user',
+	{
+		name: props.channelName,
+		username: props.name
+	},
+	(isMuted: boolean) => isMutedTarget.value = isMuted
+);
+
+socket.value.on(
+	'receive_mute_channel_user',
+	({channelName, username}) => {
+		if (channelName == props.channelName && username == props.name)
+			isMutedTarget.value = true;
+	}
+)
 
 </script>
 

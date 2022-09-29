@@ -296,4 +296,13 @@ export class ChatGateway implements OnGatewayConnection {
         }
       );
   }
+
+  @SubscribeMessage('is_muted_user')
+  async isMutedUserOnChannel(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() isMutedUser: ChannelUserTargetDTO
+  ) {
+    const user = await this.socketService.getUserFromSocket(socket);
+    return await this.channelService.isMutedChannelUser(user, isMutedUser);
+  }
 }
