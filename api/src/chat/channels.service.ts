@@ -306,7 +306,7 @@ export class ChannelsService {
     if (await this.muteService.isUserMutedOnChannel(target, channel))
       throw new WsUserIsAlreadyMutedOnChannelException(target.username, channel.name);
 
-    await this.muteService.muteUserOnChannel(target, channel, muteUser.duration);
+    await this.muteService.muteUserOnChannel(target, channel, muteUser.durationMs);
   }
 
   async isMutedChannelUser(user: UserEntity, isMutedUser: ChannelUserTargetDTO) {

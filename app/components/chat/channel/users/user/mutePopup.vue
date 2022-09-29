@@ -54,7 +54,7 @@ function muteUser() {
     {
       name: props.channelName,
       username: props.name,
-      duration: new Date(selectedMute.value)
+      durationMs: selectedMute.value
     }
   );
 }

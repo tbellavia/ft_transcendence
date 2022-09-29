@@ -1,4 +1,4 @@
-import { IsDate, IsNotEmpty, IsString } from "class-validator";
+import { IsDate, IsNotEmpty, IsNumber, IsPositive, IsString } from "class-validator";
 
 export class MuteUserOnChannelDTO {
   @IsString()
@@ -9,6 +9,7 @@ export class MuteUserOnChannelDTO {
   @IsNotEmpty()
   username: string;
 
-  @IsDate()
-  duration: Date;
+  @IsNumber()
+  @IsPositive()
+  durationMs: number;
 }
