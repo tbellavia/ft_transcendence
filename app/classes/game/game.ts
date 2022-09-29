@@ -45,24 +45,19 @@ export class Game {
   /* -------------------------------------------------------------- */
   update() {
     this.ball.update();
-    if ( this.ball.isOut() ){
-
-    }
     if (this.ball.isOut()) {
       this.playerTurn = !this.playerTurn;
       this.ball.start(this.playerTurn);
     }
-    if ( this.ball.wallCollide() ) {
-      this.ball.start(true);
+	else if ( this.ball.wallCollide() ) {
+	  this.ball.wallBounce();
     }
-    const left_collide = this.paddleLeft.collide(this.ball);
-    const right_collide = this.paddleRight.collide(this.ball);
-    if ( left_collide ) {
-      this.ball.bounceLeft(left_collide);
-    }
-    else if ( right_collide ) {
-      this.ball.bounceRight(right_collide);
-    }
+	else if ( this.paddleLeft.collide(this.ball) ) {
+		this.ball.bounceLeft(this.paddleLeft);
+	}
+	else if ( this.paddleRight.collide(this.ball) ) {
+		this.ball.bounceRight(this.paddleRight);
+	}
   }
 
   // Draw and clear Canva
