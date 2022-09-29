@@ -13,6 +13,9 @@ import { MessageEntity } from "./entities/message.entity";
 import { WsBlockedByUserException } from "./exceptions/wsBlockedByUser.exception";
 import { WsInternalError } from "src/socket/exceptions/bases/wsInternalError";
 import { WsUserNotInChannelException } from "./exceptions/channel/wsUserNotInChannel.exception";
+import { MuteService } from "./mute.service";
+import { WsUserIsNotMuteOnChannelException } from "./exceptions/channel/wsUserIsNotMuteOnChannel.excpetion";
+import { WsUserIsMutedOnChannelException } from "./exceptions/channel/wsUserIsMutedOnChannel.exception";
 
 @Injectable()
 export class ChatService {
@@ -21,7 +24,8 @@ export class ChatService {
     private messageRepository: Repository<MessageEntity>,
     private readonly socketService: SocketService,
     private readonly blockedService: BlockedService,
-    private channelService: ChannelsService
+    private channelService: ChannelsService,
+    private readonly muteService: MuteService
   ) {}
 
   // Send Messages
@@ -56,19 +60,21 @@ export class ChatService {
     // Check if user is in channel and allowed to speak
     if (channel.users.findIndex(user => user.username == author.username) == -1)
       throw new WsUserNotInChannelException(author.username, channel.name);
-    
-      try {
-        await this.saveMessage({
-          author,
-          channel_target: channel,
-          content: message.message
-        });
-      } catch (error) {
-        throw new WsInternalError();
-      }
+    if (await this.muteService.isUserMutedOnChannel(author, channel)) {
+      throw new WsUserIsMutedOnChannelException(author.username, channel.name);
+    }
+    try {
+      await this.saveMessage({
+        author,
+        channel_target: channel,
+        content: message.message
+      });
+    } catch (error) {
+      throw new WsInternalError();
+    }
 
-      return new ReceiveMessage(message.message, author.username);
-  }
+    return new ReceiveMessage(message.message, author.username);
+}
 
   private async saveMessage(message: MessageEntity) {
     const newMessage = this.messageRepository.create(message);
