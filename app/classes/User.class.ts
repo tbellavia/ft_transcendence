@@ -40,12 +40,19 @@ export class User {
 	 * call all fetch methods that is not fetchAll
 	 */
 	public async fetchAll() {
-		Object.getOwnPropertyNames(User.prototype).forEach(async key => {
-			if (key.startsWith('fetch') && key != 'fetchAll' && key != 'fetchingMethod') {
-				await this[key]();
-			}
-		});
-		return this;
+		await this.fetchingMethod(`/${this.username}`)
+		.then( async () => {
+			Object.getOwnPropertyNames(User.prototype).forEach(async key => {
+				if (key.startsWith('fetch') && key != 'fetchAll' && key != 'fetchingMethod') {
+					await this[key]();
+				}
+				return this;
+			});
+		})
+		.catch( async (error) => {
+			console.log(error);
+			return undefined;
+		})
 	}
 
 	public async fetchInfos() {

@@ -1,6 +1,6 @@
 <template>
 		<!-- <profilePublic :user=userAuthenticate/> -->
-		<div class="profile-page">
+		<div v-if="user" class="profile-page">
 			<!-- <profileSelfProfileHeader /> -->
 			<div class="profile-header">
 				<div class="profile-user-image"> <img :src="user.avatar_url" /> </div>
@@ -41,6 +41,9 @@
 			</div>
 
 		</div>
+		<div v-else >
+			unexisting !!!!
+		</div>
 </template>
 	
 
@@ -59,6 +62,7 @@ const props = defineProps({
 })
 
 const user = await(useUser(props.username))
+
 let newName = ref();
 let imageError = ref();
 let nameError = ref();
@@ -149,7 +153,7 @@ div.user-parameters-sub {
 }
 
 .error {
-	color: #da0000;;
+	color: var(--error-color);;
 }
 
 </style>
