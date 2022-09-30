@@ -1,8 +1,9 @@
 import { ClassSerializerInterceptor, SerializeOptions, UseInterceptors } from "@nestjs/common";
-import { ConnectedSocket, OnGatewayConnection, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
+import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
 import { userInfo } from "os";
 import { Socket } from "socket.io";
 import { MatchesService } from "src/matches/matches.service";
+import { UserStatus } from "src/socket/enums/userStatus.enum";
 import { SocketService } from "src/socket/socket.service";
 import { MatchmakingService } from "./matchmaking/matchmaking.service";
 
@@ -19,7 +20,7 @@ import { MatchmakingService } from "./matchmaking/matchmaking.service";
 		credentials: true
 	}
 })
-export class GameGateway {
+export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	constructor(
 		private socketService: SocketService,
 		private matchmakingService: MatchmakingService
@@ -27,8 +28,13 @@ export class GameGateway {
 	{ }
 
 	async handleConnection(socket: Socket){
-		const user = await this.socketService.getUserFromSocket(socket);
-		console.log(`User ${user.username} connected to game!`);
+		try {
+			this.socketService.setUserStatus(socket, UserStatus.IN_GAME);
+		} catch {}
+	}
+
+	async handleDisconnect(socket: Socket) {
+		const user = await this.socketService.disconnectSocketBindedToUser(socket);
 	}
 
 	@SubscribeMessage("subscribe")

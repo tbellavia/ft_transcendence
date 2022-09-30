@@ -25,14 +25,17 @@
 			<div v-if="authUser.username != name">
 
 				<!-- Owner can set other users in channel as moderator or not -->
-				<div v-if="authUserIsOwner">
+				<div v-if="authUserIsOwner && !isBan">
 					<button v-if="!isModerator" @click="setModerator" class="OptionsProfile_sub">Updgrade as moderator</button>
 					<button v-else @click="unsetModerator" class="OptionsProfile_sub">Downgrade as simple user</button>
 				</div>
 
 				<!-- Can ban other user that is not owner -->
 				<div v-if="authUserIsModerator && !targetIsOwner">
-					<button @click="banUser">Ban User</button>
+					<button v-if="!isBan" @click="banUser">Ban User</button>
+					<button v-else @click="unbanUser">Unban User</button>
+
+					<ChatChannelUsersUserMutePopup v-if="!isMutedTarget && !isBan" :name="name" :channel-name="channelName" />
 				</div>
 			</div>
 
@@ -60,7 +63,8 @@ const props = defineProps({
 		required: true,
 		type: String
 	},
-  isModerator: Boolean
+  isModerator: Boolean,
+	isBan: Boolean
 });
 
 const avatarUrl = ref(await getAvatar(props.name));
@@ -129,6 +133,36 @@ function unsetModerator() {
 function banUser() {
 	socket.value.emit('ban_channel_user', {name: props.channelName, username: props.name});
 }
+
+function unbanUser() {
+	socket.value.emit('unban_channel_user', {name: props.channelName, username: props.name});
+}
+
+const isMutedTarget = ref(false);
+socket.value.emit(
+	'is_muted_user',
+	{
+		name: props.channelName,
+		username: props.name
+	},
+	(isMuted: boolean) => isMutedTarget.value = isMuted
+);
+
+socket.value.on(
+	'receive_mute_channel_user',
+	({channelName, username}) => {
+		if (channelName == props.channelName && username == props.name)
+			isMutedTarget.value = true;
+	}
+);
+
+socket.value.on(
+	'receive_unmute_channel_user',
+	({channelName, username}) => {
+		if (channelName == props.channelName && username == props.name)
+			isMutedTarget.value = false;
+	}
+)
 
 </script>
 

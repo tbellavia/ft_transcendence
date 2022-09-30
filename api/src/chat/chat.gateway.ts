@@ -1,5 +1,5 @@
 import { ClassSerializerInterceptor, SerializeOptions, UseInterceptors } from "@nestjs/common";
-import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Server, Socket } from 'socket.io';
 import { SocketService } from "src/socket/socket.service";
 import { ChatService } from "./chat.service";
@@ -12,6 +12,8 @@ import { CreateChannelDTO } from "./dto/createChannel.dto";
 import { InviteUserDTO } from "./dto/inviteUser.dto";
 import { UpdateChannelDto } from "./dto/updateChannel.dto";
 import { ChannelUserTargetDTO } from "./dto/channelUserTarget.dto";
+import { MuteUserOnChannelDTO } from "./dto/muteUserOnChannel.dto";
+import { UserStatus } from "src/socket/enums/userStatus.enum";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
@@ -26,7 +28,7 @@ import { ChannelUserTargetDTO } from "./dto/channelUserTarget.dto";
     credentials: true
   }
 })
-export class ChatGateway implements OnGatewayConnection {
+export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server
 
@@ -39,14 +41,12 @@ export class ChatGateway implements OnGatewayConnection {
   //Be aware filters does not works on handleConnection !
   async handleConnection(socket: Socket) {
     try {
-      const user = await this.socketService.getUserFromSocket(socket);
-      socket.join(user.username);
-    } catch (exception: any) {
-      socket.emit('exception', {
-        status: 'error',
-        exception: 'Failed to connect'
-      });
-    }
+			this.socketService.setUserStatus(socket, UserStatus.CHATTING);
+    } catch {}
+  }
+
+  async handleDisconnect(socket: Socket) {
+    const user = await this.socketService.disconnectSocketBindedToUser(socket);
   }
 
   // Message handling
@@ -76,9 +76,11 @@ export class ChatGateway implements OnGatewayConnection {
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
     const messages = await this.chatService.getAllMessages(author, getAllMessages);
+
     // Connect socket to channel's room
     if (getAllMessages.isChannel)
       this.server.to(author.username).socketsJoin(getAllMessages.target);
+    this.socketService.setUserStatus(socket, UserStatus.CHATTING);
     return messages;
   }
 
@@ -135,7 +137,7 @@ export class ChatGateway implements OnGatewayConnection {
 
   @SubscribeMessage('get_all_channels_joined')
   async getAllChannels(
-    @ConnectedSocket() socket
+    @ConnectedSocket() socket: Socket
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
 
@@ -253,5 +255,70 @@ export class ChatGateway implements OnGatewayConnection {
         username: banUser.username
       }
     );
+
+    this.server.to(banUser.username).socketsLeave(banUser.name);
+  }
+
+  @SubscribeMessage('unban_channel_user')
+  async unbanChannelUser(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() unbanUser: ChannelUserTargetDTO
+  ) {
+    const user = await this.socketService.getUserFromSocket(socket);
+    await this.channelService.unbanChannelUser(user, unbanUser);
+
+    this.server.to(unbanUser.name)
+      .emit(
+        'receive_unban_channel_user',
+        {
+          channelName: unbanUser.name,
+          username: unbanUser.username
+        }
+      );
+  }
+
+  @SubscribeMessage('mute_channel_user')
+  async muteChannelUser(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() muteUser: MuteUserOnChannelDTO
+  ) {
+    const user = await this.socketService.getUserFromSocket(socket);
+    await this.channelService.muteChannelUser(user, muteUser);
+
+
+    // Send back unmute notif when time has passed
+    setTimeout(async () => 
+    {
+      await this.channelService.unmuteChannelUser(user, {...muteUser});
+
+      this.server.emit(
+        'receive_unmute_channel_user',
+        {
+          channelName: muteUser.name,
+          username: muteUser.username
+        }
+      );
+    },
+      muteUser.durationMs
+    );
+
+
+    this.server.to(muteUser.name)
+      .emit(
+        'receive_mute_channel_user',
+        {
+          channelName: muteUser.name,
+          username: muteUser.username
+        }
+      );
+  }
+
+  @SubscribeMessage('is_muted_user')
+  async isMutedUserOnChannel(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() isMutedUser: ChannelUserTargetDTO
+  ) {
+    const user = await this.socketService.getUserFromSocket(socket);
+    return await this.channelService.isMutedChannelUser(user, isMutedUser);
   }
 }

@@ -32,6 +32,13 @@ import { WsUserIsOwnerException } from "./exceptions/channel/wsUserIsOwner.excep
 import { WsUserIsAlreadyBannedException } from "./exceptions/channel/wsUserIsAlreadyBanned.exception";
 import { WsUserIsBannedOfChannel } from "./exceptions/channel/wsUserIsBanOfChannel.exception";
 import { WsBanHimselfException } from "./exceptions/channel/wsBanHimself.exception";
+import { WsUserIsNotBanned } from "./exceptions/channel/wsUserIsNotBannedexception";
+import { MuteUserOnChannelDTO } from "./dto/muteUserOnChannel.dto";
+import { WsMuteHimselfException } from "./exceptions/channel/wsMuteHimself.exception";
+import { MuteService } from "./mute.service";
+import { WsUserIsAlreadyMutedOnChannelException } from "./exceptions/channel/wsUserIsAlreadyMutedOnChannel.exception";
+import { channel } from "diagnostics_channel";
+import { WsUserIsNotMuteOnChannelException } from "./exceptions/channel/wsUserIsNotMuteOnChannel.excpetion";
 
 @Injectable()
 export class ChannelsService {
@@ -39,7 +46,8 @@ export class ChannelsService {
     @InjectRepository(ChannelEntity)
     private channelRepository: Repository<ChannelEntity>,
     private readonly userService: UsersService,
-    private readonly socketService: SocketService
+    private readonly socketService: SocketService,
+    private readonly muteService: MuteService
   ) {}
 
   // Create, Join and Leave channel
@@ -253,13 +261,69 @@ export class ChannelsService {
       throw new WsUserIsOwnerException(target.username, channel.name);
     if (target.username == user.username)
       throw new WsBanHimselfException(target.username, channel.name);
-    const index = channel.users.findIndex(chanUser => chanUser.username == target.username);
     if (channel.banned_users.find(chanUser => chanUser.username == target.username))
       throw new WsUserIsAlreadyBannedException(target.username, channel.name);
 
+    let index = channel.users.findIndex(chanUser => chanUser.username == target.username);
     if (index != -1)
       channel.users.splice(index, 1);
+    index = channel.moderators.findIndex(chanUser => chanUser.username == target.username);
+    if (index != -1)
+      channel.moderators.splice(index, 1);
+    index = channel.invited_users.findIndex(chanUser => chanUser.username == target.username);
+    if (index != -1)
+      channel.invited_users.splice(index, 1);
+    
     channel.banned_users.push(target);
     await this.channelRepository.save(channel);
+  }
+
+  async unbanChannelUser(user: UserEntity, unbanUser: ChannelUserTargetDTO) {
+    const channel = await this.getChannel(unbanUser.name);
+    if (!this.hasModeratorRights(user, channel))
+      throw new WsUserHasNotModPermissionsException(user.username, channel.name);
+
+    const target = await this.socketService.getUserByName(unbanUser.username);
+    const index = channel.banned_users.findIndex(chanUser => chanUser.username == target.username);
+    if (index == -1)
+      throw new WsUserIsNotBanned(target.username, channel.name);
+    
+    channel.banned_users.splice(index, 1);
+    await this.channelRepository.save(channel);
+  }
+
+  async muteChannelUser(user: UserEntity, muteUser: MuteUserOnChannelDTO) {
+    const channel = await this.getChannel(muteUser.name);
+    if (!this.hasModeratorRights(user, channel))
+      throw new WsUserHasNotModPermissionsException(user.username, channel.name);
+
+    const target = await this.socketService.getUserByName(muteUser.username);
+    if (!channel.users.find(chanUser => chanUser.username == target.username))
+      throw new WsUserNotInChannelException(target.username, channel.name);
+    if (target.username == user.username)
+      throw new WsMuteHimselfException(target.username, channel.name);
+    if (target.username == channel.owner.username)
+      throw new WsUserIsOwnerException(target.username, channel.name);
+    if (await this.muteService.isUserMutedOnChannel(target, channel))
+      throw new WsUserIsAlreadyMutedOnChannelException(target.username, channel.name);
+
+    await this.muteService.muteUserOnChannel(target, channel, muteUser.durationMs);
+  }
+
+  async unmuteChannelUser(user: UserEntity, unmuteUser: ChannelUserTargetDTO) {
+    const channel = await this.getChannel(unmuteUser.name);
+    if (!this.hasModeratorRights(user, channel))
+      throw new WsUserHasNotModPermissionsException(user.username, channel.name);
+
+    const target = await this.socketService.getUserByName(unmuteUser.username);
+    await this.muteService.unmuteUserOnChannel(target, channel);
+  }
+
+  async isMutedChannelUser(user: UserEntity, isMutedUser: ChannelUserTargetDTO) {
+    const channel = await this.getChannel(isMutedUser.name);
+    const target = await this.socketService.getUserByName(isMutedUser.username);
+    if (!channel.users.find(chanUser => chanUser.username == target.username))
+      throw new WsUserNotInChannelException(target.username, channel.name);
+    return await this.muteService.isUserMutedOnChannel(target, channel);
   }
 }

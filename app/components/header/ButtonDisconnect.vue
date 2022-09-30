@@ -11,6 +11,10 @@
 
 <script setup lang="ts">
 async function disconnect() {
+
+  const socket = useSocket();
+  socket.value.disconnect();
+
   const { $apiFetch } = useNuxtApp();
   await $apiFetch("/auth/disconnect")
     .then(async () => {

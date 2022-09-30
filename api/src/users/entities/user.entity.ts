@@ -6,6 +6,8 @@ import { MatchEntity } from "src/matches/entity/match.entity";
 import { Expose } from "class-transformer";
 import { MessageEntity } from "src/chat/entities/message.entity";
 import { ChannelEntity } from "src/chat/entities/channel.entity";
+import { MuteEntity } from "src/chat/entities/mute.entity";
+import { channel } from "diagnostics_channel";
 
 @Entity("users")
 export class UserEntity extends BaseEntity {
@@ -87,4 +89,7 @@ export class UserEntity extends BaseEntity {
 
     @ManyToMany(() => ChannelEntity, channel_banned => channel_banned.banned_users)
     channels_banned: ChannelEntity[];
+
+    @OneToMany(() => MuteEntity, muted_channel => muted_channel.user)
+    muted_channels: MuteEntity[];
 }

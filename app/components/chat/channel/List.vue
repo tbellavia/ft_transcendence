@@ -23,7 +23,7 @@
 
 const channelsJoined = ref<string[]>([]);
 const channelsInvited = ref<string[]>([]);
-const authUser = await useGetUser();
+const authUser = getUserAuthenticate();
 const socket = useSocketChat();
 
 //fetch all channels joined
@@ -58,6 +58,14 @@ function acceptInvite(channel: string) {
     }
   );
 }
+
+socket.value.on('receive_ban_channel_user', ({username, channelName}) => {
+  if (username == authUser?.value?.username) {
+    const index = channelsJoined.value.findIndex(channel => channel == channelName);
+    if (index != -1)
+      channelsJoined.value.splice(index, 1);
+  }
+});
 
 </script>
 
