@@ -17,12 +17,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     try {
       const user = await this.socketService.getUserFromSocket(socket);
       socket.join(user.username);
-    } catch (exception: any) {
-      socket.emit('exception', {
-        status: 'error',
-        exception: 'Failed to connect'
-      });
-    }
+    } catch {}
   }
 
   async handleDisconnect(socket: Socket) {

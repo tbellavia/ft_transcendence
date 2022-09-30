@@ -1,5 +1,5 @@
 import { ClassSerializerInterceptor, SerializeOptions, UseInterceptors } from "@nestjs/common";
-import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Server, Socket } from 'socket.io';
 import { SocketService } from "src/socket/socket.service";
 import { ChatService } from "./chat.service";
@@ -41,14 +41,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleConnection(socket: Socket) {
     try {
       const user = await this.socketService.getUserFromSocket(socket);
-      socket.join(user.username);
       console.log(user.username, 'connect to chat');
-    } catch (exception: any) {
-      socket.emit('exception', {
-        status: 'error',
-        exception: 'Failed to connect'
-      });
-    }
+    } catch {}
   }
 
   async handleDisconnect(socket: Socket) {

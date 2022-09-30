@@ -31,6 +31,7 @@ export class SocketService {
       throw new WsException('Invalid credentials');
     
     this.connectedUsers.set(socket.id, user);
+    socket.join(user.username);
 
     /*
     console.log('User', user.username, 'connect');

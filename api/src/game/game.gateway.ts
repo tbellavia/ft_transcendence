@@ -27,8 +27,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	{ }
 
 	async handleConnection(socket: Socket){
-		const user = await this.socketService.getUserFromSocket(socket);
-		console.log(user.username, 'connect to a game');
+		try {
+			const user = await this.socketService.getUserFromSocket(socket);
+			console.log(user.username, 'connect to a game');
+		} catch {}
 	}
 
 	async handleDisconnect(socket: Socket) {
