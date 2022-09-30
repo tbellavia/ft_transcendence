@@ -1,6 +1,7 @@
 import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway } from "@nestjs/websockets";
 import { SocketService } from "./socket.service";
 import { Socket } from 'socket.io';
+import { UserStatus } from "./enums/userStatus.enum";
 
 @WebSocketGateway({
   cors: {
@@ -15,8 +16,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleConnection(socket: Socket) {
     try {
-      const user = await this.socketService.getUserFromSocket(socket);
-      socket.join(user.username);
+			this.socketService.setUserStatus(socket, UserStatus.ONLINE);
     } catch {}
   }
 

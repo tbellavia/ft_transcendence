@@ -13,6 +13,7 @@ import { InviteUserDTO } from "./dto/inviteUser.dto";
 import { UpdateChannelDto } from "./dto/updateChannel.dto";
 import { ChannelUserTargetDTO } from "./dto/channelUserTarget.dto";
 import { MuteUserOnChannelDTO } from "./dto/muteUserOnChannel.dto";
+import { UserStatus } from "src/socket/enums/userStatus.enum";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
@@ -40,15 +41,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   //Be aware filters does not works on handleConnection !
   async handleConnection(socket: Socket) {
     try {
-      const user = await this.socketService.getUserFromSocket(socket);
-      console.log(user.username, 'connect to chat');
+			this.socketService.setUserStatus(socket, UserStatus.CHATTING);
     } catch {}
   }
 
   async handleDisconnect(socket: Socket) {
     const user = await this.socketService.disconnectSocketBindedToUser(socket);
-    if (user)
-      console.log(user.username, 'disconnect from chat');
   }
 
   // Message handling
