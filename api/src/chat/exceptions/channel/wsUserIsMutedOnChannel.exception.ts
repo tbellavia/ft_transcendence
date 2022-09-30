@@ -3,7 +3,7 @@ import { ChannelExceptionCodes } from "./enums/channelExceptionsCode.enum";
 
 export class WsUserIsMutedOnChannelException extends WsChannelException {
   constructor(username: string, channelName: string, duration: Date) {
-    const seconds =  1000 * (duration.getTime() - Date.now());
+    const seconds =  Math.round((duration.getTime() - Date.now()) / 1000);
 
     super(
       ChannelExceptionCodes.CHANNEL_SEND_FAILED,
