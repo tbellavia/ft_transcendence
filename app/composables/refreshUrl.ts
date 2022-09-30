@@ -1,6 +1,5 @@
 export async function refreshUrl() {
 	try {
-		const user = await getRefreshedUserAuthenticate();
 		const route = useRoute();
 		await redirectIfConnected(route.fullPath, '/');
 	} catch {
