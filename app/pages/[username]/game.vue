@@ -6,7 +6,11 @@
 			<button class="friends-buttons" @click="subscribeMatchmaking()"> PLAY ! </button>
 		</div>
 		<div v-show="view">
-			LIST MATCH
+			<div class="profile-match-body">
+				<div class="list-match" v-for="match in onlineMatch">
+			<profileMatchItem :match="match" :user="" />
+		</div>
+	</div>
 		</div>
 	</div>
 	<div v-else class="in-game" >
@@ -28,6 +32,7 @@ const socket = useSocketGame();
 const user = await getRefreshedUserAuthenticate();
 const match = ref(undefined);
 const view = ref(false);
+const onlineMatch = await getOnlineMatch();
 
 async function subscribeMatchmaking() {
 	socket.value.emit("subscribe");

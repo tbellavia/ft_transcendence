@@ -3,7 +3,6 @@ import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect, SubscribeMes
 import { userInfo } from "os";
 import { Socket } from "socket.io";
 import { MatchesService } from "src/matches/matches.service";
-import { UserStatus } from "src/socket/enums/userStatus.enum";
 import { SocketService } from "src/socket/socket.service";
 import { MatchmakingService } from "./matchmaking/matchmaking.service";
 
@@ -29,12 +28,15 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 	async handleConnection(socket: Socket){
 		try {
-			await this.socketService.setUserStatus(socket, UserStatus.IN_GAME);
+			const user = await this.socketService.getUserFromSocket(socket);
+			console.log(user.username, 'connect to a game');
 		} catch {}
 	}
 
 	async handleDisconnect(socket: Socket) {
 		const user = await this.socketService.disconnectSocketBindedToUser(socket);
+		if (user)
+			console.log(user.username, 'disconnect from a game');
 	}
 
 	@SubscribeMessage("subscribe")
@@ -51,17 +53,23 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			player_1.socket.emit("matched", {
 				id,
 				username: player_2.user.username, 
-				left: true,
 			});
 			player_2.socket.emit("matched", {
 				id,
-				username: player_1.user.username,
-				left: false,
+				username: player_1.user.username
 			});
 
 			match = await this.matchmakingService.match();
 		}
 	}
+
+	@SubscribeMessage("invite")
+	async suggestMatch(@ConnectedSocket() socket: Socket, oponent: string) {
+		const user = await this.socketService.getUserFromSocket(socket);
+
+	}
+
+
 }
 
 // TODO: if MATCH MAKING ET inviter quelqu un a jouer
