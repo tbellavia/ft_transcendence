@@ -1,5 +1,5 @@
 import { ClassSerializerInterceptor, SerializeOptions, UseInterceptors } from "@nestjs/common";
-import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from 'socket.io';
 import { SocketService } from "src/socket/socket.service";
 import { ChatService } from "./chat.service";
@@ -27,7 +27,7 @@ import { MuteUserOnChannelDTO } from "./dto/muteUserOnChannel.dto";
     credentials: true
   }
 })
-export class ChatGateway implements OnGatewayConnection {
+export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server
 
@@ -42,12 +42,19 @@ export class ChatGateway implements OnGatewayConnection {
     try {
       const user = await this.socketService.getUserFromSocket(socket);
       socket.join(user.username);
+      console.log(user.username, 'connect to chat');
     } catch (exception: any) {
       socket.emit('exception', {
         status: 'error',
         exception: 'Failed to connect'
       });
     }
+  }
+
+  async handleDisconnect(socket: Socket) {
+    const user = await this.socketService.disconnectSocketBindedToUser(socket);
+    if (user)
+      console.log(user.username, 'disconnect from chat');
   }
 
   // Message handling

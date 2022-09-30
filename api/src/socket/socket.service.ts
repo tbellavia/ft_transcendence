@@ -31,13 +31,24 @@ export class SocketService {
       throw new WsException('Invalid credentials');
     
     this.connectedUsers.set(socket.id, user);
-    console.log('User', user.username, 'connected');
-    console.log(this.connectedUsers);
+
+    /*
+    console.log('User', user.username, 'connect');
+    this.connectedUsers.forEach((user, socketId) => {
+      console.log(socketId, ':',user.username)
+    });
+    */
     return user;
   }
 
   async disconnectSocketBindedToUser(socket: Socket) {
+    const user = this.connectedUsers.get(socket.id);
     this.connectedUsers.delete(socket.id);
+    /*
+    if (user)
+      console.log('User', user.username, 'disconnect');
+    */
+    return user;
   }
 
   async getUserFromSocket(socket: Socket) {
