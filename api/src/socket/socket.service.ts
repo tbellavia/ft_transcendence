@@ -61,7 +61,7 @@ export class SocketService {
   async getUserFromSocket(socket: Socket) {
     const user = this.connectedUsers.get(socket.id);
     if (!user)
-      return this.connectUserWithSocket(socket);
+      return await this.connectUserWithSocket(socket);
     return user;
   }
 

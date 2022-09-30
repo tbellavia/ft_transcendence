@@ -29,7 +29,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 	async handleConnection(socket: Socket){
 		try {
-			this.socketService.setUserStatus(socket, UserStatus.IN_GAME);
+			await this.socketService.setUserStatus(socket, UserStatus.IN_GAME);
 		} catch {}
 	}
 
