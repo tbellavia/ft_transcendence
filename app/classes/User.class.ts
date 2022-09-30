@@ -43,7 +43,7 @@ export class User {
 	public async fetchAll() {
 		Object.getOwnPropertyNames(User.prototype).forEach(async key => {
 			if (key.startsWith('fetch') && key != 'fetchAll' && key != 'fetchingMethod') {
-				console.log('Fetch: ', key);
+				// console.log('Fetch: ', key);
 				await this[key]();
 			}
 		});

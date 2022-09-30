@@ -45,10 +45,12 @@ export class GameGateway {
 			player_1.socket.emit("matched", {
 				id,
 				username: player_2.user.username, 
+				left: true,
 			});
 			player_2.socket.emit("matched", {
 				id,
-				username: player_1.user.username
+				username: player_1.user.username,
+				left: false,
 			});
 
 			match = await this.matchmakingService.match();
