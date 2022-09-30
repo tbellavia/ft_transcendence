@@ -49,7 +49,7 @@ export class GameGateway {
 				username: player_1.user.username,
 				left: false
 			});
-
+			this.gameService.initGame(match);
 			match = await this.matchmakingService.match();
 		}
 	}

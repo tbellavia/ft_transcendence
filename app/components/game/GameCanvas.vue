@@ -8,26 +8,21 @@
 
 import { Game } from '~~/classes/game/game';
 
-const props = defineProps({
-	socket: {
-		required: true,
-	}
-})
-
+const props = defineProps({ socket: { required: true, } })
 const user = await getRefreshedUserAuthenticate();
 
 onMounted (() => {
 	const gameCanvas = document.getElementById("game-canvas") as HTMLCanvasElement | null;
 	const game = new Game(gameCanvas, props.socket, user.value.currentMatch.left);
-
-	game.start();
+	
 	document.addEventListener("keydown", (event) => {
 		game.keypressEvent(event);
 	});
-
+	
 	document.addEventListener("keyup", (event) => {
 		game.keyupEvent(event);
 	});
+	game.start();
 })
 
 </script>

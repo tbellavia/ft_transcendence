@@ -73,6 +73,14 @@ export class Paddle {
 		return this.pos;
 	}
 
+	setPos(y: number) {
+		this.pos.y = constrain(
+			y,
+			this.wall_margin,
+			this.canva.height - this.dimension.height - this.wall_margin
+		);
+	}
+
 	getDimension() : GameDimension {
 		return this.dimension;
 	}

@@ -42,6 +42,15 @@ export class Game {
     this.ball.start(this.playerTurn);
     this.socket = socket;
     this.left = left;
+
+    this.setSocketListeners();
+  }
+
+  setSocketListeners() {
+    this.socket.on("paddle-pos", (y) => {
+			console.log(`Moving opponent paddle to ${y}`);
+      this.setOpponentPaddlePos(y);
+    })
   }
 
   start() {
@@ -149,6 +158,14 @@ export class Game {
     if ( !this.left ) {
       this.paddleRight.down();
       this.emitPaddleRightPos();
+    }
+  }
+
+  setOpponentPaddlePos(y: number) {
+    if ( this.left ) {
+      this.paddleRight.setPos(y);
+    } else {
+      this.paddleLeft.setPos(y);
     }
   }
 

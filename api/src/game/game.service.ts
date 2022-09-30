@@ -60,7 +60,6 @@ export class GameService {
     async updateGamePaddlePos(socket: Socket, y: number) {
         const matchWithUser = this.users.get(socket);
 
-
         if ( matchWithUser ) {
             const { game, match } = matchWithUser;
 
@@ -71,6 +70,16 @@ export class GameService {
                 console.log("Set position of right paddle to ${y}");
                 game.setRightPaddlePos(y);
             }
+            this.streamOpponentPaddlePos(socket, match, y);
+        }
+    }
+
+    async streamOpponentPaddlePos(current: Socket, match: GameMatch, y: number) {
+        console.log(`Emitting paddle position !!!!`);
+        if ( current.id === match.player_1.socket.id ) {
+            match.player_2.socket.emit("paddle-pos", y);
+        } else {
+            match.player_1.socket.emit("paddle-pos", y);
         }
     }
 
