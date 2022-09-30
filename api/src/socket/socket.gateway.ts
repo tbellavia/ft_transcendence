@@ -1,6 +1,6 @@
-import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
+import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway } from "@nestjs/websockets";
 import { SocketService } from "./socket.service";
-import { Socket, Server } from 'socket.io';
+import { Socket } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
@@ -8,7 +8,7 @@ import { Socket, Server } from 'socket.io';
     credentials: true
   }
 })
-export class SocketGateway implements OnGatewayConnection {
+export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly socketService: SocketService
   ) {}
@@ -23,5 +23,9 @@ export class SocketGateway implements OnGatewayConnection {
         exception: 'Failed to connect'
       });
     }
+  }
+
+  async handleDisconnect(socket: Socket) {
+    this.socketService.disconnectSocketBindedToUser(socket);
   }
 }

@@ -14,7 +14,6 @@ import { WsBlockedByUserException } from "./exceptions/wsBlockedByUser.exception
 import { WsInternalError } from "src/socket/exceptions/bases/wsInternalError";
 import { WsUserNotInChannelException } from "./exceptions/channel/wsUserNotInChannel.exception";
 import { MuteService } from "./mute.service";
-import { WsUserIsNotMuteOnChannelException } from "./exceptions/channel/wsUserIsNotMuteOnChannel.excpetion";
 import { WsUserIsMutedOnChannelException } from "./exceptions/channel/wsUserIsMutedOnChannel.exception";
 
 @Injectable()
