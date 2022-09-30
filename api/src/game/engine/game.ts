@@ -2,6 +2,7 @@ import { Ball } from "./ball";
 import { GameVec } from "./utils/gameVec";
 import { Paddle } from "./paddle";
 import { GameDimension } from "./utils/dimension";
+import { GameUser } from "../interfaces/gameUser";
 
 export class Game {
   private canva: GameDimension;
@@ -11,9 +12,13 @@ export class Game {
   private ball: Ball;
   private playerTurn: boolean;
   private started: boolean;
+  private player_1: GameUser;
+  private player_2: GameUser;
 
-  constructor(canva: GameDimension) {
+  constructor(canva: GameDimension, player_1: GameUser, player_2: GameUser) {
     this.canva = canva;
+    this.player_1 = player_1;
+    this.player_2 = player_2;
     this.middle = new GameVec(
       Math.floor(this.canva.width / 2),
       Math.floor(this.canva.height / 2)
@@ -35,6 +40,7 @@ export class Game {
   /* -------------------------------------------------------------- */
   update() {
     if ( this.started ) {
+      this.emitBallPos();
       this.ball.update();
       if (this.ball.isOut()) {
         this.playerTurn = !this.playerTurn;
@@ -42,7 +48,7 @@ export class Game {
       }
       else if ( this.ball.wallCollide() ) {
         this.ball.wallBounce();
-        }
+      }
       else if ( this.paddleLeft.collide(this.ball) ) {
         this.ball.bounceLeft(this.paddleLeft);
       }
@@ -50,6 +56,13 @@ export class Game {
         this.ball.bounceRight(this.paddleRight);
       }
     }
+  }
+
+  emitBallPos() {
+    const ball_pos = this.ball.getPos();
+
+    this.player_1.socket.emit("ball-pos", { x: ball_pos.x, y: ball_pos.y });
+    this.player_2.socket.emit("ball-pos", { x: ball_pos.x, y: ball_pos.y });
   }
 
   setLeftPaddlePos(y: number) {

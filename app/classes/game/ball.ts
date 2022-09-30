@@ -70,6 +70,11 @@ export class Ball {
 		return this.pos.copy()
 	}
 
+	setPos(newPos: GameVec) {
+		// TODO: Normalize position to current screen
+		this.pos = newPos;
+	}
+
 	bounceLeft(paddle: Paddle) {
 		const ppos = paddle.getPos();
 		const pdim = paddle.getDimension();

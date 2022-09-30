@@ -24,20 +24,23 @@ export class GameService {
     }
 
     async initGame(match: GameMatch) {
-        const game = new Game(GameService.GAME_CANVA);
-
+        const game = new Game(GameService.GAME_CANVA, match.player_1, match.player_2);
+        
+        setTimeout(() => {
+            console.log("Game started!");
+            game.start();
+        }, 5000);
         this.games.push(game);
         this.users.set(match.player_1.socket, { game, match });
         this.users.set(match.player_2.socket, { game, match });
     }
 
     async gameLoop() {
-        console.log("Update!");
         this.update();
 
         setTimeout(() => {
             this.gameLoop();
-        }, 1000);
+        }, 35);
     }
 
     /**
@@ -64,10 +67,8 @@ export class GameService {
             const { game, match } = matchWithUser;
 
             if ( this.isLeftPlayer(socket, match) ){
-                console.log("Set position of left paddle to ${y}");
                 game.setLeftPaddlePos(y);
             } else {
-                console.log("Set position of right paddle to ${y}");
                 game.setRightPaddlePos(y);
             }
             this.streamOpponentPaddlePos(socket, match, y);
@@ -75,7 +76,6 @@ export class GameService {
     }
 
     async streamOpponentPaddlePos(current: Socket, match: GameMatch, y: number) {
-        console.log(`Emitting paddle position !!!!`);
         if ( current.id === match.player_1.socket.id ) {
             match.player_2.socket.emit("paddle-pos", y);
         } else {

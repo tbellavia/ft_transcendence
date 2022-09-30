@@ -48,9 +48,13 @@ export class Game {
 
   setSocketListeners() {
     this.socket.on("paddle-pos", (y) => {
-			console.log(`Moving opponent paddle to ${y}`);
+			// console.log(`Moving opponent paddle to ${y}`);
       this.setOpponentPaddlePos(y);
     })
+    this.socket.on("ball-pos", ({x, y}) => {
+      console.log(`Moving ball position to x=${x} y=${y}`);
+      this.ball.setPos(new GameVec(x, y));
+    });
   }
 
   start() {
@@ -65,20 +69,20 @@ export class Game {
   // Check collide and update match
   /* -------------------------------------------------------------- */
   update() {
-    this.ball.update();
-    if (this.ball.isOut()) {
-      this.playerTurn = !this.playerTurn;
-      this.ball.start(this.playerTurn);
-    }
-    else if ( this.ball.wallCollide() ) {
-      this.ball.wallBounce();
-      }
-    else if ( this.paddleLeft.collide(this.ball) ) {
-      this.ball.bounceLeft(this.paddleLeft);
-    }
-    else if ( this.paddleRight.collide(this.ball) ) {
-      this.ball.bounceRight(this.paddleRight);
-    }
+    // this.ball.update();
+    // if (this.ball.isOut()) {
+    //   this.playerTurn = !this.playerTurn;
+    //   this.ball.start(this.playerTurn);
+    // }
+    // else if ( this.ball.wallCollide() ) {
+    //   this.ball.wallBounce();
+    //   }
+    // else if ( this.paddleLeft.collide(this.ball) ) {
+    //   this.ball.bounceLeft(this.paddleLeft);
+    // }
+    // else if ( this.paddleRight.collide(this.ball) ) {
+    //   this.ball.bounceRight(this.paddleRight);
+    // }
   }
 
   // Draw and clear Canva
@@ -162,6 +166,7 @@ export class Game {
   }
 
   setOpponentPaddlePos(y: number) {
+    // TODO: Normalize position the current screen size
     if ( this.left ) {
       this.paddleRight.setPos(y);
     } else {
