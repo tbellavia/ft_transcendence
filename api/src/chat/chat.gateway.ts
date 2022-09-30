@@ -41,7 +41,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   //Be aware filters does not works on handleConnection !
   async handleConnection(socket: Socket) {
     try {
-			this.socketService.setUserStatus(socket, UserStatus.CHATTING);
+			await this.socketService.setUserStatus(socket, UserStatus.CHATTING);
     } catch {}
   }
 
@@ -80,7 +80,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // Connect socket to channel's room
     if (getAllMessages.isChannel)
       this.server.to(author.username).socketsJoin(getAllMessages.target);
-    this.socketService.setUserStatus(socket, UserStatus.CHATTING);
+    await this.socketService.setUserStatus(socket, UserStatus.CHATTING);
     return messages;
   }
 

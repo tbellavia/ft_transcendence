@@ -4,7 +4,6 @@ import { Socket } from 'socket.io';
 import { UserStatus } from "./enums/userStatus.enum";
 
 @WebSocketGateway({
-  // namespace: '/',
   cors: {
     origin: true,
     credentials: true
@@ -17,7 +16,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleConnection(socket: Socket) {
     try {
-			this.socketService.setUserStatus(socket, UserStatus.ONLINE);
+			await this.socketService.setUserStatus(socket, UserStatus.ONLINE);
     } catch {}
   }
 

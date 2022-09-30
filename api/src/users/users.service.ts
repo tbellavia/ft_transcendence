@@ -137,7 +137,8 @@ export class UsersService {
     
     if(username) {
       const collide = await this.usernameCollide(username);
-      if ( collide ){
+      const validUsername = await this.isValidUsername(username)
+      if ( collide || !validUsername ) {
         throw new UsernameCollision(username);
       }
       user.username = username;
@@ -195,5 +196,13 @@ export class UsersService {
     const user = await this.userRepository.findOneBy({ username });
 
     return user !== null;
+  }
+
+  async isValidUsername(username: string) { // TODO voir avec tony eithan
+    if (! /^[a-zA-Z0-9_]+$/.test(username) || username.length > 16 || username.length <= 0) {
+      return false
+    } else {
+      return true;
+    }
   }
 }
