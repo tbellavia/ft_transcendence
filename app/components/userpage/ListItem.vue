@@ -5,7 +5,10 @@
 		<div class="userDatas">
 			
 			<div class="userImage"> <img :src="targetAvatar"/> </div>
+			<div class="userNameAndStatus">
 			<div class="userName"> {{ props.target.username }}</div>
+				<p v-if="isFriend" class="userStatus">{{ status }}</p>
+			</div>
 		</div> 
 
 		<!-- Buttons of all options -->
@@ -54,18 +57,19 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
-const userAuthenticate = await getRefreshedUserAuthenticate();
-const targetAvatar = ref(await getAvatar(props.target.username))
-const isBlocked = ref(await userAuthenticate.value.isBlockUser(props.target));
-const messageLink = `/${userAuthenticate.value.username}/chat/${props.target.username}`;
-const emit = defineEmits(['refreshList']);
-
 const props = defineProps({
 	target: Object,
 	isFriend: Boolean,
 	isBlocked: Boolean,
 	pendingFriend: Boolean,
 })
+
+const userAuthenticate = await getRefreshedUserAuthenticate();
+const targetAvatar = ref(await getAvatar(props.target.username))
+const isBlocked = ref(await userAuthenticate.value.isBlockUser(props.target));
+const messageLink = `/${userAuthenticate.value.username}/chat/${props.target.username}`;
+const emit = defineEmits(['refreshList']);
+
 
 async function useAction(action: string) {
 	console.log(action);
@@ -85,6 +89,13 @@ async function useAction(action: string) {
 	}
 	emit('refreshList');
 }
+
+let status = ref('offline');
+if (props.isFriend) {
+	const socket = useSocket();
+	socket.value.emit('get_status', props.target.username, userStatus => status.value = userStatus);
+}
+
 </script>
 
 <!-- -------------------------------------------------------------- -->
@@ -94,5 +105,11 @@ async function useAction(action: string) {
 		width: 100%;
 		text-align: left;
 		padding-left: 15px;
+	}
+
+	.userNameAndStatus {
+		margin-left: 1em;
+		display: flex;
+		flex-direction: column;
 	}
 </style>

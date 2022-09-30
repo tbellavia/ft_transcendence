@@ -74,10 +74,9 @@ export class SocketService {
   }
 
   // Get and Set user's status
-  getUserStatus(socket: Socket): UserStatus {
+  getUserStatus(user: UserEntity): UserStatus {
     let status = UserStatus.OFFLINE;
-    const user = this.connectedUsers.get(socket.id);
-    if (user)
+    if (this.usersStatus.has(user.username))
       status = this.usersStatus.get(user.username);
     return status;
   }

@@ -1,4 +1,4 @@
-import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway } from "@nestjs/websockets";
+import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
 import { SocketService } from "./socket.service";
 import { Socket } from 'socket.io';
 import { UserStatus } from "./enums/userStatus.enum";
@@ -22,5 +22,13 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleDisconnect(socket: Socket) {
     this.socketService.disconnectSocketBindedToUser(socket);
+  }
+
+  @SubscribeMessage('get_status')
+  async getUserStatus(
+    @MessageBody() username: string
+  ) {
+    const user = await this.socketService.getUserByName(username);
+    return this.socketService.getUserStatus(user);
   }
 }
