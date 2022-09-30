@@ -35,7 +35,7 @@ onMounted (() => {
 	});
 
 	document.addEventListener("keyup", (event) => {
-		game.keyupEvent();
+		game.keyupEvent(event);
 	});
 
 	gameLoop(game);
@@ -52,10 +52,9 @@ onMounted (() => {
 
 
 #game-canvas {
-	border: solid;
+	/* border: solid; */
 	z-index: 999;
-	/* TODO: background black */
-	background-color: transparent;
+	background-color: black;
 	width: 100%;
 	height: 100%;
 	object-fit: contain;

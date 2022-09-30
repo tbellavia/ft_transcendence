@@ -103,8 +103,9 @@ export class Game {
     this.keyPressed = event.key;
   }
 
-  keyupEvent() {
-    this.keyPressed = "";
+  keyupEvent(event) {
+    if (this.keyPressed === event.key)
+      this.keyPressed = "";
   }
 
   upLeft() {
