@@ -11,13 +11,16 @@ export class MuteEntity {
 
   @Expose()
   @Transform(({ value }) => value.map(channel => channel.name))
-  @ManyToOne(() => ChannelEntity, channel => channel.muted_users)
+  @ManyToOne(() => ChannelEntity, channel => channel.muted_users, {
+    onDelete: "CASCADE"
+  })
   channel: ChannelEntity;
 
   @Expose()
   @Transform(({ value }) => value.map(user => user.username))
   @ManyToOne(() => UserEntity, user => user.muted_channels, {
-    eager: true
+    eager: true,
+    onDelete: "CASCADE"
   })
   user: UserEntity;
 

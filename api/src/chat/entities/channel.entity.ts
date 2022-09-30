@@ -71,8 +71,7 @@ export class ChannelEntity {
   messages: MessageEntity[];
 
   @OneToMany(() => MuteEntity, muted_user => muted_user.channel, {
-    eager: true,
-    onDelete: 'CASCADE'
+    eager: true
   })
   muted_users: MuteEntity[];
 }
