@@ -10,6 +10,7 @@ export class Game {
   private paddleRight: Paddle;
   private ball: Ball;
   private playerTurn: boolean;
+  private started: boolean;
 
   constructor(canva: GameDimension) {
     this.canva = canva;
@@ -22,25 +23,32 @@ export class Game {
     this.ball = new Ball(this.canva);
     this.playerTurn = true;
     this.ball.start(this.playerTurn);
+    this.started = false;
   }
 
+
+  start() {
+    this.started = true;
+  }
 
   // Check collide and update match
   /* -------------------------------------------------------------- */
   update() {
-    this.ball.update();
-    if (this.ball.isOut()) {
-      this.playerTurn = !this.playerTurn;
-      this.ball.start(this.playerTurn);
-    }
-    else if ( this.ball.wallCollide() ) {
-      this.ball.wallBounce();
+    if ( this.started ) {
+      this.ball.update();
+      if (this.ball.isOut()) {
+        this.playerTurn = !this.playerTurn;
+        this.ball.start(this.playerTurn);
       }
-    else if ( this.paddleLeft.collide(this.ball) ) {
-      this.ball.bounceLeft(this.paddleLeft);
-    }
-    else if ( this.paddleRight.collide(this.ball) ) {
-      this.ball.bounceRight(this.paddleRight);
+      else if ( this.ball.wallCollide() ) {
+        this.ball.wallBounce();
+        }
+      else if ( this.paddleLeft.collide(this.ball) ) {
+        this.ball.bounceLeft(this.paddleLeft);
+      }
+      else if ( this.paddleRight.collide(this.ball) ) {
+        this.ball.bounceRight(this.paddleRight);
+      }
     }
   }
 
