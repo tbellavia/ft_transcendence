@@ -13,22 +13,20 @@ export interface UserInfos {
 	creation_date: Date;
 };
 
-// export interface UserMatchs {
-// 	public: 
-// }
-
 export class User {
 	public username: string;
 	public double_auth_enabled: boolean;
 	public avatar_url: string;
 	public stats: UserStats;
 	public matchs: Object;
+	public isInGame: boolean;
 
 	protected readonly fetchingMethod: $Fetch;
 	private avatar: Blob;
 
 	constructor(username: string, fetchingMethod: $Fetch) {
 		this.username = username;
+		this.isInGame = false;
 		this.fetchingMethod = fetchingMethod.create({
 			baseURL: 'http://localhost:3000/api/v1/users'
 		});
@@ -42,10 +40,6 @@ export class User {
 	public async fetchAll() {
 		Object.getOwnPropertyNames(User.prototype).forEach(async key => {
 			if (key.startsWith('fetch') && key != 'fetchAll' && key != 'fetchingMethod') {
-<<<<<<< HEAD
-				// console.log('Fetch: ', key);
-=======
->>>>>>> a3a7b000ab447b44b3f7e8c3b2b8e1c9fa8c5f40
 				await this[key]();
 			}
 		});

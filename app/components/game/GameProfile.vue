@@ -1,10 +1,22 @@
 <template>
 	<div class="game-profile">
-			<div id="game-profile-player" class="player-left"> 
-				<v-avatar>
-					<img :src="user.avatar_url" alt="">
-				</v-avatar>{{ user.username }}</div>
-			<div id="game-profile-player" class="player-right"> {{ userAuth.username }}</div>
+			<div id="game-profile-player" class="player-left">
+				<div class="game-profile-player-avatar">
+					<img :src="playerLeft.avatar_url" alt="">
+				</div>
+					<h2> {{ playerLeft.username }} </h2>
+				<h1 class="game-point"> {{ match.leftPoint }}</h1>
+			</div> 
+			<div>
+
+			</div> 
+			<div id="game-profile-player" class="player-right"> 
+					<h1 class="game-point"> {{ match.leftPoint }}</h1>
+					<h2> {{ playerRight.username }} </h2>
+				<div class="game-profile-player-avatar">
+					<img :src="playerRight.avatar_url" alt="">
+				</div>
+			</div>
 	</div>
 </template>
 
@@ -13,41 +25,60 @@
 import { anyTypeAnnotation } from '@babel/types';
 import { Match } from '~/interfaces/game.interface';
 
-const userAuth = getUserAuthenticate();
-const user = await useUser(props.match.username);
+const userAuth = await getRefreshedUserAuthenticate();
+const match = ref(userAuth.value.getCurrentMatch());
+const oponent = await useUser(match.value.oponent);
 
-const props = defineProps({
-	match:  {
-		required: true,
-	}
-})
+const playerLeft  = ref(match.value.left ? userAuth.value : oponent.value);
+const playerRight = ref(match.value.left ? oponent.value : userAuth.value);
 
-console.log(props.match);
-
-
-
+	
 </script>
 
 <style scoped>
+
+h2 {
+	padding: 5%;
+	align-self: center;
+}
+.game-profile-player-avatar {
+	display: flex;
+	align-self: center;
+
+}
 .game-profile {
  width: 80%;
  height: 20%;
  position: relative;
  display: flex;
+ padding-bottom: 2%;
 }
 
-#game-profile-player {
+.player-left {
 	width: 50%;
 	height: 100%;
 	display:flex;
-	border: solid;
-}
-
-
-.player-left {
 }
 
 .player-right {
+	width: 50%;
+	height: 100%;
+	display:flex;
+	justify-content: flex-end;
+}
 
+.player-left .game-point {
+	text-align: right;
+}
+
+.game-point {
+	width: 100%;
+	padding: 5%;
+	align-self: center;
+	flex-grow: 3;
+}
+
+.game-profile-avatar {
+	display: flex;
 }
 </style>

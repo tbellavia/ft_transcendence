@@ -1,8 +1,8 @@
 <template>
 <div class="game-page">
-	<div v-if="user.isInGame() === false">
+	<div v-if="user.isInGame === false">
 		<div class="friends-buttons">
-			<button @click="changeView()"> SEE MATCH </button>
+			<button @click="view = true"> SEE MATCH </button>
 			<button class="friends-buttons" @click="subscribeMatchmaking()"> PLAY ! </button>
 		</div>
 		<div v-show="view">
@@ -10,9 +10,9 @@
 		</div>
 	</div>
 	<div v-else class="in-game" >
-		<GameProfile :match="match" />
+		<GameProfile  />
 		<div>
-			<GameCanvas class="game-container" :match="match" />
+			<GameCanvas1 :socket=socket class="game-container" />
 		</div>
 	</div>
 </div>
@@ -20,14 +20,14 @@
 
 
 <script setup lang="ts">
-import GameCanvas from '../../components/game/GameCanvas.vue';
+import GameCanvas1 from '../../components/game/GameCanvas.vue';
 import GameProfile from '../../components/game/GameProfile.vue';
 import { Match } from '~/interfaces/game.interface';
 
 const socket = useSocketGame();
 const user = await getRefreshedUserAuthenticate();
-const view = ref(!user.value.isInGame());
-const match: Match = undefined;
+const match = ref(undefined);
+const view = ref(false);
 
 async function subscribeMatchmaking() {
 	socket.value.emit("subscribe");
@@ -36,23 +36,9 @@ async function subscribeMatchmaking() {
 	console.log("Subscribe !");	
 }
 
-function changeView() {
-	if (user.value.isInGame() === false)
-		view.value = true;
-}
-
-// SOCKET EVENT 
-// socket.value.on("waiting_player", () => {
-// 	console.log("waiting_players")
-// // })
-
 socket.value.on("matched", ({ username, id, left }) => {
-	console.log(`${id} : Matched with ${username}`); //
-	view.value = true;
-	user.value.matchId = id;
-	match.id = id;
-	match.username = username;
-	match.left = left;
+	console.log(`${id} : Matched with ${username} and you are left: ${left}`);
+	user.value.setMatch(id, username, left);
 });
 
 
@@ -75,8 +61,7 @@ socket.value.on("matched", ({ username, id, left }) => {
 
 .game-container {
 		width: 80%;
-		height: 60%; 
-		/* height: 80%;  */
+		height: 80%; 
 }
 
 	.friends-buttons {

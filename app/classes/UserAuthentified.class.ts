@@ -1,5 +1,6 @@
 import { Socket } from "engine.io-client";
 import { $Fetch } from "ohmyfetch";
+import { Match } from "~~/interfaces/game.interface";
 import { User, UserInfos } from "./User.class";
 
 interface FriendRelation {
@@ -19,8 +20,7 @@ export class UserAuthentified extends User {
   public friends: User[] = [];
   public pendingFriends: User[] = [];
   public blockedUsers: User[] = [];
-  public matchId: Number;
-  public gameSocket: any;
+  public currentMatch: Match;
 
   constructor(username: string, fetchingMethod: $Fetch) {
     super(username, fetchingMethod);
@@ -124,20 +124,29 @@ export class UserAuthentified extends User {
   
   /* GAME */
   /* -------------------------------------------------------------- */
-  public generateGameSocket() {
-    this.gameSocket = useSocketGame();
+  public getCurrentMatch() : Match {
+    return this.currentMatch;
   }
 
+  public getisInGame() : Boolean {
+    return (this.currentMatch ? true : false)
+  }
+
+  public setMatch(id: number, oponent: string, left: boolean ) {
+    this.currentMatch = {
+      id,
+      oponent,
+      left,
+      leftPoint: 0,
+      rightPoint: 0,
+    }
+    this.isInGame = true;
+  }
+  
   /* UTILS */
   /* -------------------------------------------------------------- */
-
-
   public extractFriend(relation: FriendRelation) {
     return relation.user_2.username != this.username ? relation.user_2 : relation.user_1;
-  }
-
-  public isInGame() : Boolean {
-    return (this.gameSocket && this.matchId ? true : false)
   }
 
 }

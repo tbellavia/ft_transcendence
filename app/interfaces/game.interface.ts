@@ -1,5 +1,7 @@
 export interface Match {
-	username: string,
+	oponent: string,
 	id: number,
 	left: boolean,
+	leftPoint: number,
+	rightPoint: number,
 }
