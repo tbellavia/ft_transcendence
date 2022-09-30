@@ -1,9 +1,10 @@
-import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
+import { MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
 import { SocketService } from "./socket.service";
 import { Socket } from 'socket.io';
 import { UserStatus } from "./enums/userStatus.enum";
 
 @WebSocketGateway({
+  // namespace: '/',
   cors: {
     origin: true,
     credentials: true
