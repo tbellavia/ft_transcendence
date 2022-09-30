@@ -50,7 +50,6 @@ export class User {
 			});
 		})
 		.catch( async (error) => {
-			console.log(error);
 			return undefined;
 		})
 	}
@@ -68,11 +67,17 @@ export class User {
 			game_won: 0,
 			rank: 'WOOD',
 		}
-		try {
-			const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`);
-			this.stats = stats;
+		const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`); // TODO remove and change to do in back eithan
+		this.stats = stats;
+		if (!this.stats)
+		{
+			this.stats = {
+				game_abandonned: 0,
+				game_total: 0,
+				game_won: 0,
+				rank: 'WOOD',
+			}
 		}
-		catch {}
 		return this.stats;
 	}
 
