@@ -3,6 +3,7 @@ import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect, SubscribeMes
 import { userInfo } from "os";
 import { Socket } from "socket.io";
 import { MatchesService } from "src/matches/matches.service";
+import { UserStatus } from "src/socket/enums/userStatus.enum";
 import { SocketService } from "src/socket/socket.service";
 import { MatchmakingService } from "./matchmaking/matchmaking.service";
 
@@ -28,15 +29,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 	async handleConnection(socket: Socket){
 		try {
-			const user = await this.socketService.getUserFromSocket(socket);
-			console.log(user.username, 'connect to a game');
+			await this.socketService.setUserStatus(socket, UserStatus.IN_GAME);
 		} catch {}
 	}
 
 	async handleDisconnect(socket: Socket) {
 		const user = await this.socketService.disconnectSocketBindedToUser(socket);
-		if (user)
-			console.log(user.username, 'disconnect from a game');
 	}
 
 	@SubscribeMessage("subscribe")

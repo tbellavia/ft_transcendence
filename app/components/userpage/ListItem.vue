@@ -5,7 +5,10 @@
 		<div class="userDatas">
 			
 			<div class="userImage"> <img :src="targetAvatar"/> </div>
+			<div class="userNameAndStatus">
 			<div class="userName"> {{ props.target.username }}</div>
+				<p v-if="isFriend" class="userStatus">{{ status }}</p>
+			</div>
 		</div> 
 
 		<!-- Buttons of all options -->
@@ -38,7 +41,11 @@
 			<button v-show="!isBlocked" class="OptionsProfile_sub">  suggest a match </button>
 
 			<!-- SEE PROFILE PAGE -->
+<<<<<<< HEAD
 			<button class="OptionsProfile_sub" @click='navigateTo("/" + props.target.username + "/profileParams" )'> Profile Page </button>
+=======
+			<button class="OptionsProfile_sub" @click='navigateTo("/" + props.target.username + "/profile" )'> Profile Page </button>
+>>>>>>> 45191c3c101383ab95a610905ea5c93307fde253
 
 			<!-- BLOCK or UNBLOCK USER -->
 			<button v-if="isBlocked" class="OptionsProfile_sub"
@@ -54,18 +61,19 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
-const userAuthenticate = await getRefreshedUserAuthenticate();
-const targetAvatar = ref(await getAvatar(props.target.username))
-const isBlocked = ref(await userAuthenticate.value.isBlockUser(props.target));
-const messageLink = `/${userAuthenticate.value.username}/chat/${props.target.username}`;
-const emit = defineEmits(['refreshList']);
-
 const props = defineProps({
 	target: Object,
 	isFriend: Boolean,
 	isBlocked: Boolean,
 	pendingFriend: Boolean,
 })
+
+const userAuthenticate = await getRefreshedUserAuthenticate();
+const targetAvatar = ref(await getAvatar(props.target.username))
+const isBlocked = ref(await userAuthenticate.value.isBlockUser(props.target));
+const messageLink = `/${userAuthenticate.value.username}/chat/${props.target.username}`;
+const emit = defineEmits(['refreshList']);
+
 
 async function useAction(action: string) {
 	console.log(action);
@@ -85,6 +93,13 @@ async function useAction(action: string) {
 	}
 	emit('refreshList');
 }
+
+let status = ref('offline');
+if (props.isFriend) {
+	const socket = useSocket();
+	socket.value.emit('get_status', props.target.username, userStatus => status.value = userStatus);
+}
+
 </script>
 
 <!-- -------------------------------------------------------------- -->
@@ -94,5 +109,11 @@ async function useAction(action: string) {
 		width: 100%;
 		text-align: left;
 		padding-left: 15px;
+	}
+
+	.userNameAndStatus {
+		margin-left: 1em;
+		display: flex;
+		flex-direction: column;
 	}
 </style>

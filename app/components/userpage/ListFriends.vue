@@ -1,5 +1,5 @@
 <script setup lang="ts">
-let userAuthenticate = await getUserAuthenticate();
+let userAuthenticate = await getRefreshedUserAuthenticate();
 let listFriends = ref(await userAuthenticate.value.getFriends());
 
 async function refreshList() {

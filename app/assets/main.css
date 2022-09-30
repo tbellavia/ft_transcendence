@@ -196,12 +196,21 @@ input::placeholder {
 /* --------------------------------------------------------------  */
 
 img {
+<<<<<<< HEAD
     display: block;
     height: auto;
     width: 100%;
     overflow: hidden;
     object-fit: contain;
   }
+=======
+  display: block;
+  height: auto;
+  width: 100%;
+  overflow: hidden;
+  object-fit: contain;
+}
+>>>>>>> 45191c3c101383ab95a610905ea5c93307fde253
 /* --------------------------------------------------------------  */
 
 
