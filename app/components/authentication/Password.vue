@@ -58,8 +58,10 @@ async function authenticateApi() {
     errorMessage.value = '';
     password.value = '';
 
-    const { $eventBus } = useNuxtApp();
-    $eventBus.$emit('connect', userInfos);
+    if (!isRegistering.value) {
+      const { $eventBus } = useNuxtApp();
+      $eventBus.$emit('connect', userInfos);
+    }
     registeringValid.value = isRegistering.value
   } catch (error) {
     errorMessage.value = error.data.message;
