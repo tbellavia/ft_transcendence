@@ -2,8 +2,9 @@ import { Expose, Transform, Type } from "class-transformer";
 import { UserEntity } from "src/users/entities/user.entity";
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { MessageEntity } from "./message.entity";
+import { MuteEntity } from "./mute.entity";
 
-@Entity()
+@Entity("channels")
 export class ChannelEntity {
   // Identity informations (unique)
   @PrimaryGeneratedColumn()
@@ -16,13 +17,18 @@ export class ChannelEntity {
   @Column({ nullable: true })
   password: string;
 
+  @Expose()
+  @Column()
+  private: boolean
+  @Type(() => UserEntity)
+
   // Users relations
   @Expose()
   @Transform(({ value }) => value.username )
-  @ManyToOne(() => UserEntity, (creator => creator.channels_created), {
+  @ManyToOne(() => UserEntity, (owner => owner.channels_owned), {
     eager: true
   })
-  creator: UserEntity;
+  owner: UserEntity;
 
   @Expose()
   @Type(() => UserEntity)
@@ -42,9 +48,31 @@ export class ChannelEntity {
   @JoinTable()
   users: UserEntity[];
 
+  @Expose()
+  @Type(() => UserEntity)
+  @Transform(({ value }) => value.map(user => user.username))
+  @ManyToMany(() => UserEntity, user => user.channels_banned, {
+    eager: true
+  })
+  @JoinTable()
+  banned_users: UserEntity[];
+
+  @ManyToMany(() => UserEntity, invited_user => invited_user.channels_invited, {
+    eager: true
+  })
+  @JoinTable()
+  invited_users: UserEntity[];
+
   // Messages relations
   @OneToMany(() => MessageEntity, message => message.channel_target, {
     eager: true,
+    onDelete: 'CASCADE'
   })
-  messages?: MessageEntity[];
+  messages: MessageEntity[];
+
+  @OneToMany(() => MuteEntity, muted_user => muted_user.channel, {
+    eager: true,
+    onDelete: 'CASCADE'
+  })
+  muted_users: MuteEntity[];
 }

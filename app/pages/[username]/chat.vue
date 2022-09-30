@@ -1,7 +1,8 @@
 <template>
   <div class="chat-page">
-    <ChatLists class="chat-lists" />
-    <div class="page">
+    <ChatErrorPopup />
+    <ChatLists class="chat-list" />
+    <div class="chat-target-page">
       <NuxtPage />
     </div>
   </div>
@@ -11,19 +12,19 @@
 
   .chat-page {
     display: flex;
-    width: 100%;
-    height: 100%;
-  }
+    flex-direction: row;
 
-  .page {
     width: 100%;
     height: 100%;
   }
 
   .chat-list {
-    max-width: 20%;
-    min-width: 10%;
-    display: flex;
+    width: 15%;
+    min-width: max-content;
+  }
+  .chat-target-page {
+    width: 85%;
+    height: 100%;
   }
 
   .chat-box {

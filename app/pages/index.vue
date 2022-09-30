@@ -16,9 +16,9 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
+import { Socket } from 'engine.io-client';
 import { UserInfos } from '~~/classes/User.class';
 import { getRefreshedUserAuthenticate } from '~~/composables/useUserAuthentified';
-
 onMounted(async () => {
   const route = useRoute();
   const user = await getRefreshedUserAuthenticate();
@@ -32,6 +32,9 @@ const { $eventBus } = useNuxtApp();
 $eventBus.$on('connect', async (userInfos: UserInfos) => {
   double_auth_enabled.value = userInfos.double_auth_enabled;
 
+  let socket = useSocket();
+  if (socket.value.disconnected)
+    socket.value.connect();
   if (!double_auth_enabled.value) {
     const user = await getRefreshedUserAuthenticate();
     await redirectIfConnected(`/${user.value.username}`, '/');

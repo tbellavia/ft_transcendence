@@ -3,7 +3,6 @@
     <form action="" @submit.prevent="sendMessage">
         <input type="text" placeholder="type message to sent" v-model="message"/>
     </form>
-    <p v-if="error" class="error">{{ error }}</p>
   </div>
 </template>
 
@@ -27,7 +26,6 @@ interface sendMessage {
 const message = ref<string>('');
 const socket = useSocketChat();
 function sendMessage() {
-  error.value = '';
   socket.value.emit(
     'send_message',
     {
@@ -37,12 +35,6 @@ function sendMessage() {
     () => message.value = ''
   );
 }
-
-// Captures errors on exception and display them
-const error = ref<string>('');
-socket.value.on('exception', ({ message }) => {
-  error.value = message;
-});
 </script>
 
 <style scoped>

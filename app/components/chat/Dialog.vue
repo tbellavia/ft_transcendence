@@ -1,19 +1,16 @@
 <template>
-  <div class="chat-page">
-    <div class="dialog-box">
-      <!-- Displaying chat messages area -->
-      <ul>
-        <h2>{{ target }}</h2>
-        <li v-for="message in messages">
-          <p>
-            <span class="author">{{ message.author }}:</span>
-            {{ message.content }}
-          </p>
-        </li>
-      </ul>
-      <ChatSend :target="target" :isChannel="isChannel" />
-    </div>
-    <ChatChannelParameters v-if="isChannel" :target="target" />
+  <div class="dialog-box">
+    <!-- Displaying chat messages area -->
+    <h2>{{ target }}</h2>
+    <ul>
+      <li v-for="message in messages">
+        <p>
+          <span class="author">{{ message.author }}:</span>
+          {{ message.content }}
+        </p>
+      </li>
+    </ul>
+    <ChatSend class="chat-input" :target="target" :isChannel="isChannel" />
   </div>
 </template>
 
@@ -56,27 +53,35 @@ socket.value.on('receive_message', chatMessage => {
 
 <style scoped>
 
-  .chat-page {
-    display: flex;
-    height: 100%;
-  }
+  /* Layout of the dialog box */
   .dialog-box {
     display: flex;
     flex-direction: column;
     overflow-wrap: anywhere;
 
-    flex: 2;
-    width: 100%;
     height: 100%;
   }
 
-  ul {
-    flex-grow: 2;
+  .dialog-box > h2 {
+    /*  */
+  }
+
+  .dialog-box > ul {
+    flex: 1;
+
+    overflow-wrap: anywhere;
+    overflow-y: auto;
 
     color: var(--main-color);
     /* border: solid var(--background-line-color); */
     background-color: var(--main-color-op-30);
   }
+
+  .dialog-box > .chat-input {
+    /*  */
+  }
+
+  /* Details */
 
   input::placeholder {
     color: var(--main-color);

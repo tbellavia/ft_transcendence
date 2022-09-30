@@ -41,6 +41,8 @@ let listSelector = ref('friends');
     font-size: 14px;
   }
 
+  /* Layout of list items */
+
   .list-selectors {
     display: flex;
     justify-content: space-around;
