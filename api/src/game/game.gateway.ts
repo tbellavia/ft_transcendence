@@ -1,9 +1,10 @@
 import { ClassSerializerInterceptor, SerializeOptions, UseInterceptors } from "@nestjs/common";
-import { ConnectedSocket, OnGatewayConnection, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
+import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
 import { userInfo } from "os";
 import { Socket } from "socket.io";
 import { MatchesService } from "src/matches/matches.service";
 import { SocketService } from "src/socket/socket.service";
+import { GameService } from "./game.service";
 import { MatchmakingService } from "./matchmaking/matchmaking.service";
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -22,13 +23,20 @@ import { MatchmakingService } from "./matchmaking/matchmaking.service";
 export class GameGateway {
 	constructor(
 		private socketService: SocketService,
+		private gameService: GameService,
 		private matchmakingService: MatchmakingService
 	) 
 	{ }
 
-	async handleConnection(socket: Socket){
-		const user = await this.socketService.getUserFromSocket(socket);
-		console.log(`User ${user.username} connected to game!`);
+	@SubscribeMessage("position") 
+	async handleEvent(
+		@ConnectedSocket() socket: Socket, 
+		@MessageBody() pos: number
+	) 
+	{
+		console.log(pos);
+		console.log(pos * 2);
+		console.log(typeof pos);
 	}
 
 	@SubscribeMessage("subscribe")
@@ -44,15 +52,27 @@ export class GameGateway {
 			
 			player_1.socket.emit("matched", {
 				id,
-				username: player_2.user.username, 
+				username: player_2.user.username,
+				left: true 
 			});
 			player_2.socket.emit("matched", {
 				id,
-				username: player_1.user.username
+				username: player_1.user.username,
+				left: false
 			});
 
 			match = await this.matchmakingService.match();
 		}
+	}
+
+	@SubscribeMessage("update-paddle-pos")
+	async updatePaddlePos(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody() y: number
+	) 
+	{
+		console.log(`Position ${y}`);
+		this.gameService.updateGamePaddlePos(socket, y);
 	}
 }
 

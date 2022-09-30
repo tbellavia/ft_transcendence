@@ -23,6 +23,7 @@ export class User {
 	public avatar_url: string;
 	public stats: UserStats;
 	public matchs: Object;
+	public isInGame: boolean;
 
 	protected readonly fetchingMethod: $Fetch;
 	private avatar: Blob;
@@ -32,7 +33,7 @@ export class User {
 		this.fetchingMethod = fetchingMethod.create({
 			baseURL: 'http://localhost:3000/api/v1/users'
 		});
-
+		this.isInGame = false;
 	}
 
 

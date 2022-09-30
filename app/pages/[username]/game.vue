@@ -1,10 +1,9 @@
 <template>
 <div class="game-page">
-	<div v-if="user.isInGame() === true">
+	<div v-if="user.isInGame === false">
 		<button class="friends-buttons" @click="subscribeMatchmaking()"> Play </button>
 	</div>
 	<div v-else>
-		WESH
 		<GameCanvas1 class= "game-container" :socket="socket" />
 	</div>
 </div>
@@ -12,11 +11,15 @@
 
 
 <script setup lang="ts">
+import { use } from 'h3';
 import GameCanvas1 from '../../components/game/GameCanvas.vue';
 
 const socket = useSocketGame();
 const user = await getRefreshedUserAuthenticate();
 
+/**
+ * Subscribe user to matchmaking.
+ */
 async function subscribeMatchmaking() {
 	await user.value.generateGameSocket()
 	socket.value.emit("subscribe");
@@ -24,18 +27,19 @@ async function subscribeMatchmaking() {
 	console.log("Subscribe !");	
 }
 
+/**
+ * User has been matched with another user.
+ */
+socket.value.on("matched", ({username, id, left}) => {
+	const side = (left) ? "left" : "right";
+	console.log(`You have been matched with ${username} and you play ${side}`);
 
-// SOCKET EVENT 
-// socket.value.on("waiting_player", () => {
-// 	console.log("waiting_players")
-// // })
-
-socket.value.on("matched", ({username, id}) => {
-	console.log(`${id} : Matched with ${username}`); //
-
-	user.value.matchId = id;
+	user.value.setMatch(id, username, left);
 });
 
+onMounted (() => {
+
+});
 
 </script>
 
