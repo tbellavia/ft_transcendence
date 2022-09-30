@@ -76,9 +76,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
     const messages = await this.chatService.getAllMessages(author, getAllMessages);
+
     // Connect socket to channel's room
     if (getAllMessages.isChannel)
       this.server.to(author.username).socketsJoin(getAllMessages.target);
+    this.socketService.setUserStatus(socket, UserStatus.CHATTING);
     return messages;
   }
 
