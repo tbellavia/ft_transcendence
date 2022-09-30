@@ -38,3 +38,14 @@ $eventBus.$on('disconnect', () => {
 
 
 </script>
+
+<style>
+   html {
+      overflow: scroll;
+      overflow-x: hidden;
+   }
+   ::-webkit-scrollbar {
+      width: 0;
+      background: transparent;
+   }
+</style>

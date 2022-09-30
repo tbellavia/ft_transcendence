@@ -124,7 +124,6 @@ socket.value.on(
     flex-direction: column;
   }
 
-
   .list-channel-users > div {
     flex: 1;
   }
@@ -132,6 +131,7 @@ socket.value.on(
   .list-selectors {
     display: flex;
     justify-content: space-between;
+    height: fit-content;
   }
 
   .list-selectors > h2 {
