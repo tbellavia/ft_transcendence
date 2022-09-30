@@ -20,7 +20,7 @@ export class MuteEntity {
   @Transform(({ value }) => value.map(user => user.username))
   @ManyToOne(() => UserEntity, user => user.muted_channels, {
     eager: true,
-    onDelete: "SET NULL"
+    onDelete: "CASCADE"
   })
   user: UserEntity;
 
