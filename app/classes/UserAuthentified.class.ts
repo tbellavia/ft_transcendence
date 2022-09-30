@@ -21,7 +21,6 @@ export class UserAuthentified extends User {
   public pendingFriends: User[] = [];
   public blockedUsers: User[] = [];
   public currentMatch: Match;
-  public gameSocket: any;
 
   constructor(username: string, fetchingMethod: $Fetch) {
     super(username, fetchingMethod);
@@ -125,10 +124,6 @@ export class UserAuthentified extends User {
   
   /* GAME */
   /* -------------------------------------------------------------- */
-  public generateGameSocket() {
-    this.gameSocket = useSocketGame();
-  }
-
   public getCurrentMatch() : Match {
     return this.currentMatch;
   }
@@ -150,8 +145,6 @@ export class UserAuthentified extends User {
 
   /* UTILS */
   /* -------------------------------------------------------------- */
-
-
   public extractFriend(relation: FriendRelation) {
     return relation.user_2.username != this.username ? relation.user_2 : relation.user_1;
   }

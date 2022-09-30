@@ -36,9 +36,6 @@ const props = defineProps({
 	user: Object,
 })
 
-console.log(props.user);
-
-
 
 //-- -------------------------------------------------------------- -->
 

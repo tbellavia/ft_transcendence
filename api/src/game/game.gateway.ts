@@ -28,17 +28,6 @@ export class GameGateway {
 	) 
 	{ }
 
-	@SubscribeMessage("position") 
-	async handleEvent(
-		@ConnectedSocket() socket: Socket, 
-		@MessageBody() pos: number
-	) 
-	{
-		console.log(pos);
-		console.log(pos * 2);
-		console.log(typeof pos);
-	}
-
 	@SubscribeMessage("subscribe")
 	async subscribeMatchmaking(@ConnectedSocket() socket: Socket) 
 	{

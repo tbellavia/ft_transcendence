@@ -3,5 +3,5 @@ import { JoinChannelDTO } from "./joinChannel.dto";
 
 export class CreateChannelDTO extends JoinChannelDTO {
   @IsBoolean()
-  isPrivate: boolean
+  private: boolean
 }
