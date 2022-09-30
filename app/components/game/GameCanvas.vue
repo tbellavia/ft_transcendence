@@ -1,5 +1,5 @@
 <template>
-	<div class="game-div">
+	<div class="game-container">
 		<canvas  id="game-canvas" ></canvas>
 	</div>
 </template>
@@ -25,6 +25,9 @@ function gameLoop(game: Game) {
 
 onMounted (() => {
 	const gameCanvas = document.getElementById("game-canvas") as HTMLCanvasElement | null;
+	
+	gameCanvas.width = window.innerWidth / 1.5;
+      gameCanvas.height = window.innerHeight / 1.5;
 	const game = new Game(gameCanvas);
 
 
@@ -45,20 +48,23 @@ onMounted (() => {
 
 <style scoped>
 
-.game-div {
-	width: 80%;
-	height: 100%;
-}
 
+.game-container {
+
+		position: relative;
+		left: 10%;
+		top: 5%;
+		width: 650px;
+		height: 480px;
+	}
 
 #game-canvas {
 	border: solid;
 	z-index: 999;
 	/* TODO: background black */
-	background-color: transparent;
+	background-color: black;
+	object-fit: contain;
 	width: 100%;
 	height: 100%;
-	object-fit: contain;
-
 }
 </style>
