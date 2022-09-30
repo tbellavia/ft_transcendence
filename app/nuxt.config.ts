@@ -6,16 +6,6 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify'],
   },
-  // Vite config currently not working ;-(
-  vite: {
-    define: {
-      'process.env.DEBUG': false,
-    },
-    server: {
-      host: "0.0.0.0",
-      port: 8000,
-    },
-  },
   imports: {
     dirs: [
       // ... or scan all modules within given directory
