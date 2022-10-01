@@ -1,3 +1,4 @@
+import { Socket } from "socket.io-client";
 import { Ball } from "./ball";
 import { GameVec } from "./engine/gameVec";
 import { Paddle } from "./paddle";
@@ -13,9 +14,10 @@ export class Game {
   private ball: Ball;
   private keyPressed: String;
   private playerTurn: boolean;
+  private socket: Socket;
+  private left: boolean;
 
-  constructor(canva: HTMLCanvasElement) {
-
+  constructor(canva: HTMLCanvasElement, socket: Socket, left: boolean) {
     // ratio for each window
     var dpr = window.devicePixelRatio || 1;
     var rect = canva.getBoundingClientRect();
@@ -38,26 +40,49 @@ export class Game {
     this.ctx.strokeStyle = "white";
     this.playerTurn = true;
     this.ball.start(this.playerTurn);
+    this.socket = socket;
+    this.left = left;
+
+    this.setSocketListeners();
   }
 
+  setSocketListeners() {
+    this.socket.on("paddle-pos", (y) => {
+			// console.log(`Moving opponent paddle to ${y}`);
+      this.setOpponentPaddlePos(y);
+    })
+    this.socket.on("ball-pos", ({x, y}) => {
+      console.log(`Moving ball position to x=${x} y=${y}`);
+      this.ball.setPos(new GameVec(x, y));
+    });
+  }
+
+  start() {
+    this.update();
+    this.draw();
+
+    window.requestAnimationFrame(() => {
+      this.start();
+    });
+  }
 
   // Check collide and update match
   /* -------------------------------------------------------------- */
   update() {
-    this.ball.update();
-    if (this.ball.isOut()) {
-      this.playerTurn = !this.playerTurn;
-      this.ball.start(this.playerTurn);
-    }
-	else if ( this.ball.wallCollide() ) {
-	  this.ball.wallBounce();
-    }
-	else if ( this.paddleLeft.collide(this.ball) ) {
-		this.ball.bounceLeft(this.paddleLeft);
-	}
-	else if ( this.paddleRight.collide(this.ball) ) {
-		this.ball.bounceRight(this.paddleRight);
-	}
+    // this.ball.update();
+    // if (this.ball.isOut()) {
+    //   this.playerTurn = !this.playerTurn;
+    //   this.ball.start(this.playerTurn);
+    // }
+    // else if ( this.ball.wallCollide() ) {
+    //   this.ball.wallBounce();
+    //   }
+    // else if ( this.paddleLeft.collide(this.ball) ) {
+    //   this.ball.bounceLeft(this.paddleLeft);
+    // }
+    // else if ( this.paddleRight.collide(this.ball) ) {
+    //   this.ball.bounceRight(this.paddleRight);
+    // }
   }
 
   // Draw and clear Canva
@@ -85,15 +110,19 @@ export class Game {
   }
   
   drawMoving() {
-	if ( this.keyPressed == "ArrowUp" ) {
-	  this.upLeft();
-	} else if ( this.keyPressed == "ArrowDown" ) {
-	  this.downLeft();
-	} else if ( this.keyPressed == "ArrowLeft" ) {
-	  this.upRight();
-	} else if ( this.keyPressed == "ArrowRight" ) {
-	  this.downRight();
-	}
+    if ( this.keyPressed == "ArrowUp" ) {
+      if ( this.left ) {
+        this.upLeft();
+      } else {
+        this.upRight();
+      }
+    } else if ( this.keyPressed == "ArrowDown" ) {
+      if ( this.left ) {
+        this.downLeft();
+      } else {
+        this.downRight();
+      }
+    }
   }
 
   // Event Key from user
@@ -109,18 +138,47 @@ export class Game {
   }
 
   upLeft() {
-    this.paddleLeft.up();
+    if ( this.left ) {
+      this.paddleLeft.up();
+      this.emitPaddleLeftPos();
+    }
   }
 
   upRight() {
-    this.paddleRight.up();
+    if ( !this.left ) {
+      this.paddleRight.up();
+      this.emitPaddleRightPos();
+    }
   }
 
   downLeft() {
-    this.paddleLeft.down();
+    if ( this.left ){
+      this.paddleLeft.down();
+      this.emitPaddleLeftPos();
+    }
   }
 
   downRight() {
-    this.paddleRight.down();
+    if ( !this.left ) {
+      this.paddleRight.down();
+      this.emitPaddleRightPos();
+    }
+  }
+
+  setOpponentPaddlePos(y: number) {
+    // TODO: Normalize position the current screen size
+    if ( this.left ) {
+      this.paddleRight.setPos(y);
+    } else {
+      this.paddleLeft.setPos(y);
+    }
+  }
+
+  emitPaddleLeftPos() {
+    this.socket.emit("update-paddle-pos", this.paddleLeft.getPos().y);
+  }
+
+  emitPaddleRightPos() {
+    this.socket.emit("update-paddle-pos", this.paddleRight.getPos().y);
   }
 }

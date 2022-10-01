@@ -1,6 +1,6 @@
 import { Socket } from "engine.io-client";
 import { $Fetch } from "ohmyfetch";
-import { Match } from "~~/interfaces/game.interface";
+import { Match } from "~~/interfaces/match.interface";
 import { User, UserInfos } from "./User.class";
 
 interface FriendRelation {
@@ -145,12 +145,11 @@ export class UserAuthentified extends User {
     }
     this.isInGame = true;
   }
-  
+
   /* UTILS */
   /* -------------------------------------------------------------- */
   public extractFriend(relation: FriendRelation) {
 	console.log("RELATION: ", relation) // TODO eithan ?
     return relation.user_2.username !== this.username ? relation.user_2 : relation.user_1;
   }
-
 }

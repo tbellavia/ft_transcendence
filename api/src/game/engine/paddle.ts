@@ -1,17 +1,10 @@
 import { Ball } from "./ball";
-import { constrain } from "./engine/constrain";
-import { GameDimension } from "./engine/dimension";
-import { GameVec } from "./engine/gameVec";
-
-export enum PaddleStage {
-	UP = 1,
-	MIDDLE,
-	DOWN,
-}
+import { constrain } from "./utils/constrain";
+import { GameDimension } from "./utils/dimension";
+import { GameVec } from "./utils/gameVec";
 
 export class Paddle {
-	private canva: HTMLCanvasElement;
-	private ctx: CanvasRenderingContext2D;
+	private canva: GameDimension;
 	private margin: number;
 	private pos: GameVec;
 	private dimension: GameDimension;
@@ -20,9 +13,8 @@ export class Paddle {
 	private third: number;
 	private wall_margin: number;
 
-	constructor(canva: HTMLCanvasElement, ctx: CanvasRenderingContext2D, left: boolean){
+	constructor(canva: GameDimension, left: boolean){
 		this.canva = canva;
-		this.ctx = ctx;
 		this.margin = 15;
 		this.wall_margin = 30;
 		this.pos = new GameVec(0, 0);
@@ -39,16 +31,12 @@ export class Paddle {
 		this.velocity = 4;
 	}
 
-
-	// Draw and update position
-  /* -------------------------------------------------------------- */
-	draw() {
-		this.ctx.fillRect(
-			this.pos.x,
-			this.pos.y,
-			this.dimension.width,
-			this.dimension.height
-		)
+	setPos(y: number) {
+		this.pos.y = constrain(
+			y,
+			this.wall_margin,
+			this.canva.height - this.dimension.height - this.wall_margin
+		);
 	}
 
 	up() {
@@ -71,14 +59,6 @@ export class Paddle {
 	/* -------------------------------------------------------------- */
 	getPos() : GameVec {
 		return this.pos;
-	}
-
-	setPos(y: number) {
-		this.pos.y = constrain(
-			y,
-			this.wall_margin,
-			this.canva.height - this.dimension.height - this.wall_margin
-		);
 	}
 
 	getDimension() : GameDimension {

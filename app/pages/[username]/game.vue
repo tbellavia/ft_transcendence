@@ -26,7 +26,6 @@
 <script setup lang="ts">
 import GameCanvas1 from '../../components/game/GameCanvas.vue';
 import GameProfile from '../../components/game/GameProfile.vue';
-import { Match } from '~/interfaces/game.interface';
 
 const socket = useSocketGame();
 const user = await getRefreshedUserAuthenticate();
@@ -34,6 +33,9 @@ const match = ref(undefined);
 const view = ref(false);
 const onlineMatch = await getOnlineMatch();
 
+/**
+ * Subscribe user to matchmaking.
+ */
 async function subscribeMatchmaking() {
 	socket.value.emit("subscribe");
 	view.value = false;
@@ -41,11 +43,19 @@ async function subscribeMatchmaking() {
 	console.log("Subscribe !");	
 }
 
-socket.value.on("matched", ({ username, id, left }) => {
-	console.log(`${id} : Matched with ${username} and you are left: ${left}`);
+/**
+ * User has been matched with another user.
+ */
+socket.value.on("matched", ({username, id, left}) => {
+	const side = (left) ? "left" : "right";
+	console.log(`You have been matched with ${username} and you play ${side}`);
+
 	user.value.setMatch(id, username, left);
 });
 
+onMounted (() => {
+
+});
 
 
 </script>

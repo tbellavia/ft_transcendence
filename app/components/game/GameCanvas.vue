@@ -5,42 +5,26 @@
 </template>
 
 <script setup lang="ts">
+
 import { Game } from '~~/classes/game/game';
 
-const props = defineProps({
-	socket: {
-		required: true,
-	}
-})
-
-
-function gameLoop(game: Game) {
-	game.update()
-	game.draw();
-	window.requestAnimationFrame(() => {
-		gameLoop(game)
-	})
-}
-
+const props = defineProps({ socket: { required: true, } })
+const user = await getRefreshedUserAuthenticate();
 
 onMounted (() => {
 	const gameCanvas = document.getElementById("game-canvas") as HTMLCanvasElement | null;
-	const game = new Game(gameCanvas);
-
-
+	const game = new Game(gameCanvas, props.socket, user.value.currentMatch.left);
+	
 	document.addEventListener("keydown", (event) => {
-		console.log(event);
 		game.keypressEvent(event);
-
 	});
-
+	
 	document.addEventListener("keyup", (event) => {
 		game.keyupEvent(event);
 	});
-
-	gameLoop(game);
-	
+	game.start();
 })
+
 </script>
 
 <style scoped>

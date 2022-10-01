@@ -1,25 +1,21 @@
-import { GameDimension } from "./engine/dimension";
-import { GameVec, radians } from "./engine/gameVec";
-import { map, randomInt } from "./engine/utils";
-import { Paddle, PaddleStage } from "./paddle";
+import { GameDimension } from "./utils/dimension";
+import { GameVec, radians } from "./utils/gameVec";
+import { map, randomInt } from "./utils/utils";
+import { Paddle } from "./paddle";
 
 export class Ball {
-	private canva: HTMLCanvasElement;
-	private ctx: CanvasRenderingContext2D;
+	private canva: GameDimension;
 	private pos: GameVec;
 	private dimension: GameDimension;
 	private velocity: number;
 	private speed: GameVec;
-	private start_margin: number;
 	private start_side: boolean;
 
-	constructor(canva: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+	constructor(canva: GameDimension) {
 		this.canva = canva;
-		this.ctx = ctx;
 		this.pos = new GameVec(0, 0);
 		this.dimension = new GameDimension(10, 10);
-		this.velocity = 5;
-		this.start_margin = 10;
+		this.velocity = 6;
 		this.speed = new GameVec(this.velocity, this.velocity);
 	}
 
@@ -45,14 +41,7 @@ export class Ball {
 		return this.start_side;
 	}
 	
-	draw() {
-		this.ctx.fillRect(
-			this.pos.x,
-			this.pos.y,
-			this.dimension.width,
-			this.dimension.height
-		)
-	}
+	draw() { }
 		
 	isOut() {
 		return this.pos.x <= 0 || (this.pos.x > (this.canva.width - this.dimension.width));
@@ -68,11 +57,6 @@ export class Ball {
 	
 	getPos(): GameVec {
 		return this.pos.copy()
-	}
-
-	setPos(newPos: GameVec) {
-		// TODO: Normalize position to current screen
-		this.pos = newPos;
 	}
 
 	bounceLeft(paddle: Paddle) {
@@ -101,15 +85,4 @@ export class Ball {
 	wallBounce() {
 		this.speed.y *= -1;
 	}
-
-	async debugStop() {
-		this.velocity = 0;
-		await delay(2000);
-		this.velocity = 2;
-	}
-} // end of class
-	
-	
-function delay(ms: number) {
-	return new Promise( resolve => setTimeout(resolve, ms) );
 }
