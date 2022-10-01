@@ -1,4 +1,6 @@
 import Game from "../classGame";
+import { getCanvasRatio } from "./engine/constants";
+import { constrain } from "./engine/constrain";
 import { GameDimension } from "./engine/dimension";
 import { GameVec, radians } from "./engine/gameVec";
 import { map, randomInt } from "./engine/utils";
@@ -21,12 +23,24 @@ export class Ball {
 		this.canva = canva;
 		this.ctx = ctx;
 		this.pos = new GameVec(0, 0);
+		this.ratio = getCanvasRatio(canva);
 
-		// Scale all
 		this.dimension = Ball.BALL_DIMENSION;
 		this.velocity = Ball.BALL_VELOCITY;
-
 		this.speed = new GameVec(this.velocity, this.velocity);
+
+		this.scale();
+	}
+
+	scale() {
+		this.scaleSize();
+	}
+
+	scaleSize() {
+		const ratio = this.ratio.y;
+
+		this.dimension.width = this.dimension.width * ratio;
+		this.dimension.height = this.dimension.height * ratio;
 	}
 
 	update() {
@@ -78,7 +92,16 @@ export class Ball {
 
 	setPos(newPos: GameVec) {
 		// TODO: Normalize position to current screen
-		this.pos = newPos;
+		this.pos.x = constrain(
+			newPos.x * this.ratio.x,
+			0,
+			this.canva.width - this.dimension.width
+		)
+		this.pos.y = constrain(
+			newPos.y * this.ratio.y,
+			0,
+			this.canva.height - this.dimension.height
+		)
 	}
 
 	bounceLeft(paddle: Paddle) {
@@ -106,9 +129,5 @@ export class Ball {
 
 	wallBounce() {
 		this.speed.y *= -1;
-	}
-
-	scaleSize() {
-		// this.dimension.width = 
 	}
 }
