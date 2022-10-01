@@ -1,23 +1,19 @@
 <template>
  <div class="match-item" :id="background">
-	<div class="match-item-sub">
-		<div class="match-user-image"> <img :src="props.user.avatar_url"/> </div>
+	<div class="left-elem">
+		<div class="match-user-image"> <img :src="target.avatar_url"/> </div>
 		<v-spacer></v-spacer>
 		<div class="match-user-name" >	{{ target.username }} </div>
 		<v-spacer></v-spacer>
 	</div>
-	<v-spacer></v-spacer>
-
 	<div class="match-item-sub">{{ getMatchMessage() }} </div> 
-	<v-spacer></v-spacer>
-	<div class="match-item-sub">{{ props.match.creation_date }} </div> 
+	<div class="right-elem">{{ props.match.creation_date }} </div> 
 </div>
 </template>
 
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
-import { WinstonReporter } from 'consola';
 import { User } from '~~/classes/User.class';
 
 
@@ -27,7 +23,7 @@ const props = defineProps({
 })
 
 const background = ref();
-const target = ref(getTargetUser());
+const target = await useUser(getTargetUser());
 
 function winnerMessage(yourPoint: Number, targetPoint: Number) {
 	background.value = "won-match";
@@ -55,16 +51,14 @@ function formateMatchMessage(yourPoint: Number, targetPoint: Number){
 
 function getTargetUser() {
 	if (props.match.user_1.username === props.user.username)
-		return props.match.user_2;
-	return props.match.user_1;
+		return props.match.user_2.username;
+	return props.match.user_1.username;
 }
 
 function getMatchMessage() {
 	if (props.match.user_1.username === props.user.username) {
-		target.value = props.match.user_2;
 		return formateMatchMessage(props.match.player_1_point, props.match.player_2_point );
 	}
-	target.value = props.match.user_1;
 	return formateMatchMessage(props.match.player_2_point, props.match.player_1_point);
 }
 
@@ -80,11 +74,11 @@ function getMatchMessage() {
 }
 
 .match-item {
-	width: 100%;
 	display: flex;
 
-	justify-content:flex-start;
+	justify-content: space-between;
 	align-content: center;
+	align-items: center;
 
 
 	border: solid;
@@ -95,10 +89,22 @@ function getMatchMessage() {
 
 
 .match-item-sub {
-	width: 20%;
-	height: 40px;
 	display: flex;
-	justify-content: space-around;
+	align-items: center;
+}
+
+.match-user-name {
+	padding-left: 2vw;
+}
+
+.left-elem {
+	display: flex;
+	align-items: center;
+	justify-self: flex-start;
+}
+
+.right-elem {
+	justify-self: flex-end;
 }
 
 #won-match {
@@ -108,7 +114,6 @@ function getMatchMessage() {
 #loose-match {
 	background-color:var(--background-error-color);
 	border-color: var(--background-error-color);
-	/* color: var(--background-error-color) */
 }
 
 #equality-match {

@@ -99,6 +99,14 @@ export class UserAuthentified extends User {
     return await this.fetchingMethod(`/friends/me/request`);
   }
 
+  public async isFriend(username: string) {
+    const friends = await this.getFriends(false);
+    for (let friend of friends) {
+      if (this.extractFriend(friend).username === username)
+        return true;
+    }
+    return false;
+  }
 
   /* BLOCK INTERFACE */
   /* -------------------------------------------------------------- */
@@ -129,7 +137,6 @@ export class UserAuthentified extends User {
   }
 
   public extractFriend(relation: FriendRelation) {
-	console.log("RELATION: ", relation) // TODO eithan ?
     return relation.user_2.username !== this.username ? relation.user_2 : relation.user_1;
   }
 }
