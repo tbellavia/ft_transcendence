@@ -25,11 +25,18 @@ export class GameService {
 
     async initGame(match: GameMatch) {
         const game = new Game(match.player_1, match.player_2);
+        let seconds = 0;
         
-        setTimeout(() => {
-            console.log("Game started!");
-            game.start();
-        }, 5000);
+        const timer = setInterval(() => {
+            this.emitGameTimer(match, 5 - seconds);
+            console.log("MATCH " + seconds);
+            if ( seconds == 5 ){
+                game.start();
+                clearInterval(timer);
+            }
+            seconds++;
+        }, 1000);
+
         this.games.push(game);
         this.users.set(match.player_1.socket, { game, match });
         this.users.set(match.player_2.socket, { game, match });
@@ -41,6 +48,11 @@ export class GameService {
         setTimeout(() => {
             this.gameLoop();
         }, 35);
+    }
+
+    async emitGameTimer(match: GameMatch, second: number) {
+        match.player_1.socket.emit("game-start-timer", second);
+        match.player_2.socket.emit("game-start-timer", second);
     }
 
     /**
