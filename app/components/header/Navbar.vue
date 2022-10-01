@@ -2,7 +2,8 @@
   <nav class="navbar">
     <!-- TODO User name  -->
   <div class="link">
-    <NuxtLink v-for="(link, index) in links" :key="`${link.name}${index}`" :to="`/${username}/${link.link}`">{{ link.name }}</NuxtLink>
+    <!-- <NuxtLink v-for="(link, index) in links" :key="`${link.name}${index}`" :to="getNavbarNavigateLink(link)">{{ link.name }}</NuxtLink> -->
+    <NuxtLink v-for="(link, index) in links" :key="`${link.name}${index}`" :to="inGame? '' : `/${username}/${link.link}`">{{ link.name }}</NuxtLink>
   </div>
 
     <div class="navbar-right">
@@ -21,6 +22,13 @@
   ]);
   const user =  await getRefreshedUserAuthenticate();
   const username = user.value.username ? user.value.username : 'Default';
+  const inGame = ref(user.value.isInGame)
+
+
+  // async function getNavbarNavigateLink(link) {
+  //   const user =  await getRefreshedUserAuthenticate();
+  //   return user.value.isInGame ? '' : `/${username}/${link}`;
+  // }
 </script>
 
 <style scoped>
