@@ -1,5 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Ball } from "./ball";
+import { GAME_CANVA_DIMENSION, getRatio } from "./engine/constants";
+import { GameDimension } from "./engine/dimension";
 import { GameVec } from "./engine/gameVec";
 import { Paddle } from "./paddle";
 
@@ -47,9 +49,22 @@ export class Game {
   }
 
   setSocketListeners() {
-    this.socket.on("paddle-pos", (y) => {
-      this.setOpponentPaddlePos(y);
-    })
+    this.socket.on("paddle-move-up", () => {
+      if ( this.left ) {
+        this.paddleRight.up();
+      } else {
+        this.paddleLeft.up();
+      }
+    });
+
+    this.socket.on("paddle-move-down", () => {
+      if ( this.left ) {
+        this.paddleRight.down();
+      } else {
+        this.paddleLeft.down();
+      }
+    });
+
     this.socket.on("ball-pos", ({x, y}) => {
       this.ball.setPos(new GameVec(x, y));
     });
@@ -67,6 +82,7 @@ export class Game {
   // Check collide and update match
   /* -------------------------------------------------------------- */
   update() {
+
     // this.ball.update();
     // if (this.ball.isOut()) {
     //   this.playerTurn = !this.playerTurn;
@@ -138,28 +154,28 @@ export class Game {
   upLeft() {
     if ( this.left ) {
       this.paddleLeft.up();
-      this.emitPaddleLeftPos();
+      this.emitPaddleMoveUp();
     }
   }
 
   upRight() {
     if ( !this.left ) {
       this.paddleRight.up();
-      this.emitPaddleRightPos();
+      this.emitPaddleMoveUp();
     }
   }
 
   downLeft() {
     if ( this.left ){
       this.paddleLeft.down();
-      this.emitPaddleLeftPos();
+      this.emitPaddleMoveDown();
     }
   }
 
   downRight() {
     if ( !this.left ) {
       this.paddleRight.down();
-      this.emitPaddleRightPos();
+      this.emitPaddleMoveDown();
     }
   }
 
@@ -172,6 +188,15 @@ export class Game {
     }
   }
 
+  async emitPaddleMoveUp() {
+    this.socket.emit("paddle-move-up");
+  }
+
+  async emitPaddleMoveDown() {
+    this.socket.emit("paddle-move-down");
+  }
+
+  // TODO: Delete ?
   emitPaddleLeftPos() {
     this.socket.emit("update-paddle-pos", this.paddleLeft.getPos().y);
   }
