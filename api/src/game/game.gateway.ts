@@ -41,13 +41,6 @@ export class GameGateway {
 			
 			player_1.socket.emit("matched", {
 				id,
-<<<<<<< HEAD
-				username: player_2.user.username, 
-			});
-			player_2.socket.emit("matched", {
-				id,
-				username: player_1.user.username
-=======
 				username: player_2.user.username,
 				left: true 
 			});
@@ -55,22 +48,12 @@ export class GameGateway {
 				id,
 				username: player_1.user.username,
 				left: false
->>>>>>> f9983290c33d2a1ff827b422ef0ee5d76a6d0b9a
 			});
 			this.gameService.initGame(match);
 			match = await this.matchmakingService.match();
 		}
 	}
 
-<<<<<<< HEAD
-	@SubscribeMessage("invite")
-	async suggestMatch(@ConnectedSocket() socket: Socket, oponent: string) {
-		const user = await this.socketService.getUserFromSocket(socket);
-
-	}
-
-
-=======
 	@SubscribeMessage("update-paddle-pos")
 	async updatePaddlePos(
 		@ConnectedSocket() socket: Socket,
@@ -80,7 +63,6 @@ export class GameGateway {
 		console.log(`Position ${y}`);
 		this.gameService.updateGamePaddlePos(socket, y);
 	}
->>>>>>> f9983290c33d2a1ff827b422ef0ee5d76a6d0b9a
 }
 
 // TODO: if MATCH MAKING ET inviter quelqu un a jouer

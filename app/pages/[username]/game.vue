@@ -8,7 +8,7 @@
 		<div v-show="view">
 			<div class="profile-match-body">
 				<div class="list-match" v-for="match in onlineMatch">
-			<profileMatchItem :match="match" :user="" />
+			<profileMatchItem :match="match" />
 		</div>
 	</div>
 		</div>

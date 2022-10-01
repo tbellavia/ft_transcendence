@@ -59,14 +59,6 @@ export class User {
 	}
 
 	public async fetchStats() {
-<<<<<<< HEAD
-
-		const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`).catch(() => {});
-		if (stats)
-			this.stats = stats;
-		else {
-
-=======
 		this.stats = {
 			game_abandonned: 0,
 			game_total: 0,
@@ -77,7 +69,6 @@ export class User {
 		this.stats = stats;
 		if (!this.stats)
 		{
->>>>>>> 806b4dc888e166be5b24382eb0656227342b8f42
 			this.stats = {
 				game_abandonned: 0,
 				game_total: 0,

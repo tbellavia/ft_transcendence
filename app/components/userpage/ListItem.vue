@@ -41,11 +41,7 @@
 			<button v-show="!isBlocked" class="OptionsProfile_sub">  suggest a match </button>
 
 			<!-- SEE PROFILE PAGE -->
-<<<<<<< HEAD
-			<button class="OptionsProfile_sub" @click='navigateTo("/" + props.target.username + "/profileParams" )'> Profile Page </button>
-=======
 			<button class="OptionsProfile_sub" @click='navigateTo("/" + props.target.username + "/profile" )'> Profile Page </button>
->>>>>>> 45191c3c101383ab95a610905ea5c93307fde253
 
 			<!-- BLOCK or UNBLOCK USER -->
 			<button v-if="isBlocked" class="OptionsProfile_sub"
