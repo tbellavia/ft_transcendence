@@ -5,7 +5,6 @@ import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { UpdateStatDto } from './dto/stats.dto';
 import { StatEntity } from './entities/stat.entity';
-import { StatsNotFoundException } from './exceptions/statsNotFound.exception';
 
 @Injectable()
 export class StatsService {
@@ -42,15 +41,28 @@ export class StatsService {
         return stat;
     }
 
-    async findOne(username: string) {
-        const user = await this.userService.findOneByName(username);
+    // async findOne(username: string) {
+    //     const user = await this.userService.findOneByName(username);
 
-        const stat = await this.statRepository.findOne({ 
-            where: {
-                user: { username }
-            }
-        });
-        return stat;
+    //     const stat = await this.statRepository.findOne({ 
+    //         where: {
+    //             user: { username }
+    //         }
+    //     });
+    //     return stat;
+    async findOne(username: string) {  // TODO see if necessary eithan
+        try {
+            const user = await this.userService.findOneByName(username);
+            const stat = await this.statRepository.findOne({
+                where: {
+                    user: { username }
+                }
+            });
+            return stat;
+        }
+        catch {
+            return undefined;
+        }
     }
 
     async remove(username: string) {

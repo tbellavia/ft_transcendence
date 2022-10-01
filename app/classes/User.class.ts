@@ -48,7 +48,6 @@ export class User {
 			});
 		})
 		.catch( async (error) => {
-			console.log(error);
 			return undefined;
 		})
 	}
@@ -60,12 +59,25 @@ export class User {
 	}
 
 	public async fetchStats() {
+<<<<<<< HEAD
 
 		const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`).catch(() => {});
 		if (stats)
 			this.stats = stats;
 		else {
 
+=======
+		this.stats = {
+			game_abandonned: 0,
+			game_total: 0,
+			game_won: 0,
+			rank: 'WOOD',
+		}
+		const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`); // TODO remove and change to do in back eithan
+		this.stats = stats;
+		if (!this.stats)
+		{
+>>>>>>> 806b4dc888e166be5b24382eb0656227342b8f42
 			this.stats = {
 				game_abandonned: 0,
 				game_total: 0,

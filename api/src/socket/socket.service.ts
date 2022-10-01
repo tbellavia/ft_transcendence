@@ -58,7 +58,7 @@ export class SocketService {
   }
 
   // Fetch user
-  async getUserFromSocket(socket: Socket) {
+  async getUserFromSocket(socket: any) {
     const user = this.connectedUsers.get(socket.id);
     if (!user)
       return await this.connectUserWithSocket(socket);

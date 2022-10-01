@@ -59,6 +59,8 @@ const props = defineProps({
 })
 
 const user = await(useUser(props.username))
+if (!user.value.stats) // TODO do it in back eithan
+	user.value = undefined
 
 let newName = ref();
 let imageError = ref();

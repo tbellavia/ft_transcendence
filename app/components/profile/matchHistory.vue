@@ -1,8 +1,10 @@
 <template>
-	<h2>MATCH HISTORY</h2>
-	<div class="profile-match-body">
-		<div class="list-match" v-for="match in props.user.matchs">
-			<profileMatchItem :match="match" :user="props.user" />
+	<div class="match-display">
+		<h2>MATCH HISTORY</h2>
+		<div class="profile-match-body">
+			<div class="list-match" v-for="match in props.user.matchs">
+				<profileMatchItem :match="match" :user="props.user" />
+			</div>
 		</div>
 	</div>
 </template>
@@ -49,6 +51,11 @@ h2 {
 	border-bottom: solid 1px;
 	border-top: solid 1px;
 	margin-bottom: 3%;
+}
+/* TODO Do it later eithan */
+.match-display {
+	display: block;
+	position: relative;
 }
 
 </style>
