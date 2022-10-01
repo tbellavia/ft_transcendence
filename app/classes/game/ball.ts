@@ -92,13 +92,14 @@ export class Ball {
 
 	setPos(newPos: GameVec) {
 		// TODO: Normalize position to current screen
+		
 		this.pos.x = constrain(
-			newPos.x * this.ratio.x,
+			Math.ceil(newPos.x * this.ratio.x),
 			0,
 			this.canva.width - this.dimension.width
 		)
 		this.pos.y = constrain(
-			newPos.y * this.ratio.y,
+			Math.ceil(newPos.y * this.ratio.y),
 			0,
 			this.canva.height - this.dimension.height
 		)
