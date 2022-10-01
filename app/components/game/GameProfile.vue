@@ -22,9 +22,6 @@
 
 
 <script setup lang="ts">
-import { anyTypeAnnotation } from '@babel/types';
-import { Match } from '~/interfaces/game.interface';
-
 const userAuth = await getRefreshedUserAuthenticate();
 const match = ref(userAuth.value.getCurrentMatch());
 const oponent = await useUser(match.value.oponent);
