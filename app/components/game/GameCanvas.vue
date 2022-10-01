@@ -1,6 +1,6 @@
 <template>
 	<div class="game-div">
-		<v-dialog disabled="timer?" v-if="timer" v-model="timer">
+		<v-dialog persistent v-if="timer" v-model="timer">
 			<v-card center class="game-begin-timer">
 			<v-card-title> MACH BEGIN </v-card-title>
 			<v-card-text>{{ timer }}</v-card-text>
@@ -22,7 +22,8 @@ const socket = useSocketGame();
 
 const timer = ref();
 
-socket.value.on("game-start-timer", ({ remaining }) => {
+socket.value.on("game-start-timer", (remaining) => {
+	console.log()
 	timer.value = remaining;
 })
 
