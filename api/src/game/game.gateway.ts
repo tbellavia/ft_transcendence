@@ -60,8 +60,21 @@ export class GameGateway {
 		@MessageBody() y: number
 	) 
 	{
-		console.log(`Position ${y}`);
+		// console.log(`Position ${y}`);
 		this.gameService.updateGamePaddlePos(socket, y);
+	}
+
+	@SubscribeMessage("paddle-move-up")
+	async paddleMoveUp(@ConnectedSocket() socket: Socket) 
+	{
+		console.log("MOVE UP");
+		this.gameService.updateMoveUp(socket);
+	}
+
+	@SubscribeMessage("paddle-move-down")
+	async paddleMoveDown(@ConnectedSocket() socket: Socket) {
+		console.log("MOVE DOWN");
+		this.gameService.updateMoveDown(socket);
 	}
 }
 
