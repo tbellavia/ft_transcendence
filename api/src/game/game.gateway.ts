@@ -60,7 +60,6 @@ export class GameGateway {
 		@MessageBody() y: number
 	) 
 	{
-		console.log(`Position ${y}`);
 		this.gameService.updateGamePaddlePos(socket, y);
 	}
 }

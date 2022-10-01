@@ -48,11 +48,9 @@ export class Game {
 
   setSocketListeners() {
     this.socket.on("paddle-pos", (y) => {
-			// console.log(`Moving opponent paddle to ${y}`);
       this.setOpponentPaddlePos(y);
     })
     this.socket.on("ball-pos", ({x, y}) => {
-      console.log(`Moving ball position to x=${x} y=${y}`);
       this.ball.setPos(new GameVec(x, y));
     });
   }

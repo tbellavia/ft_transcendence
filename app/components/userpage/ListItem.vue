@@ -72,7 +72,6 @@ const emit = defineEmits(['refreshList']);
 
 
 async function useAction(action: string) {
-	console.log(action);
 	if (action === 'acceptFriend')
 		await userAuthenticate.value.acceptFriend(props.target);
 	else if (action === 'addFriend')
