@@ -1,5 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Ball } from "./ball";
+import { GAME_CANVA_DIMENSION, getRatio } from "./engine/constants";
+import { GameDimension } from "./engine/dimension";
 import { GameVec } from "./engine/gameVec";
 import { Paddle } from "./paddle";
 
@@ -81,6 +83,7 @@ export class Game {
   // Check collide and update match
   /* -------------------------------------------------------------- */
   update() {
+
     // this.ball.update();
     // if (this.ball.isOut()) {
     //   this.playerTurn = !this.playerTurn;
@@ -193,10 +196,6 @@ export class Game {
   async emitPaddleMoveDown() {
     this.socket.emit("paddle-move-down");
   }
-
-
-
-
 
   // TODO: Delete ?
   emitPaddleLeftPos() {

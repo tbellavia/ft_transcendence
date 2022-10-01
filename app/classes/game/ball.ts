@@ -1,25 +1,31 @@
+import Game from "../classGame";
 import { GameDimension } from "./engine/dimension";
 import { GameVec, radians } from "./engine/gameVec";
 import { map, randomInt } from "./engine/utils";
 import { Paddle, PaddleStage } from "./paddle";
 
 export class Ball {
+	static BALL_DIMENSION: GameDimension = new GameDimension(10, 10);
+	static BALL_VELOCITY: number = 6;
+
 	private canva: HTMLCanvasElement;
 	private ctx: CanvasRenderingContext2D;
 	private pos: GameVec;
 	private dimension: GameDimension;
 	private velocity: number;
 	private speed: GameVec;
-	private start_margin: number;
 	private start_side: boolean;
+	private ratio: GameVec;
 
 	constructor(canva: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
 		this.canva = canva;
 		this.ctx = ctx;
 		this.pos = new GameVec(0, 0);
-		this.dimension = new GameDimension(10, 10);
-		this.velocity = 5;
-		this.start_margin = 10;
+
+		// Scale all
+		this.dimension = Ball.BALL_DIMENSION;
+		this.velocity = Ball.BALL_VELOCITY;
+
 		this.speed = new GameVec(this.velocity, this.velocity);
 	}
 
@@ -102,14 +108,7 @@ export class Ball {
 		this.speed.y *= -1;
 	}
 
-	async debugStop() {
-		this.velocity = 0;
-		await delay(2000);
-		this.velocity = 2;
+	scaleSize() {
+		// this.dimension.width = 
 	}
-} // end of class
-	
-	
-function delay(ms: number) {
-	return new Promise( resolve => setTimeout(resolve, ms) );
 }

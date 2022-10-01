@@ -2,6 +2,7 @@ import { GameDimension } from "./utils/dimension";
 import { GameVec, radians } from "./utils/gameVec";
 import { map, randomInt } from "./utils/utils";
 import { Paddle } from "./paddle";
+import { BALL_DIMENSION, BALL_VELOCITY } from "./utils/constants";
 
 export class Ball {
 	private canva: GameDimension;
@@ -14,8 +15,8 @@ export class Ball {
 	constructor(canva: GameDimension) {
 		this.canva = canva;
 		this.pos = new GameVec(0, 0);
-		this.dimension = new GameDimension(10, 10);
-		this.velocity = 6;
+		this.dimension = BALL_DIMENSION;
+		this.velocity = BALL_VELOCITY;
 		this.speed = new GameVec(this.velocity, this.velocity);
 	}
 

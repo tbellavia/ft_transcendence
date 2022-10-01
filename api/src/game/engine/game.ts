@@ -3,6 +3,7 @@ import { GameVec } from "./utils/gameVec";
 import { Paddle } from "./paddle";
 import { GameDimension } from "./utils/dimension";
 import { GameUser } from "../interfaces/gameUser";
+import { GAME_CANVA_DIMENSION } from "./utils/constants";
 
 export class Game {
   private canva: GameDimension;
@@ -15,8 +16,8 @@ export class Game {
   private player_1: GameUser;
   private player_2: GameUser;
 
-  constructor(canva: GameDimension, player_1: GameUser, player_2: GameUser) {
-    this.canva = canva;
+  constructor(player_1: GameUser, player_2: GameUser) {
+    this.canva = GAME_CANVA_DIMENSION;
     this.player_1 = player_1;
     this.player_2 = player_2;
     this.middle = new GameVec(

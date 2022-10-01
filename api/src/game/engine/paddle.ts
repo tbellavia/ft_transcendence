@@ -1,4 +1,5 @@
 import { Ball } from "./ball";
+import { PADDLE_VELOCITY } from "./utils/constants";
 import { constrain } from "./utils/constrain";
 import { GameDimension } from "./utils/dimension";
 import { GameVec } from "./utils/gameVec";
@@ -28,7 +29,7 @@ export class Paddle {
 			this.pos.x = this.canva.width - this.margin - this.dimension.width;
 		}
 		this.pos.y = Math.floor(this.canva.height / 2 - this.dimension.height / 2);
-		this.velocity = 4;
+		this.velocity = PADDLE_VELOCITY;
 	}
 
 	setPos(y: number) {

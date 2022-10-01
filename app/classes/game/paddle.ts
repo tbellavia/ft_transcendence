@@ -1,4 +1,5 @@
 import { Ball } from "./ball";
+import { getCanvasRatio, getRatio, PADDLE_DIMENSION, PADDLE_MARGIN, PADDLE_VELOCITY, PADDLE_WALL_MARGIN } from "./engine/constants";
 import { constrain } from "./engine/constrain";
 import { GameDimension } from "./engine/dimension";
 import { GameVec } from "./engine/gameVec";
@@ -19,29 +20,41 @@ export class Paddle {
 	private side: boolean;
 	private third: number;
 	private wall_margin: number;
+	private ratio: GameVec;
 
 	constructor(canva: HTMLCanvasElement, ctx: CanvasRenderingContext2D, left: boolean){
 		this.canva = canva;
 		this.ctx = ctx;
-		this.margin = 15;
-		this.wall_margin = 30;
+		this.margin = PADDLE_MARGIN;
+		this.wall_margin = PADDLE_WALL_MARGIN;
 		this.pos = new GameVec(0, 0);
-		this.dimension = new GameDimension(10, 60);
+		this.dimension = PADDLE_DIMENSION;
 		this.third = Math.floor(this.dimension.height / 3);
 		this.side = left;
+
+		this.pos.y = Math.floor(this.canva.height / 2 - this.dimension.height / 2);
+		this.velocity = PADDLE_VELOCITY;
+		this.ratio = getCanvasRatio(canva);
+		
+		this.scale();
 
 		if ( left ) {
 			this.pos.x = this.margin;
 		} else {
 			this.pos.x = this.canva.width - this.margin - this.dimension.width;
 		}
-		this.pos.y = Math.floor(this.canva.height / 2 - this.dimension.height / 2);
-		this.velocity = 4;
 	}
 
 
+	scale() {
+		this.scaleSize();
+		this.scaleVelocity();
+		this.scaleMargin();
+		this.scaleWallMargin();
+	}
+
 	// Draw and update position
-  /* -------------------------------------------------------------- */
+  	/* -------------------------------------------------------------- */
 	draw() {
 		this.ctx.fillRect(
 			this.pos.x,
@@ -84,8 +97,26 @@ export class Paddle {
 	getDimension() : GameDimension {
 		return this.dimension;
 	}
+
 	isLeft() : boolean {
 		return (this.side);
+	}
+
+	scaleSize() {
+		this.dimension.width = this.dimension.width * this.ratio.x;
+		this.dimension.height = this.dimension.height * this.ratio.y;
+	}
+
+	scaleVelocity() {
+		this.velocity = this.velocity * this.ratio.y;
+	}
+
+	scaleMargin() {
+		this.margin = this.margin * this.ratio.x;
+	}
+
+	scaleWallMargin() {
+		this.wall_margin = this.wall_margin * this.ratio.y;
 	}
 
 	// Check Ball collide

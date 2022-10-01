@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { Socket } from "socket.io";
 import { Game } from "./engine/game";
 import { GameDimension } from "./engine/utils/dimension";
+import { GameVec } from "./engine/utils/gameVec";
 import { GameMatch } from "./interfaces/match";
 
 interface GameWithMatch {
@@ -11,7 +12,6 @@ interface GameWithMatch {
 
 @Injectable()
 export class GameService {
-    static  GAME_CANVA: GameDimension = new GameDimension(620, 410);
     private users: Map<Socket, GameWithMatch>;
     private games: Game[];
 
@@ -24,7 +24,7 @@ export class GameService {
     }
 
     async initGame(match: GameMatch) {
-        const game = new Game(GameService.GAME_CANVA, match.player_1, match.player_2);
+        const game = new Game(match.player_1, match.player_2);
         
         setTimeout(() => {
             console.log("Game started!");
@@ -107,6 +107,9 @@ export class GameService {
     isLeftPlayer(socket: Socket, match: GameMatch) {
         return socket.id === match.player_1.socket.id;
     }
+
+
+
 
     // TODO: DELETE ?
     /**
