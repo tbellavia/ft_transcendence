@@ -1,20 +1,22 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PaginationQueryDto } from "src/common/dto/pagination.query-dto";
-import { UserEntity } from "src/users/entities/user.entity";
 import { UsersService } from "src/users/users.service";
 import { FindManyOptions, FindOptionsWhere, Repository } from "typeorm";
 import { GetFriendsQueryDTO } from "./dto/get-friends.query.dto";
 import { UpdatePendingDto } from "./dto/update-pending.dto";
 import { FriendEntity } from "./entity/friend.entity";
 import { selectFriendOptions } from "./options/select-friend.options";
+import { BlockedService } from "src/blocked/blocked.service";
 
 @Injectable()
 export class FriendsService {
     constructor(
         @InjectRepository(FriendEntity)
         private friendRepository: Repository<FriendEntity>,
-        private readonly userService: UsersService
+        private readonly userService: UsersService,
+        @Inject(forwardRef(() => BlockedService))
+        private readonly blockedService: BlockedService,
     ) { }
 
     async create(username1: string, username2: string){
@@ -29,6 +31,10 @@ export class FriendsService {
         }
         if ( username1 == username2 ){
             throw new BadRequestException('User can not be friend with himself');
+        }
+        // if target blocked this user: don't create any friendship
+        if (await this.blockedService.exists(username2, username1)){
+            throw new BadRequestException('Friendship for this user is unvailable');
         }
         const friend = FriendEntity.create();
 
