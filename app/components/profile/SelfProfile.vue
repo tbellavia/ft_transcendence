@@ -1,41 +1,40 @@
-<!-- <template>
-	<profilePublic :user=userAuthenticate/>
+<template>
 	<div v-if="user" class="profile-page">
-		<profileSelfProfileHeader />
 		<div class="profile-page-header">
-			Display Avatar
+			<!-- Display Avatar -->
 			<div class="profile-user-image">
 				<img :src="user.avatar_url" />
 			</div>
 			<div class="profile-user-parameters">
+				<!-- Display Username -->
 				<div class="profile-name">
-					Display Username
 					<h1 class="profile-username"> {{ user.username }} </h1>
-					Display Status if is friend
-					<h2 v-show="isFriend" class="profile-status"> {{ status }}</h2>
+					<!-- Display Status if is friend or me -->
+					<h2 v-if="isFriend" class="profile-status"> {{ status }} </h2>
+					<h2 v-else class="profile-status">me</h2>
 				</div>
-				Display Rank and Stats
-				<Suspense class="profile-stats">
+				<!-- Display Rank and Stats -->
+				<Suspense>
 					<profileStats :username="props.username" />
 				</Suspense>
-				Update Info
-				<Suspense v-if="props.isUserAuth">
-					<profileParams class="profile-update-datas" />
-				</Suspense>
-				Display options linked to friendship
+				<!-- Settings link -->
+				<div v-if="props.isUserAuth" class="settings">
+					<NuxtLink class="settings-button" :href="settingslink">Settings</NuxtLink>
+				</div>
+				<!-- Display options linked to friendship -->
 				<Suspense v-else>
 					<profileFriendsOptions :username="user.username" class="profile-friends-options" />
 				</Suspense>
 			</div>
 		</div>
-		Display Match History
+		<!-- Display Match History -->
 		<div class="profile-match">
 			<Suspense>
 				<profileMatchHistory :user="user" />
 			</Suspense>
 		</div>
 	</div>
-	Display User Not Found
+	<!-- Display User Not Found -->
 	<div v-else class="undefined">
 		<h1>User not found</h1>
 	</div>
@@ -52,13 +51,14 @@ const props = defineProps({
 		required: true
 	}
 })
+const userAuth = await getRefreshedUserAuthenticate()
+const settingslink = `/user/${userAuth.value.username}/settings`;
 
 const user = await useUser(props.username)
 if (!user?.value?.stats) // TODO do it in back eithan
 	user.value = undefined
 
 const isFriend = ref()
-const userAuth = await getRefreshedUserAuthenticate()
 if (props.isUserAuth === false)
 	isFriend.value = user?.value ? ref(await userAuth.value.isFriend(user.value.username)) : false;
 
@@ -79,8 +79,8 @@ if (isFriend.value) {
 }
 
 .profile-page-header {
+	border: solid;
 	display: flex;
-	flex-direction: row;
 	margin-bottom: 10px;
 }
 
@@ -91,26 +91,24 @@ div.profile-user-parameters {
 
 .profile-name {
 	display: flex;
-	width: 100%;
-	justify-content: space-between;
 }
 
 .profile-status {
 	scale: 0.8;
 }
 
-.profile-update-datas {
-	max-width: 300px;
-	margin-top: 10px;
-}
-
 .profile-friends-options {
 	margin-top: 30px;
-}
-
-img {
 	min-width: 200px;
 	max-width: 300px;
+}
+
+div.settings {
+	margin-top: 20px;
+}
+
+.settings-button {
+	text-decoration: none;
 }
 
 .undefined {
@@ -118,14 +116,4 @@ img {
 	flex-direction: column;
 	align-items: center;
 }
-</style> -->
-
-<template>
-	<!-- Update Username Avatar and DoubleAuth -->
-	<Suspense>
-		<profileSettings />
-	</Suspense>
-</template>
-
-<script setup lang="ts">
-</script>
+</style>

@@ -1,35 +1,37 @@
 <template>
-	<h1 class="anim-settings">SETTINGS</h1>
-	<div class="profile-settings">
+	<div class="settings" v-if="user">
+		<h1 class="anim-settings">SETTINGS</h1>
+		<div class="profile-settings">
 
-		<div class="set-avatar">
-			<!-- Display Avatar -->
-			<img class="profile-avatar" :src="user.avatar_url" />
-			<!-- Avatar Form -->
-			<label for="newAvatar" class="form-avatar">Choose a new profile picture:</label>
-			<input type="file" name="newAvatar" id="newAvatar" @change="submitAvatar" accept="image/png">
-			<p v-show="imageError == true" class="error">Image too large (max 90 KB)</p>
-		</div>
-
-		<div class="set-2fa-and-username">
-			<!-- Double authentication component -->
-			<div class="set-2fa">
-				<authenticationDoubleAuthentication />
+			<div class="set-avatar">
+				<!-- Display Avatar -->
+				<img class="settings-avatar" :src="user.avatar_url" />
+				<!-- Avatar Form -->
+				<label for="newAvatar" class="form-avatar">Choose a new profile picture:</label>
+				<input type="file" name="newAvatar" id="newAvatar" @change="submitAvatar" accept="image/png">
+				<p v-show="imageError == true" class="error">Image too large (max 90 KB)</p>
 			</div>
 
-			<div class="set-username">
-				<!-- Display Username -->
-				<h1 class="profile-username"> Username: {{ user.username }} </h1>
-				<!-- Username Form -->
-				<form @submit.prevent="submitName" class="form-username">
-					<input @keypress="lettersAndNumbersOnly" v-model="newName" type="text" required
-					placeholder="new username" maxlength="16" autofocus />
-					<input type="submit" value="Change username" class="submit">
-				</form>
-				<p v-show="nameError == true" class="error">Invalid username</p>
-			</div>
-		</div>
+			<div class="set-2fa-and-username">
+				<!-- Double authentication component -->
+				<div class="set-2fa">
+					<authenticationDoubleAuthentication />
+				</div>
 
+				<div class="set-username">
+					<!-- Display Username -->
+					<h1 class="settings-username"> Username: {{ user.username }} </h1>
+					<!-- Username Form -->
+					<form @submit.prevent="submitName" class="form-username">
+						<input @keypress="lettersAndNumbersOnly" v-model="newName" type="text" required
+							placeholder="new username" maxlength="16" autofocus />
+						<input type="submit" value="Change username" class="submit">
+					</form>
+					<p v-show="nameError == true" class="error">Invalid username</p>
+				</div>
+			</div>
+
+		</div>
 	</div>
 </template>
 
@@ -61,7 +63,7 @@ async function submitName() {
 	}
 	const route = useRoute()
 	try {
-		user.value = await (await getRefreshedUserAuthenticate()).value
+		user.value = await getRefreshedUserAuthenticate()
 		await redirectIfConnected(route.fullPath.replace(String(route?.params?.username), user.value.username), '/');
 	}
 	catch {
@@ -92,6 +94,14 @@ async function submitAvatar(event) {
 
 <style scoped>
 /* Main */
+.settings {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: fit-content;
+	border: solid;
+}
+
 .profile-settings {
 	display: flex;
 	flex-direction: row;
@@ -106,7 +116,7 @@ async function submitAvatar(event) {
 	padding: 25px;
 }
 
-.profile-avatar {
+.settings-avatar {
 	min-width: 200px;
 	min-height: 200px;
 	max-width: 300px;
