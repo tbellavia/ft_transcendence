@@ -35,8 +35,8 @@ export class Game {
       Math.floor(this.width / 2),
       Math.floor(this.height / 2)
     );
-    this.paddleLeft = new Paddle(this.canva, this.ctx, true);
-    this.paddleRight = new Paddle(this.canva, this.ctx, false);
+    this.paddleLeft = new Paddle(canva, this.ctx, true);
+    this.paddleRight = new Paddle(canva, this.ctx, false);
     this.ball = new Ball(this.canva, this.ctx);
     this.ctx.fillStyle = "white";
     this.ctx.strokeStyle = "white";

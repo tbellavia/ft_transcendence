@@ -1,7 +1,7 @@
 <template>
   <div id="chat" class="chat-channel-options">
-    <ChatChannelUsersList :channelName="channelName" />
     <ChatChannelParameters :channelName="channelName" />
+    <ChatChannelUsersList :channelName="channelName" />
   </div>
 </template>
 

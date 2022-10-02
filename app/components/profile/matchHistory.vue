@@ -21,12 +21,6 @@ const props = defineProps ({
 
 
 <style scoped>
-.list-match {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-}
-
 .profile-match-component {
 	width: 100%;
 	border-width: 3px;
@@ -37,8 +31,8 @@ const props = defineProps ({
 }
 
 .profile-match-body {
-	width: 100%;
 	height: 100%;
+	overflow: hidden;
 	overflow-y: scroll;
 }
 
@@ -48,7 +42,5 @@ h2 {
 	background: linear-gradient(to right, var(--main-color-op-30), transparent, var(--main-color-op-30));
 	border-bottom: solid 1px;
 	border-top: solid 1px;
-	margin-bottom: 3%;
 }
-
 </style>

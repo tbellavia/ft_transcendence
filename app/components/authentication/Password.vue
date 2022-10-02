@@ -27,6 +27,7 @@
       </fieldset>
     </form>
     <p v-if="errorMessage" style="color: var(--error-color);">{{ errorMessage }}</p>
+    <p v-show="registeringValid">Account created</p>
   </div>
 </template>
 
@@ -39,8 +40,10 @@ const password: Ref<string> = ref('');
 const username: Ref<string> = ref('');
 
 const errorMessage: Ref<string> = ref('');
+const registeringValid: Ref<boolean> = ref(); // TODO voir avec lylian eithan
 
 async function authenticateApi() {
+  registeringValid.value = false
   const { $apiFetch } = useNuxtApp();
   const apiRoute = isRegistering.value ? '/auth/register' : '/auth/connect';
 
@@ -55,8 +58,11 @@ async function authenticateApi() {
     errorMessage.value = '';
     password.value = '';
 
-    const { $eventBus } = useNuxtApp();
-    $eventBus.$emit('connect', userInfos);
+    if (!isRegistering.value) {
+      const { $eventBus } = useNuxtApp();
+      $eventBus.$emit('connect', userInfos);
+    }
+    registeringValid.value = isRegistering.value
   } catch (error) {
     errorMessage.value = error.data.message;
     password.value = '';

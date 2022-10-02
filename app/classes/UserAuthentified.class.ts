@@ -37,18 +37,19 @@ export class UserAuthentified extends User {
 
   /* USER INTERFACE */
   /* -------------------------------------------------------------- */
-  public async updateAvatar(newAvatar: any) { //TODO modif type
+  public async updateAvatar(newAvatar: any) { //TODO png only eithan
     await this.fetchingMethod(`/avatar/me`,
       {
-        method: 'PUT',
+        method: 'POST',
         body: newAvatar,
       }
-    );
-
+    ).then(async () => {
+        await this.fetchAll()
+      })
   }
 
   public async updateUsername(newUsername: string) {
-    console.log(newUsername),
+    try {
       await this.fetchingMethod(`/me`, {
         method: 'PUT',
         body: {
@@ -59,6 +60,8 @@ export class UserAuthentified extends User {
         this.username = newUsername;
         await this.fetchAll()
       })
+      return false
+    } catch { return true }
   }
 
   public async updateDoubleAuth(enable: boolean) { }
@@ -99,6 +102,14 @@ export class UserAuthentified extends User {
     return await this.fetchingMethod(`/friends/me/request`);
   }
 
+  public async isFriend(username: string) {
+    const friends = await this.getFriends(false);
+    for (let friend of friends) {
+      if (this.extractFriend(friend).username === username)
+        return true;
+    }
+    return false;
+  }
 
   /* BLOCK INTERFACE */
   /* -------------------------------------------------------------- */
@@ -146,6 +157,6 @@ export class UserAuthentified extends User {
   /* UTILS */
   /* -------------------------------------------------------------- */
   public extractFriend(relation: FriendRelation) {
-    return relation.user_2.username != this.username ? relation.user_2 : relation.user_1;
+    return relation.user_2.username !== this.username ? relation.user_2 : relation.user_1;
   }
 }

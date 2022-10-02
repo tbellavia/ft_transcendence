@@ -9,6 +9,7 @@ import { UserNotFoundException } from "./exceptions/userNotFound.exception";
 import { readFileSync } from "fs";
 import * as path from "path";
 import { UsernameCollision } from "./exceptions/usernameCollision";
+import { StatEntity } from "src/stats/entities/stat.entity";
 
 const STATIC_DIR = path.join(path.resolve(__dirname, ".."), "static"); 
 
@@ -27,8 +28,12 @@ export class UsersService {
       ...createUserDto, 
       avatar: UsersService.default_avatar
     });
+    // TODO: Resolve circular dependency and use StatsService.create() instead
+    const stat = StatEntity.create();
+    stat.user = user;
 
     await this.userRepository.save(user);
+    await stat.save();
     return await this.findOneByName(user.username);
   }
   
@@ -104,9 +109,7 @@ export class UsersService {
       const other = await this.findOneByName(newUsername);
 
       throw new UsernameCollision(newUsername);
-    } catch {
-      console.log("Username valid!");
-    }
+    } catch {}
 
 
     user.username = newUsername;
@@ -137,7 +140,8 @@ export class UsersService {
     
     if(username) {
       const collide = await this.usernameCollide(username);
-      if ( collide ){
+      const validUsername = await this.isValidUsername(username)
+      if ( collide || !validUsername ) {
         throw new UsernameCollision(username);
       }
       user.username = username;
@@ -195,5 +199,13 @@ export class UsersService {
     const user = await this.userRepository.findOneBy({ username });
 
     return user !== null;
+  }
+
+  async isValidUsername(username: string) { // TODO voir avec tony eithan
+    if (! /^[a-zA-Z0-9_]+$/.test(username) || username.length > 16 || username.length <= 0) {
+      return false
+    } else {
+      return true;
+    }
   }
 }

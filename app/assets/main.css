@@ -60,14 +60,14 @@ body {
 
 /* --------------------------------------------------------------  */
 /* Visual line like old monitor */
-body:after {
-  /* background: repeating-linear-gradient(
+.real-body::after {
+  background: repeating-linear-gradient(
     transparent,
     transparent 5px,
     var(--background-line-color) 6px
   );
   content: "";
-  pointer-events: none; */
+  pointer-events: none;
 
   position: absolute;
   left: 0;

@@ -37,8 +37,6 @@ import { MuteUserOnChannelDTO } from "./dto/muteUserOnChannel.dto";
 import { WsMuteHimselfException } from "./exceptions/channel/wsMuteHimself.exception";
 import { MuteService } from "./mute.service";
 import { WsUserIsAlreadyMutedOnChannelException } from "./exceptions/channel/wsUserIsAlreadyMutedOnChannel.exception";
-import { channel } from "diagnostics_channel";
-import { WsUserIsNotMuteOnChannelException } from "./exceptions/channel/wsUserIsNotMuteOnChannel.excpetion";
 
 @Injectable()
 export class ChannelsService {

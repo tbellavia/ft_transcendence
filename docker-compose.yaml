@@ -16,6 +16,7 @@ services:
         target: /home/node/app/node_modules
     ports:
       - 8000:8000
+      - 24678:24678
 
   api:
     container_name: nestjs
@@ -36,8 +37,6 @@ services:
       - backend
     depends_on:
       - db
-    # environment:
-    #   # - DEBUG=*
 
   db:
     container_name: db

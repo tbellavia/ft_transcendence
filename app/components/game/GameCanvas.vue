@@ -1,5 +1,12 @@
 <template>
 	<div class="game-div">
+		<v-dialog persistent v-if="timer" v-model="timer">
+			<v-card center class="game-begin-timer">
+			<v-card-title> MACH BEGIN </v-card-title>
+			<v-card-text>{{ timer }}</v-card-text>
+			</v-card>
+  		</v-dialog>
+
 		<canvas  id="game-canvas" ></canvas>
 	</div>
 </template>
@@ -8,12 +15,21 @@
 
 import { Game } from '~~/classes/game/game';
 
-const props = defineProps({ socket: { required: true, } })
 const user = await getRefreshedUserAuthenticate();
+const socket = useSocketGame();
+
+// intervalle :
+
+const timer = ref();
+
+socket.value.on("game-start-timer", (remaining) => {
+	console.log()
+	timer.value = remaining;
+})
 
 onMounted (() => {
 	const gameCanvas = document.getElementById("game-canvas") as HTMLCanvasElement | null;
-	const game = new Game(gameCanvas, props.socket, user.value.currentMatch.left);
+	const game = new Game(gameCanvas, socket.value, user.value.currentMatch.left);
 	
 	document.addEventListener("keydown", (event) => {
 		game.keypressEvent(event);
@@ -42,6 +58,19 @@ onMounted (() => {
 	width: 100%;
 	height: 100%;
 	object-fit: contain;
+
+}
+
+.game-begin-timer {
+	display: block;
+	opacity: 80%;
+	color: var(--main-color-light);
+	background-color: var(--main-color-opacity-10);
+	border: thin solid;
+	text-align: center;
+}
+
+v-dialog {
 
 }
 </style>

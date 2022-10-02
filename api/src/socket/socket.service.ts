@@ -13,7 +13,7 @@ import { UserStatus } from "./enums/userStatus.enum";
 export class SocketService {
   // Map of connected users to their sockets.id
   private connectedUsers = new Map<string, UserEntity>();
-  private userStatus = new Map<string, UserStatus>();
+  private usersStatus = new Map<string, UserStatus>();
 
   constructor(
     private readonly authService: AuthService,
@@ -40,26 +40,28 @@ export class SocketService {
     console.log('User', user.username, 'connect');
     this.connectedUsers.forEach((user, socketId) => {
       console.log(socketId, ':',user.username)
-    });
-    */
-    return user;
-  }
+    });nestjs   | lperson- connect to a game
 
-  async disconnectSocketBindedToUser(socket: Socket) {
-    const user = this.connectedUsers.get(socket.id);
-    this.connectedUsers.delete(socket.id);
-    /*
     if (user)
       console.log('User', user.username, 'disconnect');
     */
     return user;
   }
 
+  async disconnectSocketBindedToUser(socket: Socket) {
+    const user = this.connectedUsers.get(socket.id);
+    if (user) {
+      this.connectedUsers.delete(socket.id);
+      this.usersStatus.delete(user.username);
+    }
+    return user;
+  }
+
   // Fetch user
-  async getUserFromSocket(socket: Socket) {
+  async getUserFromSocket(socket: any) {
     const user = this.connectedUsers.get(socket.id);
     if (!user)
-      return this.connectUserWithSocket(socket);
+      return await this.connectUserWithSocket(socket);
     return user;
   }
 
@@ -72,11 +74,15 @@ export class SocketService {
   }
 
   // Get and Set user's status
-  getUserStatus(socket: Socket) {
-    // const user = 
+  getUserStatus(user: UserEntity): UserStatus {
+    let status = UserStatus.OFFLINE;
+    if (this.usersStatus.has(user.username))
+      status = this.usersStatus.get(user.username);
+    return status;
   }
 
-  setUserStatus(socket: Socket, status: UserStatus) {
-    // const user = 
+  async setUserStatus(socket: Socket, status: UserStatus) {
+    const user = await this.getUserFromSocket(socket);
+    this.usersStatus.set(user.username, status);
   } 
 }

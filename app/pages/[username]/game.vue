@@ -1,16 +1,26 @@
 <template>
 <div class="game-page">
 	<div v-if="user.isInGame === false">
-		<div class="friends-buttons">
-			<button @click="view = true"> SEE MATCH </button>
+		<div v-show="!waiting" class="friends-buttons">
+			<button @click="view = !view"> SEE MATCH </button>
 			<button class="friends-buttons" @click="subscribeMatchmaking()"> PLAY ! </button>
 		</div>
-		<div v-show="view">
-			LIST MATCH
+		<div v-show="view" class="profile-match-body">
+			<!-- <div class="list-match" v-for="match in onlineMatch"> -->
+			<div class="list-match" v-for="match in onlineMatch">
+				<button style="width:100%;" @click="showThisRoom(match)">
+					<ListInGameItem />
+				</button>
+			</div>
+		</div>
+		<div v-show="waiting">
+			RESEARCH A PLAYER
 		</div>
 	</div>
 	<div v-else class="in-game" >
-		<GameProfile  />
+		<Suspense >
+		<GameProfile />
+	</Suspense>
 		<div>
 			<GameCanvas1 :socket=socket class="game-container" />
 		</div>
@@ -22,11 +32,16 @@
 <script setup lang="ts">
 import GameCanvas1 from '../../components/game/GameCanvas.vue';
 import GameProfile from '../../components/game/GameProfile.vue';
+import ListInGameItem from '~~/components/game/ListInGameItem.vue';
 
 const socket = useSocketGame();
 const user = await getRefreshedUserAuthenticate();
-const match = ref(undefined);
 const view = ref(false);
+const waiting = ref(false);
+
+// const onlineMatch = await getOnlineMatch();
+const onlineMatch = 20;
+
 
 /**
  * Subscribe user to matchmaking.
@@ -34,24 +49,16 @@ const view = ref(false);
 async function subscribeMatchmaking() {
 	socket.value.emit("subscribe");
 	view.value = false;
-
-	console.log("Subscribe !");	
+	waiting.value = true;
 }
 
 /**
  * User has been matched with another user.
  */
 socket.value.on("matched", ({username, id, left}) => {
-	const side = (left) ? "left" : "right";
-	console.log(`You have been matched with ${username} and you play ${side}`);
-
+	waiting.value = false;
 	user.value.setMatch(id, username, left);
 });
-
-onMounted (() => {
-
-});
-
 
 </script>
 
@@ -62,13 +69,20 @@ onMounted (() => {
 		position: relative;
 	}
 	.game-page {
-		width: 100%;
+		width: 80%;
 		height: 100%;
 		left: 10%;
 		/* position to fix */
 		position: fixed;
 	}
 
+	.profile-match-body {
+		width: 60%;
+		min-width: 500px;
+		height: 50vh;
+		overflow-y: scroll;
+		overflow-x: none;
+	}
 .game-container {
 		width: 80%;
 		height: 80%; 

@@ -38,12 +38,18 @@ export class User {
 	 * call all fetch methods that is not fetchAll
 	 */
 	public async fetchAll() {
-		Object.getOwnPropertyNames(User.prototype).forEach(async key => {
-			if (key.startsWith('fetch') && key != 'fetchAll' && key != 'fetchingMethod') {
-				await this[key]();
-			}
-		});
-		return this;
+		await this.fetchingMethod(`/${this.username}`)
+		.then( async () => {
+			Object.getOwnPropertyNames(User.prototype).forEach(async key => {
+				if (key.startsWith('fetch') && key != 'fetchAll' && key != 'fetchingMethod') {
+					await this[key]();
+				}
+				return this;
+			});
+		})
+		.catch( async (error) => {
+			return undefined;
+		})
 	}
 
 	public async fetchInfos() {
@@ -53,12 +59,16 @@ export class User {
 	}
 
 	public async fetchStats() {
-
-		const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`).catch(() => {});
-		if (stats)
-			this.stats = stats;
-		else {
-
+		this.stats = {
+			game_abandonned: 0,
+			game_total: 0,
+			game_won: 0,
+			rank: 'WOOD',
+		}
+		const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`); // TODO remove and change to do in back eithan
+		this.stats = stats;
+		if (!this.stats)
+		{
 			this.stats = {
 				game_abandonned: 0,
 				game_total: 0,

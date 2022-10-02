@@ -20,7 +20,7 @@
 			<button class="OptionsProfile_sub">suggest a match</button>
 
 			<!-- SEE PROFILE PAGE -->
-			<button class="OptionsProfile_sub">Profile Page</button>
+			<button class="OptionsProfile_sub" @click='navigateTo("/" + props.name + "/profile" )'> Profile Page </button>
 
 			<div v-if="authUser.username != name">
 
@@ -94,18 +94,6 @@ socket.value.emit(
 	}
 );
 
-const targetIsOwner = ref(false);
-socket.value.emit(
-	'is_channel_owner',
-	{
-		name: props.channelName,
-		username: props.name
-	},
-	(isChanOwner: boolean) => {
-		targetIsOwner.value = isChanOwner;
-	}
-)
-
 function setModerator() {
 	socket.value.emit('add_channel_moderator', {name: props.channelName, username: props.name});
 }
@@ -138,15 +126,29 @@ function unbanUser() {
 	socket.value.emit('unban_channel_user', {name: props.channelName, username: props.name});
 }
 
+const targetIsOwner = ref(false);
 const isMutedTarget = ref(false);
+if (!props.isBan) {
+	socket.value.emit(
+		'is_muted_user',
+		{
+			name: props.channelName,
+			username: props.name
+		},
+		(isMuted: boolean) => isMutedTarget.value = isMuted
+	);
+
 socket.value.emit(
-	'is_muted_user',
+	'is_channel_owner',
 	{
 		name: props.channelName,
 		username: props.name
 	},
-	(isMuted: boolean) => isMutedTarget.value = isMuted
-);
+	(isChanOwner: boolean) => {
+		targetIsOwner.value = isChanOwner;
+	}
+)
+}
 
 socket.value.on(
 	'receive_mute_channel_user',

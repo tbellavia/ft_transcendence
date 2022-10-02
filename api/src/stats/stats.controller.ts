@@ -13,14 +13,24 @@ export class StatsController {
   }
 
   @Get('/stats/me')
-  async findOne(@Req() request: RequestWithUser) {
-    return this.statsService.findOne(request.user.username);
+  async findOne(@Req() request: RequestWithUser) { // TODO see if necessary eithan
+    try {
+      return this.statsService.findOne(request.user.username);
+    }
+    catch {
+      return undefined;
+    }
   }
 
   // route for getting stats of other users
   @Get('/:target/stats')
-  async GetTargetStats(@Param('target') target: string) {
-    return this.statsService.findOne(target);
+  async GetTargetStats(@Param('target') target: string) {  // TODO see if necessary eithan
+    try {
+      return this.statsService.findOne(target);
+    }
+    catch {
+      return undefined;
+    }
   }
 
   @Put('/stats/me')

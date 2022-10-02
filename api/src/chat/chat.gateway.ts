@@ -13,6 +13,9 @@ import { InviteUserDTO } from "./dto/inviteUser.dto";
 import { UpdateChannelDto } from "./dto/updateChannel.dto";
 import { ChannelUserTargetDTO } from "./dto/channelUserTarget.dto";
 import { MuteUserOnChannelDTO } from "./dto/muteUserOnChannel.dto";
+import { UserStatus } from "src/socket/enums/userStatus.enum";
+import { BlockedService } from "src/blocked/blocked.service";
+import { ReceiveMessage } from "./classes/receiveMessage.class";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
@@ -34,21 +37,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private readonly socketService: SocketService,
     private readonly chatService: ChatService,
-    private readonly channelService: ChannelsService
+    private readonly channelService: ChannelsService,
+    private readonly blockedService: BlockedService
   ) {}
 
   //Be aware filters does not works on handleConnection !
   async handleConnection(socket: Socket) {
     try {
-      const user = await this.socketService.getUserFromSocket(socket);
-      console.log(user.username, 'connect to chat');
+			await this.socketService.setUserStatus(socket, UserStatus.CHATTING);
     } catch {}
   }
 
   async handleDisconnect(socket: Socket) {
     const user = await this.socketService.disconnectSocketBindedToUser(socket);
-    if (user)
-      console.log(user.username, 'disconnect from chat');
   }
 
   // Message handling
@@ -65,9 +66,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.server
         .to(author.username)
         .emit('receive_message', receiveMessage);
-    this.server
-      .to(message.target)
-      .emit('receive_message', receiveMessage);
+
+    const sockets = await this.server.in(message.target).fetchSockets();
+    sockets.forEach(async socket => {
+      const target = await this.socketService.getUserFromSocket(socket);
+      if (await this.blockedService.exists(target.username, author.username)) {
+        socket.emit('receive_message', new ReceiveMessage(`is blocked and you can not see its messages`, author.username));
+      } else {
+        socket.emit('receive_message', receiveMessage);
+      }
+    })
     return author.username;
   }
 
@@ -78,9 +86,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     const author = await this.socketService.getUserFromSocket(socket);
     const messages = await this.chatService.getAllMessages(author, getAllMessages);
+
     // Connect socket to channel's room
     if (getAllMessages.isChannel)
       this.server.to(author.username).socketsJoin(getAllMessages.target);
+    await this.socketService.setUserStatus(socket, UserStatus.CHATTING);
     return messages;
   }
 

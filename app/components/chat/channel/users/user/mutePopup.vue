@@ -5,9 +5,9 @@
     </template>
 
     <v-card>
-      <v-title>
+      <v-card-title>
         Mute User
-      </v-title>
+      </v-card-title>
 
       <select v-model="selectedMute">
         <option v-for="muteTime in muteTimes" :value="muteTime.value">

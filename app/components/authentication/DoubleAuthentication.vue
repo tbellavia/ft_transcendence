@@ -7,8 +7,8 @@
           persistent
           max-width="400">
           <template  v-slot:activator="{ on: activatePopup }">
-            <span class="line-sub"> Double Authentication :</span>
-            <v-switch class="line-sub"
+            <span class="line-sub"> Double Authentication </span>
+            <v-switch class="line-sub-2fa"
             v-model="userChoice"
             v-on:click="activatePopup" >
             <!-- Handle connection -->
@@ -16,7 +16,7 @@
           </template>
 
            <!-- Pop windows with Qr Code here -->
-          <v-card density="comfortable">
+          <v-card class="doubleFABlock" density="comfortable">
             
             <!-- title and cancel button -->
             <v-card-title class="card-title" >
@@ -145,11 +145,24 @@ async function validateTwoFactorAuthentication(code: string) {
 
 .line {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-span.line-sub, switch.line-sub {
+.line-sub-2fa {
   display: flex;
   align-self: center;
+  margin-left: 10px;
+}
+
+.doubleFABlock {
+  background-color: rgba(0, 0, 0, 0.800);
+}
+
+.profile-2fa-switch {
+  display: flex;
+  flex-direction: row;
+  scale: 10;
 }
 
 </style>

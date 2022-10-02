@@ -15,7 +15,7 @@
       <v-spacer></v-spacer>
 
       <v-card-actions>
-      <userpageDoubleAuthenticationForm 
+      <authenticationDoubleAuthenticationForm
         justify="center" 
         @DoubleAuthValidate="checkValidation" />
       </v-card-actions>
