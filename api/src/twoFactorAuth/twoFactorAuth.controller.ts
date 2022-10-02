@@ -53,7 +53,7 @@ export class TwoFactorAuthController {
   @UseGuards(new JWTAuthGuard())
   @Post('authenticate')
   async authenticate(@Req() requestWithUser, @Body() { code }: TwoFactorCodeDTO, @Res({ passthrough: true}) res) {
-    const isCodeValid = this.twoFactorAuthService.isTwoFactorAuthCodeValid(
+    const isCodeValid = await this.twoFactorAuthService.isTwoFactorAuthCodeValid(
       code,
       requestWithUser.user
     );
