@@ -54,14 +54,18 @@ export class GameGateway {
 		}
 	}
 
-	@SubscribeMessage("update-paddle-pos")
-	async updatePaddlePos(
+	@SubscribeMessage("spectator-subscribe")
+	async subscribeSpectator(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() y: number
+		@MessageBody() matchId: string
 	) 
 	{
-		// console.log(`Position ${y}`);
-		this.gameService.updateGamePaddlePos(socket, y);
+		this.gameService.subscribeSpectator(matchId, socket);
+	}
+
+	@SubscribeMessage("spectator-unsubscribe")
+	async unsubscribeSpectator(@ConnectedSocket() socket: Socket) {
+		this.gameService.unsubscribeSpectator(socket);
 	}
 
 	@SubscribeMessage("paddle-move-up")
