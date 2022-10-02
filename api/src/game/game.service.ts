@@ -6,6 +6,7 @@ import { Game } from "./engine/game";
 import { GameDimension } from "./engine/utils/dimension";
 import { GameVec } from "./engine/utils/gameVec";
 import { GameMatch } from "./interfaces/match";
+import { StatsService } from "src/stats/stats.service";
 
 interface GameWithMatch {
     game: Game;
@@ -19,7 +20,8 @@ export class GameService {
     private matches: Map<Game, GameWithMatch>;
 
 	constructor(
-        private matchesService: MatchesService
+        private matchesService: MatchesService,
+        private statsService: StatsService,
     ) 
     {
         // Init game loop here ?
@@ -83,7 +85,15 @@ export class GameService {
         const match = this.matches.get(game);
         const gameStats = game.getGameStats();
 
-        // Store date
+        const leftOutcome = game.getLeftPlayerOutcome();
+        const rightOutcome = game.getRightPlayerOutcome();
+        const player1_name = game.player_1.user.username;
+        const player2_name = game.player_2.user.username;
+        const victory = leftOutcome > rightOutcome ? player1_name : player2_name; 
+    
+        this.statsService.GameEndUpdate(player1_name, leftOutcome > rightOutcome, false)
+        this.statsService.GameEndUpdate(player2_name, leftOutcome < rightOutcome, false)
+
         this.matchesService.update(match.match.id, gameStats);
         this.removeGame(game);
     }

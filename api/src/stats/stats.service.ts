@@ -4,7 +4,7 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { UpdateStatDto } from './dto/stats.dto';
-import { StatEntity } from './entities/stat.entity';
+import { StatEntity, RankEnum } from './entities/stat.entity';
 
 @Injectable()
 export class StatsService {
@@ -21,6 +21,7 @@ export class StatsService {
         
         stat.user = user;
         await stat.save();
+
         return await this.findOne(username);
     }
 
@@ -39,6 +40,27 @@ export class StatsService {
             stat.rank = rank;
         await stat.save();
         return stat;
+    }
+
+    async GameEndUpdate(username: string, win: boolean, abandonned: boolean) {
+     
+        const stat = await this.findOne(username);
+        stat.game_total += 1;
+        stat.game_abandonned += abandonned ? 1 : 0;
+        if (win) {
+            stat.game_won += 1;
+            stat.rank = this.updateRank(stat.rank);
+        }
+        await stat.save();
+        return stat;
+    }
+
+    updateRank(rank: RankEnum) {
+        if ( rank == RankEnum.WOOD )
+            return RankEnum.BRONZE;
+        else if ( rank == RankEnum.BRONZE )
+            return RankEnum.SILVER;
+        return RankEnum.GOLD
     }
 
     // async findOne(username: string) {

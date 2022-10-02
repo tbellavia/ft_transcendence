@@ -79,13 +79,11 @@ export class GameGateway {
 	@SubscribeMessage("paddle-move-up")
 	async paddleMoveUp(@ConnectedSocket() socket: Socket) 
 	{
-		console.log("MOVE UP");
 		this.gameService.updateMoveUp(socket);
 	}
 
 	@SubscribeMessage("paddle-move-down")
 	async paddleMoveDown(@ConnectedSocket() socket: Socket) {
-		console.log("MOVE DOWN");
 		this.gameService.updateMoveDown(socket);
 	}
 

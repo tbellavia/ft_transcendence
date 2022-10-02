@@ -117,7 +117,9 @@ export class Game {
   emitGameEnd() {
     const leftOutcome = this.getLeftPlayerOutcome();
     const rightOutcome = this.getRightPlayerOutcome();
-    const victory = leftOutcome > rightOutcome ? this.player_1.user.username : this.player_2.user.username; 
+    const player1_name = this.player_1.user.username;
+    const player2_name = this.player_2.user.username;
+    const victory = leftOutcome > rightOutcome ? player1_name : player2_name; 
 
     this.player_1.socket.emit("game-end", victory);
     this.player_2.socket.emit("game-end", victory);
