@@ -57,18 +57,15 @@ const lettersAndNumbersOnly = (event: any) => {
 
 async function submitName() {
 	nameError.value = await user.value.updateUsername(newName.value);
-	newName.value = ""
-	if (nameError.value == true) {
+	if (nameError.value === true) {
+		newName.value = ""
 		return
 	}
 	const route = useRoute()
-	try {
-		user.value = await getRefreshedUserAuthenticate()
-		await redirectIfConnected(route.fullPath.replace(String(route?.params?.username), user.value.username), '/');
-	}
-	catch {
-		await navigateTo(route.fullPath)
-	}
+
+	const path = route.fullPath.replace(String(route.params.username), user.value.username);
+	await redirectIfConnected(path, '/');
+	newName.value = ""
 }
 
 async function submitAvatar(event) {
