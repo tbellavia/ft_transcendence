@@ -14,6 +14,7 @@
 
 <template>
    <v-app>
+         <GameNotifyMatch />
          <NuxtPage />
   </v-app>
 </template>
