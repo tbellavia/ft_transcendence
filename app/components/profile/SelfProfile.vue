@@ -11,9 +11,9 @@
 					<h1 class="profile-username"> {{ user.username }} </h1>
 					<h2 v-show="isFriend" class="profile-status"> {{ status }}</h2>
 				</div>
-				<div class="user-parameters-sub"> GAME TOTAL: {{ user.stats.game_total }} </div>
-				<div class="user-parameters-sub"> GAME WON : {{ user.stats.game_won }} </div>
-				<div class="user-parameters-sub"> GAME LOST: {{ user.stats.game_total - user.stats.game_won -
+				<div class="user-parameters-sub"> TOTAL GAMES : {{ user.stats.game_total }} </div>
+				<div class="user-parameters-sub"> GAMES WON : {{ user.stats.game_won }} </div>
+				<div class="user-parameters-sub"> GAMES LOST : {{ user.stats.game_total - user.stats.game_won -
 				user.stats.game_abandonned }} </div>
 				<div v-if="props.isUserAuth" class="profile-update-datas">
 					<div class="user-parameters-sub">

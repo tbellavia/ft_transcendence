@@ -1,16 +1,13 @@
 <template>
   <nav class="navbar">
-    <v-spacer></v-spacer>
-    <h1> PONG GAME </h1>
-    <v-spacer></v-spacer>
-
+    <div></div>
+    <h1 class="navbar-title"> PIP PONG </h1>
     <div class="navbar-right">
       <headerButtonChangeTheme class="navbar-sub" />
       <headerButtonDisconnect class="navbar-sub" />
     </div>
   </nav>
 </template>
-
 
 <style scoped>
 

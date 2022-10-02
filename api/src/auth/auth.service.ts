@@ -52,7 +52,7 @@ export class AuthService {
       return user;
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation)
-        throw new BadRequestException('User with that username already exists');
+        throw new BadRequestException('Username already used');
       throw new InternalServerErrorException('Something went wrong');
     }
   }
