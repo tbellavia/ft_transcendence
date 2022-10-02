@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { BlockedService } from './blocked.service';
 import { BlockedController } from './blocked.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,7 +7,11 @@ import { FriendsModule } from 'src/friends/friends.module';
 import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BlockedEntity]), FriendsModule, UsersModule],
+  imports: [
+    TypeOrmModule.forFeature([BlockedEntity]), 
+    UsersModule,
+    forwardRef(() => FriendsModule)
+  ],
   controllers: [BlockedController],
   providers: [BlockedService],
   exports: [BlockedService]

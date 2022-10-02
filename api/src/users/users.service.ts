@@ -109,9 +109,7 @@ export class UsersService {
       const other = await this.findOneByName(newUsername);
 
       throw new UsernameCollision(newUsername);
-    } catch {
-      console.log("Username valid!");
-    }
+    } catch {}
 
 
     user.username = newUsername;

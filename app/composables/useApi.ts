@@ -9,7 +9,6 @@ export async function useApi(urlEndpoint: string, options?: UseFetchOptions<Data
 			return datas;
 		})
 		.catch( (error) => {
-			console.warn(error);
 			return (undefined);
 		})
 }
@@ -23,7 +22,7 @@ export async function postApi(URLendpoint: string, data?: any) {
 		method: 'POST',
 		body: data,
 	})
-	.catch ( async (error) => console.warn(error))
+	.catch ( async () => {})
 }
 
 //  -------------------------------------------------------------- -->
@@ -35,7 +34,7 @@ export async function putApi(URLendpoint: string, data: any) {
 		method: 'PUT',
 		body: data,
 	})
-	.catch ( async (error) => console.warn(error))
+	.catch ( async () => {})
 }
 
 //  -------------------------------------------------------------- -->
@@ -46,5 +45,5 @@ export async function deleteApi(URLendpoint: string) {
 	await $apiFetch(URLendpoint, {
 		method: 'DELETE',
 	})
-	.catch ( async (error) => console.warn(error))
+	.catch ( () => {})
 }

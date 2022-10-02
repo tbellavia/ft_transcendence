@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationQueryDto } from 'src/common/dto/pagination.query-dto';
 import { FriendsService } from 'src/friends/friends.service';
@@ -14,6 +14,7 @@ import { UserBlockHimselfException } from './exceptions/userBlockHimself.excepti
 export class BlockedService {
     constructor(
         private readonly userService: UsersService,
+        @Inject(forwardRef(() => FriendsService))
         private friendsService: FriendsService,
         @InjectRepository(BlockedEntity)
         private blockedRepository: Repository<BlockedEntity>
