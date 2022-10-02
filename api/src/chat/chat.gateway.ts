@@ -45,6 +45,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   //Be aware filters does not works on handleConnection !
   async handleConnection(socket: Socket) {
     try {
+      await this.socketService.connectUserWithSocket(socket);
     } catch {}
   }
 

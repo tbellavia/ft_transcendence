@@ -26,8 +26,6 @@ export class MatchAskingService {
 		}
 		newDemands.push(target);
 		this.privateRooms.set(gameUser, newDemands);
-		// console.log("SUBSCRIBE:", user.username, '->', target.username);
-		// console.log(this.privateRooms);
 	}
 
 	async acceptOrRefuse(asker: UserEntity, target: UserEntity, socketTarget: Socket, isAccept: boolean = true) {

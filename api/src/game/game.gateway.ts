@@ -33,6 +33,7 @@ export class GameGateway {
 
 	async handleConnection(socket: Socket){
 		try {
+			await this.socketService.connectUserWithSocket(socket);
 		} catch {}
 	}
 
