@@ -86,13 +86,11 @@ export class SocketService {
   async setUserStatus(socket: Socket, status: UserStatus) {
     const user = await this.getUserFromSocket(socket);
     this.usersStatus.set(user.username, status);
-    console.log('Change status for', user.username, 'to', status);
     if (this.statusTimeout.has(user.username)) {
       clearTimeout(this.statusTimeout.get(user.username));
     }
     this.statusTimeout.set(user.username, setTimeout(() => {
       if (this.usersStatus.has(user.username)) {
-        console.log('Change status for', user.username, 'to', UserStatus.ONLINE);
         this.usersStatus.set(user.username, UserStatus.ONLINE);
       }
     }, 5000));
