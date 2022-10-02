@@ -36,6 +36,8 @@ export class SocketService {
       throw new WsException('Invalid credentials');
     
     this.connectedUsers.set(socket.id, user);
+
+
     let socketArray = this.userSockets.get(user.username);
     if (socketArray)
       socketArray.push(socket);
@@ -43,7 +45,6 @@ export class SocketService {
       socketArray = [socket];
     this.userSockets.set(user.username, socketArray);
     socket.join(user.username);
-
     /*
     console.log('User', user.username, 'connect');
     this.connectedUsers.forEach((user, socketId) => {
@@ -61,6 +62,7 @@ export class SocketService {
     if (user) {
       this.connectedUsers.delete(socket.id);
       this.usersStatus.delete(user.username);
+
       let array = this.userSockets.get(user.username);
       if (array && array.length > 1) {
         const index = array.findIndex(userSocket => userSocket.id == socket.id);

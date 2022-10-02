@@ -14,6 +14,7 @@
 
 <template>
    <v-app>
+         <GameNotifyMatch />
          <NuxtPage />
   </v-app>
 </template>
@@ -37,6 +38,15 @@ $eventBus.$on('disconnect', () => {
    layout.value = 'default'
 });
 
+const authUser = getUserAuthenticate();
+const socketGame = useSocketGame();
+socketGame.value.on('matched', ({id, username, left}) => {
+   if (authUser && authUser.value) {
+      authUser.value.isInGame = true;
+      authUser.value.setMatch(id, username, left);
+      navigateTo(`/user/${authUser.value.username}/game`);
+   }
+});
 
 </script>
 
