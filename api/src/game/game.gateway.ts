@@ -1,8 +1,6 @@
 import { ClassSerializerInterceptor, SerializeOptions, UseInterceptors } from "@nestjs/common";
 import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
-import { userInfo } from "os";
 import { Socket } from "socket.io";
-import { MatchesService } from "src/matches/matches.service";
 import { UserStatus } from "src/socket/enums/userStatus.enum";
 import { SocketService } from "src/socket/socket.service";
 import { MatchmakingService } from "./matchmaking/matchmaking.service";
@@ -29,7 +27,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 	async handleConnection(socket: Socket){
 		try {
-			await this.socketService.setUserStatus(socket, UserStatus.IN_GAME);
 		} catch {}
 	}
 
