@@ -92,16 +92,19 @@ export class GameGateway {
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() opponent: string) {
 		const user = await this.socketService.getUserFromSocket(socket);
+		if (user.username == opponent) {
+			throw new WsException('User can not suggest match to himself');
+		}
 		
 		// Check if opponent is connected
 		const opponentUser = await this.socketService.getUserByName(opponent);
 		const opponentSocket = this.socketService.getSocketsFromUsername(opponent);
 		if (!opponentSocket)
-			socket.emit('asking-match', false);
+			throw new WsException(`${opponentUser.username} is not connected!`);
 			
 			// Ignore if in game-match
 		if (this.gameService.getGameOfUser(user))
-			socket.emit('asking-match', false);
+			throw new WsException(`User is already in a game!`);
 			
 		// Unsubscribe from matchmaking
 		if (this.matchmakingService.isSubscribed(user))
@@ -117,16 +120,18 @@ export class GameGateway {
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() opponent: string) {
 		const user = await this.socketService.getUserFromSocket(socket);
-		
+		if (user.username == opponent)
+			throw new WsException('User can not accept match with himself');
+
 		// Check if opponent is connected
 		const opponentUser = await this.socketService.getUserByName(opponent);
 		const opponentSocket = this.socketService.getSocketsFromUsername(opponent);
 		if (!opponentSocket)
-			socket.emit('asking-match', false);
+			throw new WsException(`${opponentUser.username} is not connected!`);
 			
 			// Ignore if in game-match
 		if (this.gameService.getGameOfUser(user))
-			socket.emit('asking-match', false);
+			throw new WsException(`User is already in a game!`);
 			
 		// Unsubscribe from matchmaking
 		if (this.matchmakingService.isSubscribed(user))
@@ -134,7 +139,7 @@ export class GameGateway {
 
 		// Create the match!
 		await this.matchAskingService.acceptOrRefuse(opponentUser, user, socket);
-		// this.server.to(opponent).emit('asking-match', user.username);
+		this.server.to(opponent).emit('asking-match', user.username);
 	}
 
 	@SubscribeMessage("refuse-match")
@@ -142,16 +147,19 @@ export class GameGateway {
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() opponent: string) {
 		const user = await this.socketService.getUserFromSocket(socket);
-		
+		if (user.username == opponent)
+			throw new WsException('User can not deny match with himself');
+
 		// Check if opponent is connected
 		const opponentUser = await this.socketService.getUserByName(opponent);
 		const opponentSocket = this.socketService.getSocketsFromUsername(opponent);
 		if (!opponentSocket)
-			socket.emit('asking-match', false);
+			throw new WsException(`${opponentUser.username} is not connected!`);
 			
 			// Ignore if in game-match
 		if (this.gameService.getGameOfUser(user))
-			socket.emit('asking-match', false);
+			throw new WsException(`User is already in a game!`);
+
 			
 		// Unsubscribe from matchmaking
 		if (this.matchmakingService.isSubscribed(user))
@@ -159,7 +167,7 @@ export class GameGateway {
 
 		// Create the match!
 		await this.matchAskingService.acceptOrRefuse(opponentUser, user, socket, false);
-		// this.server.to(opponent).emit('asking-match', user.username);
+		this.server.to(opponent).emit('asking-match', user.username);
 	}
 }
 
