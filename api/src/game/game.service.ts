@@ -3,8 +3,6 @@ import { Socket } from "socket.io";
 import { UserEntity } from "src/users/entities/user.entity";
 import { MatchesService } from "src/matches/matches.service";
 import { Game } from "./engine/game";
-import { GameDimension } from "./engine/utils/dimension";
-import { GameVec } from "./engine/utils/gameVec";
 import { GameMatch } from "./interfaces/match";
 import { StatsService } from "src/stats/stats.service";
 
@@ -18,6 +16,8 @@ export class GameService {
     private users: Map<Socket, GameWithMatch>;
     private games: Set<Game>;
     private matches: Map<Game, GameWithMatch>;
+    private gamesBySpectator: Map<Socket, Game>;
+    private gamesById: Map<string, Game>;
 
 	constructor(
         private matchesService: MatchesService,
@@ -28,6 +28,10 @@ export class GameService {
         this.users = new Map<Socket, GameWithMatch>();
         this.games = new Set<Game>();
         this.matches = new Map<Game, GameWithMatch>();
+
+        this.gamesBySpectator = new Map<Socket, Game>();
+        this.gamesById = new Map<string, Game>();
+
         this.gameLoop();
     }
 
@@ -47,6 +51,9 @@ export class GameService {
 
         this.games.add(game);
         this.matches.set(game, { game, match });
+
+        this.gamesById.set(match.id, game);
+
         this.users.set(match.player_1.socket, { game, match });
         this.users.set(match.player_2.socket, { game, match });
     }
@@ -106,6 +113,34 @@ export class GameService {
     }
 
     /**
+     * Subscribe spectator to a game.
+     * 
+     * @param matchId 
+     * @param spectator 
+     */
+    async subscribeSpectator(matchId: string, spectator: Socket) {
+        const game = this.gamesById.get(matchId);
+
+        if ( game ) {
+            this.gamesBySpectator.set(spectator, game);
+            game.subscribeSpectator(spectator);
+        }
+    }
+
+    /**
+     * Unsubscribe spectator from a game.
+     * @param spectator 
+     */
+    async unsubscribeSpectator(spectator: Socket) {
+        const game = this.gamesBySpectator.get(spectator);
+
+        if ( game ) {
+            this.gamesBySpectator.delete(spectator);
+            game.unsubscribeSpectator(spectator);
+        }
+    }
+
+    /**
      * Move up the user paddle.
      * Player_1 -> Left paddle
      * Player_2 -> Right paddle
@@ -159,41 +194,6 @@ export class GameService {
 
     isLeftPlayer(socket: Socket, match: GameMatch) {
         return socket.id === match.player_1.socket.id;
-    }
-
-
-
-
-    // TODO: DELETE ?
-    /**
-     * Update the position of user associated with the socket.
-     * Player_1 -> Left paddle
-     * Player_2 -> Right paddle
-     * 
-     * @param socket
-     * @param y 
-     */
-    async updateGamePaddlePos(socket: Socket, y: number) {
-        const matchWithUser = this.users.get(socket);
-
-        if ( matchWithUser ) {
-            const { game, match } = matchWithUser;
-
-            if ( this.isLeftPlayer(socket, match) ){
-                game.setLeftPaddlePos(y);
-            } else {
-                game.setRightPaddlePos(y);
-            }
-            this.streamOpponentPaddlePos(socket, match, y);
-        }
-    }
-
-    async streamOpponentPaddlePos(current: Socket, match: GameMatch, y: number) {
-        if ( current.id === match.player_1.socket.id ) {
-            match.player_2.socket.emit("paddle-pos", y);
-        } else {
-            match.player_1.socket.emit("paddle-pos", y);
-        }
     }
 
     // Getter for game activity

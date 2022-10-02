@@ -6,6 +6,7 @@ import { GameUser } from "../interfaces/gameUser";
 import { GAME_CANVA_DIMENSION, WIN_SCORE } from "./utils/constants";
 import { UpdateMatchDto } from "src/matches/dto/match-update.dto";
 import { MatchOutcomeEnum } from "src/matches/entity/match.entity";
+import { Socket } from "socket.io";
 
 export enum WallSide {
   NONE = 0,
@@ -27,11 +28,13 @@ export class Game {
   private player_1_score: number;
   private player_2_score: number;
   private end_date: Date;
+  private spectators: Set<Socket>;
 
   constructor(player_1: GameUser, player_2: GameUser) {
     this.canva = GAME_CANVA_DIMENSION;
     this.player_1 = player_1;
     this.player_2 = player_2;
+    this.spectators = new Set<Socket>();
     this.player_1_score = 0;
     this.player_2_score = 0;
     this.middle = new GameVec(
@@ -58,6 +61,14 @@ export class Game {
     this.emitGameEnd();
   }
 
+  subscribeSpectator(spectator: Socket) {
+    this.spectators.add(spectator);
+  }
+
+  unsubscribeSpectator(spectator: Socket) {
+    this.spectators.delete(spectator);
+  }
+
   isAlive() {
     return this.alive;
   }
@@ -67,6 +78,7 @@ export class Game {
   update() {
     if ( this.started && this.alive ) {
       this.emitBallPos();
+      this.emitGameStateToSpectators();
       this.ball.update();
 
       const outside = this.ball.isOut();
@@ -114,6 +126,9 @@ export class Game {
     return MatchOutcomeEnum.LOST;
   }
 
+  /**
+   * Emit game end signal to both players.
+   */
   emitGameEnd() {
     const leftOutcome = this.getLeftPlayerOutcome();
     const rightOutcome = this.getRightPlayerOutcome();
@@ -125,6 +140,25 @@ export class Game {
     this.player_2.socket.emit("game-end", victory);
   }
 
+  /**
+   * Emit game end to all spectators.
+   */
+  emitSpectatorGameEnd() {
+    const leftOutcome = this.getLeftPlayerOutcome();
+    const rightOutcome = this.getRightPlayerOutcome();
+    const outcome = {
+      left: leftOutcome,
+      right: rightOutcome
+    };
+
+    this.spectators.forEach((spectator) => {
+      spectator.emit("game-end", outcome);
+    })
+  }
+
+  /**
+   * Emit ball position to both player.
+   */
   emitBallPos() {
     const ball_pos = this.ball.getPos();
 
@@ -132,14 +166,38 @@ export class Game {
     this.player_2.socket.emit("ball-pos", { x: ball_pos.x, y: ball_pos.y });
   }
 
+  /**
+   * Emit score to players and spectators.
+   */
   emitScore() {
     const left_score = this.player_1_score;
     const right_score = this.player_2_score;
     const player1 = this.player_1.user.username;
     const player2 = this.player_2.user.username;
     
-    this.player_1.socket.emit("score", {player1, player2, left_score, right_score });
-    this.player_2.socket.emit("score", { player1, player2, left_score, right_score });
+    this.player_1.socket.emit("score", { left_score, right_score });
+    this.player_2.socket.emit("score", { left_score, right_score });
+
+    this.spectators.forEach((spectator) => {
+      spectator.emit("score", { left_score, right_score });
+    });
+  }
+
+  /**
+   * Emit game state to spectators.
+   */
+  emitGameStateToSpectators() {
+    const ball_pos = this.ball.getPos();
+    const left_paddle_pos = this.ball.getPos();
+    const right_paddle_pos = this.ball.getPos();
+
+    this.spectators.forEach((spectator) => {
+      spectator.emit("game-state", {
+        ball_pos,
+        left_paddle_pos,
+        right_paddle_pos
+      })
+    });
   }
 
   incLeftScore() {
