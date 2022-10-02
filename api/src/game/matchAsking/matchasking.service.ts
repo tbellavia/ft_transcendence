@@ -16,16 +16,17 @@ export class MatchAskingService {
 
 	async subscribe(user: UserEntity, socket: Socket, target: UserEntity) {
 		const gameUser = new GameUser(user, socket);
-
+		
 		const demands = this.privateRooms.get(gameUser);
 		let newDemands = [];
 		if (demands) {
 			if (demands.find(opponent => opponent.username == target.username))
-				throw new WsException(`${user.username} has already propposed to ${target.username}`);
+			throw new WsException(`${user.username} has already propposed to ${target.username}`);
 			newDemands = demands.concat(newDemands);
 		}
 		newDemands.push(target);
 		this.privateRooms.set(gameUser, newDemands);
+		console.log("SUBSCRIBE:", user.username, '->', target.username);
 	}
 
 	async acceptOrRefuse(asker: UserEntity, target: UserEntity, socketTarget: Socket, isAccept: boolean = true) {
@@ -56,15 +57,14 @@ export class MatchAskingService {
 	}
 
 	private async createMatch(player_1: GameUser, player_2: GameUser) : Promise<GameMatch> {
-		// const match = 
 		const match = await this.matchesService.create(
 			player_1.user.username,
 			player_2.user.username
 		);
 		return {
 			id: match.match_id,
-			player_1: player_1,
-			player_2: player_2
+			player_1,
+			player_2
 		};
 	}
 }

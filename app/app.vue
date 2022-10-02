@@ -40,9 +40,10 @@ $eventBus.$on('disconnect', () => {
 
 const authUser = getUserAuthenticate();
 const socketGame = useSocketGame();
-socketGame.value.on('matched', () => {
+socketGame.value.on('matched', ({id, username, left}) => {
    if (authUser.value) {
       authUser.value.isInGame = true;
+      authUser.value.setMatch(id, username, left);
       navigateTo(`/user/${authUser.value.username}/game`);
    }
 });

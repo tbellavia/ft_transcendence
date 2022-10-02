@@ -11,14 +11,8 @@
 </template>
 
 <script setup lang="ts">
-const socket = useSocket();
-let isInGame = false;
-socket.value.emit('get_status', status => {
-  if (status == 'in a game')
-    isInGame = true;
-  else
-    isInGame = false;
-})
+const authUser = getUserAuthenticate();
+const isInGame = authUser.value ? authUser.value.isInGame : false;
 
 const fromUser = ref('');
 const hasSuggestionOfMatch = ref(false);
