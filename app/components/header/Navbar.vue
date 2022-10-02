@@ -2,11 +2,11 @@
   <nav class="navbar">
     <!-- TODO User name  -->
   <div class="link">
-    <NuxtLink class="navbar-left" v-if="disconnectButton" v-for="(link, index) in links" :key="`${link.name}${index}`" :to="`/${username}/${link.link}`">{{ link.name }}</NuxtLink>
+    <NuxtLink class="navbar-left" v-if="disconnectButton" v-for="(link, index) in links" :key="`${link.name}${index}`" :to="`/user/${username}/${link.link}`">{{ link.name }}</NuxtLink>
   </div>
     <div class="navbar-right">
       <headerButtonChangeTheme class="navbar-sub" />
-      <headerButtonDisconnect class="navbar-sub" />
+      <headerButtonDisconnect v-if="disconnectButton" class="navbar-sub" />
     </div>
   </nav>
 </template>

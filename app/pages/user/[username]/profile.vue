@@ -8,17 +8,21 @@
 <script setup lang="ts">
 const route = useRoute(); // TODO mai-fliend eithan
 const disconnectButton = ref(false);
-let isUserAuth = ref();
-let user = ref();
+let isUserAuth = ref(false);
+let user = ref('');
 try {
-	const userPage = await(useUser(route.params.username))
-	const userAuthenticate = ref(getUserAuthenticate());
-	if (userAuthenticate?.value && userPage.value.stats) {
+	user = await getRefreshedUserAuthenticate();
+	if (user.value.username === route.params.username) {
+		isUserAuth.value = true
+		user = user.value.username
 		disconnectButton.value = true;
-		isUserAuth = ref(route.params.username === userAuthenticate.value.username ? true : false);
-		user = String(route.params.username);
 	}
-} catch { } // TODO mai-fliend eithan
+	else {
+		isUserAuth.value = false;
+		user = route.params.username;
+		disconnectButton.value = true;
+	}
+} catch { user = route.params.username } // TODO mai-fliend eithan
 </script>
 
 <style>

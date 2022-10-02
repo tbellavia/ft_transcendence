@@ -63,15 +63,17 @@ const props = defineProps({
 	}
 })
 
-const user = await(useUser(props.username))
-if (!user?.value?.stats) // TODO do it in back eithan
+const userAuth = await getRefreshedUserAuthenticate() // TODO review this error mai-fliend 
+const user = await useUser(props.username)
+if (props.username === userAuth.value.username)
+	user.value = userAuth.value;
+else if (!user?.value?.stats) // TODO do it in back eithan
 	user.value = undefined
 
 const newName = ref();
 const imageError = ref();
 const nameError = ref();
-const userAuthenticate = await getRefreshedUserAuthenticate();
-const isFriend = user?.value ? ref(await userAuthenticate.value.isFriend(user.value.username)) : false;
+const isFriend = user?.value ? ref(await userAuth.value.isFriend(user.value.username)) : false;
 const status = ref('offline');
 
 if (isFriend.value) {
@@ -85,7 +87,8 @@ const lettersAndNumbersOnly = (event: any) => {
 	if ((charCode < 48 || charCode > 57)
 		&& (charCode < 65 || charCode > 90)
 		&& (charCode < 97 || charCode > 122)
-		&& charCode !== 13 && charCode !== 95) {
+		&& charCode !== 13 && charCode !== 95
+		&& charCode !== 45) {
 		event.preventDefault();
 	} else {
 		return true;
@@ -98,10 +101,14 @@ async function submitName() {
 	if (nameError.value == true) {
 		return
 	}
-	await user.value.fetchAll() // TODO eithan see fix with virginie
-	user.value = await getRefreshedUserAuthenticate()
 	const route = useRoute()
-	await redirectIfConnected(route.fullPath.replace(String(route?.params?.username), user.value.username), '/');
+	try {
+		user.value = await (await getRefreshedUserAuthenticate()).value
+		await redirectIfConnected(route.fullPath.replace(String(route?.params?.username), user.value.username), '/');
+	}
+	catch {
+		await navigateTo(route.fullPath)
+	}
 }
 
 async function submitAvatar(event) {

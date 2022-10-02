@@ -22,8 +22,7 @@ async function refreshList() {
 		</Suspense>
 	</div>
 	<div v-else>
-		<h3>You have no friend</h3>
-		<p>Go add some !</p>
+		<h3 style="max-width: 250px;">You have no friend, go add some!</h3>
 	</div>
 </div>
 </template>

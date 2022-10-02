@@ -23,15 +23,8 @@
 // Try to load user in all app
 try { // TODO mai-fliend eithan
    const route = useRoute();
-   if (route.params.username) {
-      const user = getUserAuthenticate()
+   if (route.params.username)
       await refreshUrl();
-   }
-   else {
-      const user = await getRefreshedUserAuthenticate()
-      if (user.value)
-      await refreshUrl();
-   }
 } catch { } // TODO mai-fliend eithan
 
 const { $eventBus } = useNuxtApp();

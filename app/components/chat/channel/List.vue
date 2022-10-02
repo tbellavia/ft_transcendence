@@ -4,7 +4,7 @@
     <h3>Channels joined</h3>
     <ul class="list-channels">
       <li v-for="channel in channelsJoined">
-        <NuxtLink :to="`/${authUser.username}/chat/${channel}?isChannel`">
+        <NuxtLink :to="`/user/${authUser.username}/chat/${channel}?isChannel`">
           <div class="channel-item">{{ channel }}</div>
         </NuxtLink>
       </li>

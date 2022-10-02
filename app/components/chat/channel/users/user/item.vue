@@ -20,7 +20,7 @@
 			<button class="OptionsProfile_sub">suggest a match</button>
 
 			<!-- SEE PROFILE PAGE -->
-			<button class="OptionsProfile_sub" @click='navigateTo("/" + props.name + "/profile" )'> Profile Page </button>
+			<button class="OptionsProfile_sub" @click='navigateTo("/user/" + props.name + "/profile" )'> Profile Page </button>
 
 			<div v-if="authUser.username != name">
 

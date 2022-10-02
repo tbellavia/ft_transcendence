@@ -41,7 +41,7 @@
 			<button v-show="!isBlocked" class="OptionsProfile_sub">  suggest a match </button>
 
 			<!-- SEE PROFILE PAGE -->
-			<button class="OptionsProfile_sub" @click='navigateTo("/" + props.target.username + "/profile" )'> Profile Page </button>
+			<button class="OptionsProfile_sub" @click='navigateTo("/user/" + props.target.username + "/profile" )'> Profile Page </button>
 
 			<!-- BLOCK or UNBLOCK USER -->
 			<button v-if="isBlocked" class="OptionsProfile_sub"
@@ -67,7 +67,7 @@ const props = defineProps({
 const userAuthenticate = await getRefreshedUserAuthenticate();
 const targetAvatar = ref(await getAvatar(props.target.username))
 const isBlocked = ref(await userAuthenticate.value.isBlockUser(props.target));
-const messageLink = `/${userAuthenticate.value.username}/chat/${props.target.username}`;
+const messageLink = `/user/${userAuthenticate.value.username}/chat/${props.target.username}`;
 const emit = defineEmits(['refreshList']);
 
 
