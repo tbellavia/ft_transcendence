@@ -38,6 +38,14 @@ $eventBus.$on('disconnect', () => {
    layout.value = 'default'
 });
 
+const authUser = getUserAuthenticate();
+const socketGame = useSocketGame();
+socketGame.value.on('matched', () => {
+   if (authUser.value) {
+      authUser.value.isInGame = true;
+      navigateTo(`/user/${authUser.value.username}/game`);
+   }
+});
 
 </script>
 

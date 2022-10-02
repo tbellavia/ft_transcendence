@@ -3,8 +3,6 @@ import { Socket } from "socket.io";
 import { UserEntity } from "src/users/entities/user.entity";
 import { MatchesService } from "src/matches/matches.service";
 import { Game } from "./engine/game";
-import { GameDimension } from "./engine/utils/dimension";
-import { GameVec } from "./engine/utils/gameVec";
 import { GameMatch } from "./interfaces/match";
 import { StatsService } from "src/stats/stats.service";
 
