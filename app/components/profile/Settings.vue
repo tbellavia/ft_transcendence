@@ -1,0 +1,154 @@
+<template>
+	<h1 class="anim-settings">SETTINGS</h1>
+	<div class="profile-settings">
+
+		<div class="set-avatar">
+			<!-- Display Avatar -->
+			<img class="profile-avatar" :src="user.avatar_url" />
+			<!-- Avatar Form -->
+			<label for="newAvatar" class="form-avatar">Choose a new profile picture:</label>
+			<input type="file" name="newAvatar" id="newAvatar" @change="submitAvatar" accept="image/png">
+			<p v-show="imageError == true" class="error">Image too large (max 90 KB)</p>
+		</div>
+
+		<div class="set-2fa-and-username">
+			<!-- Double authentication component -->
+			<div class="set-2fa">
+				<authenticationDoubleAuthentication />
+			</div>
+
+			<div class="set-username">
+				<!-- Display Username -->
+				<h1 class="profile-username"> Username: {{ user.username }} </h1>
+				<!-- Username Form -->
+				<form @submit.prevent="submitName" class="form-username">
+					<input @keypress="lettersAndNumbersOnly" v-model="newName" type="text" required
+					placeholder="new username" maxlength="16" autofocus />
+					<input type="submit" value="Change username" class="submit">
+				</form>
+				<p v-show="nameError == true" class="error">Invalid username</p>
+			</div>
+		</div>
+
+	</div>
+</template>
+
+<script setup lang="ts">
+const newName = ref();
+const imageError = ref();
+const nameError = ref();
+const user = await getRefreshedUserAuthenticate();
+
+const lettersAndNumbersOnly = (event: any) => {
+	event = (event) ? event : window.event;
+	var charCode = (event.which) ? event.which : event.keyCode;
+	if ((charCode < 48 || charCode > 57)
+		&& (charCode < 65 || charCode > 90)
+		&& (charCode < 97 || charCode > 122)
+		&& charCode !== 13 && charCode !== 95
+		&& charCode !== 45) {
+		event.preventDefault();
+	} else {
+		return true;
+	}
+}
+
+async function submitName() {
+	nameError.value = await user.value.updateUsername(newName.value);
+	newName.value = ""
+	if (nameError.value == true) {
+		return
+	}
+	const route = useRoute()
+	try {
+		user.value = await (await getRefreshedUserAuthenticate()).value
+		await redirectIfConnected(route.fullPath.replace(String(route?.params?.username), user.value.username), '/');
+	}
+	catch {
+		await navigateTo(route.fullPath)
+	}
+}
+
+async function submitAvatar(event) {
+	event.preventDefault();
+	let file = event.target.files[0];
+	document.getElementById('newAvatar').value = "";
+	if (!file) {
+		return
+	}
+	else if (file.size > 90000 || !file.name.endsWith(".png")) {
+		imageError.value = true
+		return
+	}
+	let data = new FormData();
+	data.append('file', file, file.name)
+
+	await user.value.updateAvatar(data)
+	await user.value.fetchAll()
+	imageError.value = false
+}
+
+</script>
+
+<style scoped>
+/* Main */
+.profile-settings {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+}
+
+/* Avatar */
+.set-avatar {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 25px;
+}
+
+.profile-avatar {
+	min-width: 200px;
+	min-height: 200px;
+	max-width: 300px;
+	max-height: 300px;
+}
+
+.form-avatar {
+	margin-top: 20px;
+}
+
+/* Username and 2FA */
+.set-2fa-and-username {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 25px;
+}
+
+/* Only 2FA */
+.set-2fa {
+	margin: auto;
+}
+
+/* Only Username */
+.set-username {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.form-username {
+	margin-top: 10px;
+	display: flex;
+	flex-direction: row;
+}
+
+.form-username .submit {
+	width: 180px;
+}
+
+.error {
+	color: var(--error-color);
+}
+</style>

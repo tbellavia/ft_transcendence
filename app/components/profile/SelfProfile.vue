@@ -1,51 +1,41 @@
-<template>
-	<!-- <profilePublic :user=userAuthenticate/> -->
+<!-- <template>
+	<profilePublic :user=userAuthenticate/>
 	<div v-if="user" class="profile-page">
-		<!-- <profileSelfProfileHeader /> -->
+		<profileSelfProfileHeader />
 		<div class="profile-page-header">
+			Display Avatar
 			<div class="profile-user-image">
 				<img :src="user.avatar_url" />
 			</div>
 			<div class="profile-user-parameters">
 				<div class="profile-name">
+					Display Username
 					<h1 class="profile-username"> {{ user.username }} </h1>
+					Display Status if is friend
 					<h2 v-show="isFriend" class="profile-status"> {{ status }}</h2>
 				</div>
-				<div class="user-parameters-sub"> TOTAL GAMES : {{ user.stats.game_total }} </div>
-				<div class="user-parameters-sub"> GAMES WON : {{ user.stats.game_won }} </div>
-				<div class="user-parameters-sub"> GAMES LOST : {{ user.stats.game_total - user.stats.game_won -
-				user.stats.game_abandonned }} </div>
-				<div v-if="props.isUserAuth" class="profile-update-datas">
-					<div class="user-parameters-sub">
-						<authenticationDoubleAuthentication />
-					</div>
-					<!-- Name and Avatar update -->
-					<div class="profile-change-name-and-avatar">
-						<form @submit.prevent="submitName" class="profile-change-name">
-							<input @keypress="lettersAndNumbersOnly" v-model="newName" type="text" required
-								placeholder="new username" maxlength="16" />
-							<input type="submit" value="Change username" class="submit">
-							<p v-show="nameError == true" class="error">Invalid username</p>
-						</form>
-						<label for="newAvatar">Choose a new profile picture:</label>
-						<input type="file" name="newAvatar" id="newAvatar" @change="submitAvatar" accept="image/png">
-						<p v-show="imageError == true" class="error">Image too large (max 90 KB)</p>
-					</div>
-				</div>
+				Display Rank and Stats
+				<Suspense class="profile-stats">
+					<profileStats :username="props.username" />
+				</Suspense>
+				Update Info
+				<Suspense v-if="props.isUserAuth">
+					<profileParams class="profile-update-datas" />
+				</Suspense>
+				Display options linked to friendship
 				<Suspense v-else>
 					<profileFriendsOptions :username="user.username" class="profile-friends-options" />
 				</Suspense>
 			</div>
-			<div class="profile-rank">
-				<h2 class="profile-username"> rank: {{ user.stats.rank }}</h2>
-			</div>
 		</div>
+		Display Match History
 		<div class="profile-match">
 			<Suspense>
 				<profileMatchHistory :user="user" />
 			</Suspense>
 		</div>
 	</div>
+	Display User Not Found
 	<div v-else class="undefined">
 		<h1>User not found</h1>
 	</div>
@@ -63,75 +53,24 @@ const props = defineProps({
 	}
 })
 
-const userAuth = await getRefreshedUserAuthenticate() // TODO review this error mai-fliend 
 const user = await useUser(props.username)
-if (props.username === userAuth.value.username)
-	user.value = userAuth.value;
-else if (!user?.value?.stats) // TODO do it in back eithan
+if (!user?.value?.stats) // TODO do it in back eithan
 	user.value = undefined
 
-const newName = ref();
-const imageError = ref();
-const nameError = ref();
-const isFriend = user?.value ? ref(await userAuth.value.isFriend(user.value.username)) : false;
+const isFriend = ref()
+const userAuth = await getRefreshedUserAuthenticate()
+if (props.isUserAuth === false)
+	isFriend.value = user?.value ? ref(await userAuth.value.isFriend(user.value.username)) : false;
+
 const status = ref('offline');
 
 if (isFriend.value) {
 	const socket = useSocket();
+	console.log()
 	socket.value.emit('get_status', user.value.username, userStatus => status.value = userStatus);
 }
 
-const lettersAndNumbersOnly = (event: any) => {
-	event = (event) ? event : window.event;
-	var charCode = (event.which) ? event.which : event.keyCode;
-	if ((charCode < 48 || charCode > 57)
-		&& (charCode < 65 || charCode > 90)
-		&& (charCode < 97 || charCode > 122)
-		&& charCode !== 13 && charCode !== 95
-		&& charCode !== 45) {
-		event.preventDefault();
-	} else {
-		return true;
-	}
-}
-
-async function submitName() {
-	nameError.value = await user.value.updateUsername(newName.value);
-	newName.value = ""
-	if (nameError.value == true) {
-		return
-	}
-	const route = useRoute()
-	try {
-		user.value = await (await getRefreshedUserAuthenticate()).value
-		await redirectIfConnected(route.fullPath.replace(String(route?.params?.username), user.value.username), '/');
-	}
-	catch {
-		await navigateTo(route.fullPath)
-	}
-}
-
-async function submitAvatar(event) {
-	event.preventDefault();
-	let file = event.target.files[0];
-	document.getElementById('newAvatar').value = "";
-	if (!file) {
-		return
-	}
-	else if (file.size > 90000 || !file.name.endsWith(".png")) {
-		imageError.value = true
-		return
-	}
-	let data = new FormData();
-	data.append('file', file, file.name)
-
-	await user.value.updateAvatar(data)
-	await user.value.fetchAll()
-	imageError.value = false
-}
-
 </script>
-
 
 <style scoped>
 .profile-page {
@@ -150,11 +89,6 @@ div.profile-user-parameters {
 	padding-left: 5%;
 }
 
-div.user-parameters-sub {
-	display: flex;
-	width: 100%;
-}
-
 .profile-name {
 	display: flex;
 	width: 100%;
@@ -165,27 +99,9 @@ div.user-parameters-sub {
 	scale: 0.8;
 }
 
-.profile-rank {
-	margin-left: auto;
-}
-
-/* border: 3px solid green; */
-
 .profile-update-datas {
 	max-width: 300px;
 	margin-top: 10px;
-}
-
-.profile-change-name {
-	margin-top: 30px;
-	display: flex;
-	flex-direction: row;
-	margin-bottom: 10px;
-}
-
-.profile-change-name .submit {
-	width: 180px;
-	/* align-self: center; */
 }
 
 .profile-friends-options {
@@ -193,11 +109,8 @@ div.user-parameters-sub {
 }
 
 img {
-	min-width: 100px;
-}
-
-.error {
-	color: var(--error-color);
+	min-width: 200px;
+	max-width: 300px;
 }
 
 .undefined {
@@ -205,4 +118,14 @@ img {
 	flex-direction: column;
 	align-items: center;
 }
-</style>
+</style> -->
+
+<template>
+	<!-- Update Username Avatar and DoubleAuth -->
+	<Suspense>
+		<profileSettings />
+	</Suspense>
+</template>
+
+<script setup lang="ts">
+</script>
