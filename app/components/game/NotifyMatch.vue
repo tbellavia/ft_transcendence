@@ -1,10 +1,10 @@
 <template>
-  <v-dialog v-model="hasSuggestionOfMatch">
+  <v-dialog persistent v-model="hasSuggestionOfMatch">
     <v-card>
       <v-card-title>You have a match suggestion from {{fromUser}}</v-card-title>
       <v-card-actions class="invite-buttons">
-        <v-btn @click.stop="handleInvite(true)">Accept</v-btn>
-        <v-btn @click.stop="handleInvite(false)">Deny</v-btn>
+        <v-btn  @click.stop="handleInvite(true)">Accept</v-btn>
+        <v-btn  @click.stop="handleInvite(false)">Deny</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 const authUser = getUserAuthenticate();
-const isInGame = authUser.value ? authUser.value.isInGame : false;
+const isInGame = authUser && authUser.value ? authUser.value.isInGame : false;
 
 const fromUser = ref('');
 const hasSuggestionOfMatch = ref(false);

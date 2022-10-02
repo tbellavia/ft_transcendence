@@ -21,12 +21,13 @@ export class MatchAskingService {
 		let newDemands = [];
 		if (demands) {
 			if (demands.find(opponent => opponent.username == target.username))
-			throw new WsException(`${user.username} has already propposed to ${target.username}`);
+				throw new WsException(`${user.username} has already propposed to ${target.username}`);
 			newDemands = demands.concat(newDemands);
 		}
 		newDemands.push(target);
 		this.privateRooms.set(gameUser, newDemands);
-		console.log("SUBSCRIBE:", user.username, '->', target.username);
+		// console.log("SUBSCRIBE:", user.username, '->', target.username);
+		// console.log(this.privateRooms);
 	}
 
 	async acceptOrRefuse(asker: UserEntity, target: UserEntity, socketTarget: Socket, isAccept: boolean = true) {
