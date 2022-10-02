@@ -12,7 +12,7 @@ async function refreshList() {
 	
 <template>
 <div>
-<div class="all" v-for="pending in pendingFriends">
+<div v-if="pendingFriends.length" class="all" v-for="pending in pendingFriends">
 	<Suspense >
 		<userpageListItem 
 			@refreshList="refreshList()"
@@ -20,6 +20,9 @@ async function refreshList() {
 			:isFriend="false"
 			:pendingFriend="true" />
 	</Suspense>
+</div>
+<div v-else>
+	<h3>No friend request pending at the moment</h3>
 </div>
 </div>
 </template>

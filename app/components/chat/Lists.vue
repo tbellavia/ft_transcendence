@@ -7,13 +7,13 @@
     </div>
     <div class="list-chat-users">
       <Suspense v-if="listSelector == 'friends'">
-        <userpageListFriends style="width: 100%"/>
+        <userpageListFriends style="min-width: 250px"/>
       </Suspense>
       <Suspense v-else-if="listSelector == 'all'">
-        <userpageListUsers style="width: 100%"/>
+        <userpageListUsers style="min-width: 250px"/>
       </Suspense>
       <Suspense v-else-if="listSelector == 'channels'">
-        <ChatChannelList style="width: 100%" />
+        <ChatChannelList style="min-width: 250px" />
       </Suspense>
     </div>
   </div>
