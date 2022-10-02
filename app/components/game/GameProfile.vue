@@ -5,13 +5,13 @@
 					<img :src="playerLeft.avatar_url" alt="">
 				</div>
 					<h2> {{ playerLeft.username }} </h2>
-				<h1 class="game-point"> {{ match.leftPoint }}</h1>
+				<h1 class="game-point"> {{ leftPoint }}</h1>
 			</div> 
 			<div>
 
 			</div> 
 			<div id="game-profile-player" class="player-right"> 
-					<h1 class="game-point"> {{ match.leftPoint }}</h1>
+					<h1 class="game-point"> {{ rightPoint }}</h1>
 					<h2> {{ playerRight.username }} </h2>
 				<div class="game-profile-player-avatar">
 					<img :src="playerRight.avatar_url" alt="">
@@ -24,11 +24,19 @@
 <script setup lang="ts">
 const userAuth = await getRefreshedUserAuthenticate();
 const match = ref(userAuth.value.getCurrentMatch());
+const socket = useSocketGame();
 const oponent = await useUser(match.value.oponent);
+const leftPoint = ref(0);
+const rightPoint = ref(0);
 
 const playerLeft  = ref(match.value.left ? userAuth.value : oponent.value);
 const playerRight = ref(match.value.left ? oponent.value : userAuth.value);
 
+
+socket.value.on("score",  ({player1, player2, left_score, right_score }) => {
+	leftPoint.value = left_score;
+	rightPoint.value = right_score;
+} )
 	
 </script>
 

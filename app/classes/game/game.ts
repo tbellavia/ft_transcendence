@@ -73,9 +73,7 @@ export class Game {
       console.log(`Left: ${left_score} - Right: ${right_score}`);
     })
 
-    this.socket.on("game-end", ({left, right}) => {
-      console.log(`Victory : ${left} - ${right}`);
-    })
+
   }
 
   start() {

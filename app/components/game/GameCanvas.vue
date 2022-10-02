@@ -1,11 +1,21 @@
 <template>
 	<div class="game-div">
+
+		<!-- CARD: timer before begining Game -->
 		<v-dialog persistent v-if="timer" v-model="timer">
 			<v-card center class="game-begin-timer">
-			<v-card-title> MACH BEGIN </v-card-title>
-			<v-card-text>{{ timer }}</v-card-text>
+				<v-card-title> MACH BEGIN </v-card-title>
+				<v-card-text>{{ timer }}</v-card-text>
 			</v-card>
   		</v-dialog>
+
+		<!-- CARD: display winner at the end of game -->
+		<v-dialog persistent v-if="endGame" v-model="endGame">
+			<v-card center class="game-begin-timer">
+				<v-card-title> MACH VICTORY </v-card-title>
+				<v-card-text>{{ winnerUser }} won ! </v-card-text>
+			</v-card>
+		</v-dialog>
 
 		<canvas  id="game-canvas" ></canvas>
 	</div>
@@ -17,14 +27,25 @@ import { Game } from '~~/classes/game/game';
 
 const user = await getRefreshedUserAuthenticate();
 const socket = useSocketGame();
-
+const endGame = ref(false);
+const winnerUser = ref('');
+const timer = ref();
 // intervalle :
 
-const timer = ref();
 
 socket.value.on("game-start-timer", (remaining) => {
-	console.log()
 	timer.value = remaining;
+})
+
+socket.value.on("game-end", (winner) => {
+     winnerUser.value = winner;
+	 endGame.value = true;
+	 const timer = setInterval(() => {
+		if (timer > 0) {
+			clearInterval(timer);
+			user.value.isInGame = false;
+		}
+	}, 1000 * 5);
 })
 
 onMounted (() => {

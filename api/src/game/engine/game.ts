@@ -117,13 +117,10 @@ export class Game {
   emitGameEnd() {
     const leftOutcome = this.getLeftPlayerOutcome();
     const rightOutcome = this.getRightPlayerOutcome();
-    const outcome = {
-      left: leftOutcome,
-      right: rightOutcome
-    };
+    const victory = leftOutcome > rightOutcome ? this.player_1.user.username : this.player_2.user.username; 
 
-    this.player_1.socket.emit("game-end", outcome);
-    this.player_2.socket.emit("game-end", outcome);
+    this.player_1.socket.emit("game-end", victory);
+    this.player_2.socket.emit("game-end", victory);
   }
 
   emitBallPos() {
@@ -136,9 +133,11 @@ export class Game {
   emitScore() {
     const left_score = this.player_1_score;
     const right_score = this.player_2_score;
+    const player1 = this.player_1.user.username;
+    const player2 = this.player_2.user.username;
     
-    this.player_1.socket.emit("score", { left_score, right_score });
-    this.player_2.socket.emit("score", { left_score, right_score });
+    this.player_1.socket.emit("score", {player1, player2, left_score, right_score });
+    this.player_2.socket.emit("score", { player1, player2, left_score, right_score });
   }
 
   incLeftScore() {
