@@ -38,7 +38,7 @@
 			</div>
 
 			<!-- SUGGEST MATCH -->
-			<button v-show="!isBlocked && canSuggestMatch" class="OptionsProfile_sub" @click="useAction('suggest-match')">suggest a match</button>
+			<button v-if="!isBlocked && canSuggestMatch" class="OptionsProfile_sub" @click="useAction('suggest-match')">suggest a match</button>
 
 			<!-- SEE PROFILE PAGE -->
 			<button class="OptionsProfile_sub" @click='navigateTo("/user/" + props.target.username + "/profile" )'> Profile Page </button>
@@ -102,6 +102,8 @@ if (props.isFriend) {
 		status.value = userStatus;
 		if (status != 'offline' && status != 'in a game')
 			canSuggestMatch.value = true;
+		else
+			canSuggestMatch.value = false;
 });
 }
 

@@ -17,7 +17,7 @@
 			<!-- Target is not auth user -->
 			<div v-if="authUser.username != name">
 				<!-- Can suggest a match if user is online and not in a match -->
-				<button class="OptionsProfile_sub" @click="suggestMatch">suggest a match</button>
+				<button class="OptionsProfile_sub" v-if="canSuggestMatch" @click="suggestMatch">suggest a match</button>
 
 				<!-- Owner can set other users in channel as moderator or not -->
 				<div v-if="authUserIsOwner && !isBan">
@@ -129,6 +129,8 @@ socket.value.emit(
 		console.log(props.name, status);
 		if (status != 'in a game' && status != 'offline')
 			canSuggestMatch.value = true;
+		else
+			canSuggestMatch.value = false;
 });
 
 function suggestMatch() {
