@@ -38,7 +38,7 @@
 			</div>
 
 			<!-- SUGGEST MATCH -->
-			<button v-show="!isBlocked" class="OptionsProfile_sub" @click="useAction('suggest-match')">  suggest a match </button>
+			<button v-show="!isBlocked && canSuggestMatch" class="OptionsProfile_sub" @click="useAction('suggest-match')">suggest a match</button>
 
 			<!-- SEE PROFILE PAGE -->
 			<button class="OptionsProfile_sub" @click='navigateTo("/user/" + props.target.username + "/profile" )'> Profile Page </button>
@@ -57,7 +57,7 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
-	
+
 const props = defineProps({
 	target: Object,
 	isFriend: Boolean,
@@ -94,10 +94,15 @@ async function useAction(action: string) {
 	emit('refreshList');
 }
 
+const canSuggestMatch = ref(false);
 let status = ref('offline');
 if (props.isFriend) {
 	const socket = useSocket();
-	socket.value.emit('get_status', props.target.username, userStatus => status.value = userStatus);
+	socket.value.emit('get_status', props.target.username, userStatus => {
+		status.value = userStatus;
+		if (status != 'offline' && status != 'in a game')
+			canSuggestMatch.value = true;
+});
 }
 
 </script>
