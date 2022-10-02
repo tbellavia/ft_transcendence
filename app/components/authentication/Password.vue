@@ -9,7 +9,8 @@
             required
             v-model="username"
             placeholder="username"
-            name="username" />
+            name="username"
+            autofocus />
         </label>
         <label>
           <input
@@ -101,14 +102,15 @@ async function authenticateApi() {
     color: var(--main-color);
   }
 
-  input[type="submit"] {
+  input[type="submit"]:hover {
     border-bottom: none;
+    scale: 1.1;
   }
 
   .form-btns {
     display: flex;
     flex-direction: row;
-
+    margin-bottom: 10px;
     justify-content: space-evenly;
   }
 </style>

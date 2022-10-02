@@ -123,7 +123,6 @@ export class ChannelsService {
         throw new WsUserNotFoundException(inviteUser.username);
       else if (error instanceof WsUserAlreadyInChannelException)
         throw error;
-      console.warn(error);
       throw new WsInternalError();
     }
   }

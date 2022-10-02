@@ -89,7 +89,7 @@ watch(userChoice, (newUserChoice) => {
 	if (newUserChoice == true) {
 		generateQrCode()
       .then(() => activatePopup.value = true )
- 		  .catch(error => console.warn(error));
+ 		  .catch(() => {});
   } else {
     // TODO: Disable 2fa for auth user
     $apiFetch('/2fa/turn-off', {method: 'DELETE'})

@@ -1,10 +1,11 @@
 export async function refreshUrl() {
-	try {
+	try {// TODO mai-fliend eithan
 		const route = useRoute();
-		await redirectIfConnected(route.fullPath, '/');
+		await getRefreshedUserAuthenticate();
+		await navigateTo(route.fullPath)
+		// else
 	} catch {
-		const user = await getRefreshedUserAuthenticate();
-		await navigateTo(`/${user.value.username}/profile`)
+		await navigateTo(`/`)
 		// TODO need to see with virginie eithan
-	}
+	} // TODO mai-fliend eithan
 }

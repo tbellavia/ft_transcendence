@@ -52,7 +52,7 @@ export class AuthService {
       return user;
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation)
-        throw new BadRequestException('User with that username already exists');
+        throw new BadRequestException('Username already used');
       throw new InternalServerErrorException('Something went wrong');
     }
   }
@@ -79,13 +79,13 @@ export class AuthService {
    * @param user the user object (TODO: replace it by db calls or api calls)
    * @returns a string containing the token encoded
    */
-  async login(user: UserEntity, isTwoFactorAuthenticated = false) {
+  login(user: UserEntity, isTwoFactorAuthenticated = false) {
     const payload: TokenPayload = {
       username: user.username,
       uuid: user.user_id,
       isTwoFactorAuthenticated
     };
 
-    return await this.jwtService.sign(payload);
+    return this.jwtService.sign(payload);
   }
 }

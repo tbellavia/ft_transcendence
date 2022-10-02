@@ -1,6 +1,7 @@
 import { ClassSerializerInterceptor, SerializeOptions, UseInterceptors } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
 import { Socket, Server } from "socket.io";
+// import { ConnectedSocket, OnGatewayConnection, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
 import { SocketService } from "src/socket/socket.service";
 import { GameService } from "./game.service";
 import { MatchAskingService } from "./matchAsking/matchasking.service";
@@ -30,6 +31,15 @@ export class GameGateway {
 		private matchAskingService: MatchAskingService
 		) 
 	{}
+
+	async handleConnection(socket: Socket){
+		try {
+		} catch {}
+	}
+
+	async handleDisconnect(socket: Socket) {
+		const user = await this.socketService.disconnectSocketBindedToUser(socket);
+	}
 
 	@SubscribeMessage("subscribe")
 	async subscribeMatchmaking(@ConnectedSocket() socket: Socket) 

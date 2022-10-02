@@ -2,10 +2,8 @@
   <nav class="navbar">
     <!-- TODO User name  -->
   <div class="link">
-    <!-- <NuxtLink v-for="(link, index) in links" :key="`${link.name}${index}`" :to="getNavbarNavigateLink(link)">{{ link.name }}</NuxtLink> -->
-    <NuxtLink v-for="(link, index) in links" :key="`${link.name}${index}`" :to="inGame? '' : `/${username}/${link.link}`">{{ link.name }}</NuxtLink>
+    <NuxtLink class="navbar-left" v-if="disconnectButton" v-for="(link, index) in links" :key="`${link.name}${index}`" :to="`/${username}/${link.link}`">{{ link.name }}</NuxtLink>
   </div>
-
     <div class="navbar-right">
       <headerButtonChangeTheme class="navbar-sub" />
       <headerButtonDisconnect class="navbar-sub" />
@@ -14,6 +12,14 @@
 </template>
 
 <script setup lang="ts">
+
+const disconnectButton = ref(false);// TODO mai-fliend eithan
+try {
+  const user = await getRefreshedUserAuthenticate();
+  if (user.value)
+    disconnectButton.value = true;
+} catch { } // TODO mai-fliend eithan
+
   const links = ref([
     {name: 'PROFILE', link: 'profile'},
     {name: 'FRIENDS', link: 'friendsList'},

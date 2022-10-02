@@ -15,6 +15,7 @@ export class SocketService {
   private connectedUsers = new Map<string, UserEntity>();
   private usersStatus = new Map<string, UserStatus>();
   private userSockets = new Map<string, Socket[]>();
+  private statusTimeout = new Map<string, NodeJS.Timeout>();
 
   constructor(
     private readonly authService: AuthService,
@@ -100,7 +101,15 @@ export class SocketService {
   async setUserStatus(socket: Socket, status: UserStatus) {
     const user = await this.getUserFromSocket(socket);
     this.usersStatus.set(user.username, status);
-  }
+    if (this.statusTimeout.has(user.username)) {
+      clearTimeout(this.statusTimeout.get(user.username));
+    }
+    this.statusTimeout.set(user.username, setTimeout(() => {
+      if (this.usersStatus.has(user.username)) {
+        this.usersStatus.set(user.username, UserStatus.ONLINE);
+      }
+    }, 5000));
+  } 
 
   getSocketsFromUsername(username: string) {
     return this.userSockets.get(username);

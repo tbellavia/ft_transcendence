@@ -53,7 +53,7 @@ export class TwoFactorAuthController {
   @UseGuards(new JWTAuthGuard())
   @Post('authenticate')
   async authenticate(@Req() requestWithUser, @Body() { code }: TwoFactorCodeDTO, @Res({ passthrough: true}) res) {
-    const isCodeValid = this.twoFactorAuthService.isTwoFactorAuthCodeValid(
+    const isCodeValid = await this.twoFactorAuthService.isTwoFactorAuthCodeValid(
       code,
       requestWithUser.user
     );
@@ -62,6 +62,9 @@ export class TwoFactorAuthController {
 
     // Set-Cookie with 2fa enabled into cookie
     const accessToken = await this.authService.login(requestWithUser.user, true);
-    res.cookie('Authentication', accessToken);
+    res.cookie('Authentication', accessToken, {
+      httpOnly: true,
+      sameSite: 'Lax'
+    });
   }
 }

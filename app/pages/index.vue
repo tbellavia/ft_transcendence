@@ -2,8 +2,8 @@
   <nuxtLayout>
     <div class="index-page">
       <div class="auth-pages-btns">
-        <NuxtLink to="password">Login With Password</NuxtLink>
-        <NuxtLink to="api42">Login with api42</NuxtLink>
+        <NuxtLink class="index-password" to="password">Login With Password</NuxtLink>
+        <NuxtLink class="index-password" to="api42">Login with api42</NuxtLink>
       </div>
       <div class="auth-page">
         <NuxtPage />
@@ -18,6 +18,14 @@
 <script setup lang="ts">
 import { UserInfos } from '~~/classes/User.class';
 import { getRefreshedUserAuthenticate } from '~~/composables/useUserAuthentified';
+
+try { // TODO mai-fliend eithan
+  const user = getUserAuthenticate();
+  console.log(user.value)
+  if (user.value) {
+    await redirectIfConnected(`${user.value.username}/profile`, '/');
+  }
+} catch { } // TODO mai-fliend eithan
 
 let double_auth_enabled = ref(false);
 const { $eventBus } = useNuxtApp();
@@ -40,6 +48,7 @@ $eventBus.$on('connect', async (userInfos: UserInfos) => {
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
+    width: fit-content;
   }
 
   .auth-pages-btns {
@@ -63,4 +72,12 @@ $eventBus.$on('connect', async (userInfos: UserInfos) => {
     justify-content: center;
     align-items: center;
   }
+
+.index-password {
+  padding: 10px;
+  text-decoration: none;
+  border: solid 1px;
+  text-align: center;
+  min-width: 200px;
+}
 </style>

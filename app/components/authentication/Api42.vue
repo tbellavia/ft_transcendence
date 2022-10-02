@@ -1,12 +1,11 @@
 <!-- Please remove this file from your project -->
 <template>
   <div class="authentication-link">
-    <p class="authentication-item">Click for login with 42</p>
-    <a
-      class="authentication-item"
+    <p class="authentication-item">Click on Vault Boy to login with 42</p>
+      <a class="authentication-vault-boy"
       href="https://api.intra.42.fr/oauth/authorize?client_id=4cdd93e38d50fce3af5d817a430542b75506fbacf0b777ba6dc3a2312730d18d&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fapi42&response_type=code">
-      <svgBoy style="width: 100%"
-    /></a>
+        <svgBoy/>
+      </a>
   </div>
 </template>
 
@@ -20,7 +19,7 @@ async function oauth42(code: string) {
       const { $eventBus } = useNuxtApp();
       $eventBus.$emit('connect', userInfos);
     })
-    .catch((error) => console.warn(error));
+    .catch(() => {});
 }
 
 // If code in query string it may be from 42api so we try to authenticate
@@ -38,39 +37,24 @@ onMounted(async () => {
 /* stylelint-disable */
 
 .authentication-link {
-  position: absolute;
-  width: 280px;
-  height: 310px;
-  top: 15%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  overflow: hidden;
+  border: solid;
+  text-decoration: none;
+  height: 380px;
 }
 
 .authentication-link:hover {
-  border: solid;
+  background-color: transparent;
+  color: var(--main-color);
 }
 
 .authentication-item {
-  display: flex;
-  justify-self: center;
-  flex-shrink: auto;
-  background-color: transparent;
-  width: 100%;
+  width: fit-content;
+  padding: 10px;
 }
 
-.authentication-item div.img-svg {
-  width: 100%;
-}
-
-.authentication-link p {
-  width: 100%;
-  border: solid;
-  padding-left: 35px;
-}
-
-.authentication-link:hover p {
-  border: none;
+.authentication-vault-boy {
+  padding-left: 18px;
 }
 </style>
