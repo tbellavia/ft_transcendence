@@ -25,6 +25,7 @@ export class AuthController {
   async registerOrLogApi42(@Request() req: RequestWithUser, @Res({ passthrough: true }) res) {
     res.cookie('Authentication', await this.authService.login(req.user), {
       httpOnly: true,
+      sameSite: 'Lax'
     });
     return req.user;
   }
@@ -42,6 +43,7 @@ export class AuthController {
   async loginWithPassword(@Request() req: RequestWithUser, @Res({ passthrough: true }) res) {
     res.cookie('Authentication', await this.authService.login(req.user), {
       httpOnly: true,
+      sameSite: 'Lax'
     });
     return req.user;
   }

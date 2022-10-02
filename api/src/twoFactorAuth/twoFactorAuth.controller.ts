@@ -62,6 +62,9 @@ export class TwoFactorAuthController {
 
     // Set-Cookie with 2fa enabled into cookie
     const accessToken = await this.authService.login(requestWithUser.user, true);
-    res.cookie('Authentication', accessToken);
+    res.cookie('Authentication', accessToken, {
+      httpOnly: true,
+      sameSite: 'Lax'
+    });
   }
 }
