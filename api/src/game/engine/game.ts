@@ -5,6 +5,12 @@ import { GameDimension } from "./utils/dimension";
 import { GameUser } from "../interfaces/gameUser";
 import { GAME_CANVA_DIMENSION } from "./utils/constants";
 
+export enum WallSide {
+  NONE = 0,
+  LEFT = 1,
+  RIGHT = 2
+}
+
 export class Game {
   private canva: GameDimension;
   private middle: GameVec;
@@ -15,11 +21,15 @@ export class Game {
   private started: boolean;
   private player_1: GameUser;
   private player_2: GameUser;
+  private player_1_score: number;
+  private player_2_score: number;
 
   constructor(player_1: GameUser, player_2: GameUser) {
     this.canva = GAME_CANVA_DIMENSION;
     this.player_1 = player_1;
     this.player_2 = player_2;
+    this.player_1_score = 0;
+    this.player_2_score = 0;
     this.middle = new GameVec(
       Math.floor(this.canva.width / 2),
       Math.floor(this.canva.height / 2)
@@ -43,7 +53,15 @@ export class Game {
     if ( this.started ) {
       this.emitBallPos();
       this.ball.update();
-      if (this.ball.isOut()) {
+
+      const outside = this.ball.isOut();
+      if ( outside !== WallSide.NONE ) {
+        if ( outside === WallSide.LEFT ){
+          this.incRightScore();
+        } else {
+          this.incLeftScore();
+        }
+        this.emitScore();
         this.playerTurn = !this.playerTurn;
         this.ball.start(this.playerTurn);
       }
@@ -64,6 +82,22 @@ export class Game {
 
     this.player_1.socket.emit("ball-pos", { x: ball_pos.x, y: ball_pos.y });
     this.player_2.socket.emit("ball-pos", { x: ball_pos.x, y: ball_pos.y });
+  }
+
+  emitScore() {
+    const left_score = this.player_1_score;
+    const right_score = this.player_2_score;
+    
+    this.player_1.socket.emit("score", { left_score, right_score });
+    this.player_2.socket.emit("score", { left_score, right_score });
+  }
+
+  incLeftScore() {
+    this.player_1_score++;
+  }
+
+  incRightScore() {
+    this.player_2_score++;
   }
 
   setLeftPaddlePos(y: number) {
