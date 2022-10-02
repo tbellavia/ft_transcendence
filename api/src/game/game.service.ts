@@ -188,9 +188,12 @@ export class GameService {
 
     // Getter for game activity
     getGameOfUser(player: UserEntity) {
-        return this.games.findIndex(game => {
-            return game.player_1.user.username == player.username ||
-                    game.player_2.user.username == player.username;
+        let result = false;
+
+        this.games.forEach( game => {
+            result = game.player_1.user.username == player.username ||
+                game.player_2.user.username == player.username
         });
+        return result;
     }
 }
