@@ -14,6 +14,7 @@ export class SocketService {
   // Map of connected users to their sockets.id
   private connectedUsers = new Map<string, UserEntity>();
   private usersStatus = new Map<string, UserStatus>();
+  private userSockets = new Map<string, Socket[]>();
 
   constructor(
     private readonly authService: AuthService,
@@ -34,6 +35,12 @@ export class SocketService {
       throw new WsException('Invalid credentials');
     
     this.connectedUsers.set(socket.id, user);
+    let socketArray = this.userSockets.get(user.username);
+    if (socketArray)
+      socketArray.push(socket);
+    else
+      socketArray = [socket];
+    this.userSockets.set(user.username, socketArray);
     socket.join(user.username);
 
     /*
@@ -53,6 +60,15 @@ export class SocketService {
     if (user) {
       this.connectedUsers.delete(socket.id);
       this.usersStatus.delete(user.username);
+      let array = this.userSockets.get(user.username);
+      if (array && array.length > 1) {
+        const index = array.findIndex(userSocket => userSocket.id == socket.id);
+        if (index != -1)
+          array.splice(index, 1);
+        this.userSockets.set(user.username, array);
+      } else {
+        this.userSockets.delete(user.username);
+      }
     }
     return user;
   }
@@ -84,5 +100,9 @@ export class SocketService {
   async setUserStatus(socket: Socket, status: UserStatus) {
     const user = await this.getUserFromSocket(socket);
     this.usersStatus.set(user.username, status);
-  } 
+  }
+
+  getSocketsFromUsername(username: string) {
+    return this.userSockets.get(username);
+  }
 }

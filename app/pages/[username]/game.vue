@@ -1,6 +1,6 @@
 <template>
 <div class="game-page">
-	<div v-if="user.isInGame === false">
+	<div v-if="user.isInGame === false || user.waitingAcceptingMatch === false">
 		<div v-show="!waiting" class="friends-buttons">
 			<button @click="view = !view"> SEE MATCH </button>
 			<button class="friends-buttons" @click="subscribeMatchmaking()"> PLAY ! </button>
@@ -15,6 +15,9 @@
 		</div>
 		<div v-show="waiting">
 			RESEARCH A PLAYER
+		</div>
+		<div v-show="user.waitingAcceptingMatch">
+			Waiting acceptation from {{ user.waitingPlayerGame }}
 		</div>
 	</div>
 	<div v-else class="in-game" >

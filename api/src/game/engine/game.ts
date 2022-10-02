@@ -12,9 +12,9 @@ export class Game {
   private paddleRight: Paddle;
   private ball: Ball;
   private playerTurn: boolean;
-  private started: boolean;
-  private player_1: GameUser;
-  private player_2: GameUser;
+  public started: boolean;
+  public player_1: GameUser;
+  public player_2: GameUser;
 
   constructor(player_1: GameUser, player_2: GameUser) {
     this.canva = GAME_CANVA_DIMENSION;

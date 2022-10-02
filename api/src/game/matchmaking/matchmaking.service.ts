@@ -41,8 +41,13 @@ export class MatchmakingService {
 		}
 		return null;
 	}
+	
 
 	isSubscribed(needle: UserEntity) {
 		return this.pool.filter(({ user }) => user.username === needle.username).length >= 1;
+	}
+
+	async unSubscribe(user: UserEntity, socket: Socket) {
+		this.pool.push({ user, socket });
 	}
 }

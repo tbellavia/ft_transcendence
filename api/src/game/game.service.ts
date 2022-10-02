@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Socket } from "socket.io";
+import { UserEntity } from "src/users/entities/user.entity";
 import { Game } from "./engine/game";
 import { GameDimension } from "./engine/utils/dimension";
 import { GameVec } from "./engine/utils/gameVec";
@@ -153,5 +154,13 @@ export class GameService {
         } else {
             match.player_1.socket.emit("paddle-pos", y);
         }
+    }
+
+    // Getter for game activity
+    getGameOfUser(player: UserEntity) {
+        return this.games.findIndex(game => {
+            return game.player_1.user.username == player.username ||
+                    game.player_2.user.username == player.username;
+        });
     }
 }

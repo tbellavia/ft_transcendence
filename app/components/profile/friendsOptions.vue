@@ -19,7 +19,7 @@
             <NuxtLink class="button" :href="messageLink">message </NuxtLink>
         </div>
         <!-- SUGGEST MATCH -->
-        <button v-show="!isBlocked" class="OptionsProfile_sub"> suggest a match </button>
+        <button v-show="!isBlocked && userAuthenticate.waitingAcceptingMatch === false" class="OptionsProfile_sub" :click="useAction('suggest-match')"> suggest a match </button>
         <button v-if="isBlocked" class="OptionsProfile_sub" @click="useAction('unblock')"> unblock
         </button>
         <button v-else class="OptionsProfile_sub" @click="useAction('block')"> block
@@ -65,6 +65,10 @@ async function useAction(action: string) {
             await userAuthenticate.value.unblockUser(user.value);
             isBlocked.value = await userAuthenticate.value.isBlockUser(user.value);
         }
+        else if (action === 'suggest-match') {
+            userAuthenticate.value.waitingAcceptingMatch === true;
+            navigateTo( `/${userAuthenticate.value.username}/game`)
+        }
     }
     catch { }
     userAuthenticate = await getRefreshedUserAuthenticate();
@@ -79,6 +83,9 @@ async function useAction(action: string) {
         }
     }
 }
+
+
+suggestMatch
 </script>
 
 <style scoped>

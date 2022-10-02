@@ -86,6 +86,10 @@ async function useAction(action: string) {
 		await userAuthenticate.value.unblockUser(props.target);
 		isBlocked.value = await userAuthenticate.value.isBlockUser(props.target);
 	}
+	else if (action === 'suggest-match') {
+		userAuthenticate.suggestMatch(target.username);
+		navigateTo( `/${userAuthenticate.value.username}/game`)
+	}
 	emit('refreshList');
 }
 

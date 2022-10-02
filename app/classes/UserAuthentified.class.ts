@@ -21,9 +21,11 @@ export class UserAuthentified extends User {
   public pendingFriends: User[] = [];
   public blockedUsers: User[] = [];
   public currentMatch: Match;
+  public waitingAcceptingMatch: boolean;
 
   constructor(username: string, fetchingMethod: $Fetch) {
     super(username, fetchingMethod);
+    this.waitingAcceptingMatch = false;
   }
 
   /* Overload method */
@@ -152,6 +154,11 @@ export class UserAuthentified extends User {
       rightPoint: 0,
     }
     this.isInGame = true;
+  }
+
+  public suggestMatch(username: string) {
+  	this.waitingAcceptingMatch === true;
+    
   }
 
   /* UTILS */

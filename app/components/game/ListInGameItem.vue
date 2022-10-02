@@ -22,7 +22,7 @@
 	   player_2: User,
    })
     const player_1 = await getRefreshedUserAuthenticate();
-	const player_2 = await useUser("amelie");
+	const player_2 = await useUser("amelie"); //TODO change and get player2
 	const player_1_point = 10;
 	const player_2_point = 2;
 
