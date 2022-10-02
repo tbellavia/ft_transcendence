@@ -17,6 +17,7 @@ import { UserStatus } from "src/socket/enums/userStatus.enum";
 import { BlockedService } from "src/blocked/blocked.service";
 import { ReceiveMessage } from "./classes/receiveMessage.class";
 
+
 @UseInterceptors(ClassSerializerInterceptor)
 @SerializeOptions({
   strategy: 'excludeAll',
@@ -44,7 +45,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   //Be aware filters does not works on handleConnection !
   async handleConnection(socket: Socket) {
     try {
-			await this.socketService.setUserStatus(socket, UserStatus.CHATTING);
     } catch {}
   }
 
@@ -68,14 +68,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         .emit('receive_message', receiveMessage);
 
     const sockets = await this.server.in(message.target).fetchSockets();
-    sockets.forEach(async socket => {
-      const target = await this.socketService.getUserFromSocket(socket);
+    sockets.forEach(async socketTarget => {
+      const target = await this.socketService.getUserFromSocket(socketTarget);
       if (await this.blockedService.exists(target.username, author.username)) {
-        socket.emit('receive_message', new ReceiveMessage(`is blocked and you can not see its messages`, author.username));
+        socketTarget.emit('receive_message', new ReceiveMessage(`is blocked and you can not see its messages`, author.username));
       } else {
-        socket.emit('receive_message', receiveMessage);
+        socketTarget.emit('receive_message', receiveMessage);
       }
-    })
+    });
+    await this.socketService.setUserStatus(socket, UserStatus.CHATTING);
     return author.username;
   }
 
@@ -90,7 +91,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // Connect socket to channel's room
     if (getAllMessages.isChannel)
       this.server.to(author.username).socketsJoin(getAllMessages.target);
-    await this.socketService.setUserStatus(socket, UserStatus.CHATTING);
     return messages;
   }
 

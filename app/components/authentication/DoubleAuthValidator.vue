@@ -57,10 +57,10 @@ async function checkValidation(code: string) {
     await redirectIfConnected(`/${user.value.username}`, '/');
   })
   .catch(error => {
-    if (Array.isArray(error.data))
-      errorMessage.value = error.data.messsage.join(' ');
+    if (Array.isArray(error.data.messsage))
+      errorMessage.value = error.data.message.join(' ');
     else
-      errorMessage.value = error.data.messsage;
+      errorMessage.value = error.data.message;
   });
 }
 </script>

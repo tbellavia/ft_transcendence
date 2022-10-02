@@ -31,7 +31,6 @@ async function disconnect() {
       await navigateTo("/")
     })
     .catch(async error => {
-      console.warn(error);
       await navigateTo("/");
     });
 }

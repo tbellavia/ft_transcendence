@@ -9,6 +9,7 @@ import { UserNotFoundException } from "./exceptions/userNotFound.exception";
 import { readFileSync } from "fs";
 import * as path from "path";
 import { UsernameCollision } from "./exceptions/usernameCollision";
+import { StatEntity } from "src/stats/entities/stat.entity";
 
 const STATIC_DIR = path.join(path.resolve(__dirname, ".."), "static"); 
 
@@ -27,8 +28,12 @@ export class UsersService {
       ...createUserDto, 
       avatar: UsersService.default_avatar
     });
+    // TODO: Resolve circular dependency and use StatsService.create() instead
+    const stat = StatEntity.create();
+    stat.user = user;
 
     await this.userRepository.save(user);
+    await stat.save();
     return await this.findOneByName(user.username);
   }
   

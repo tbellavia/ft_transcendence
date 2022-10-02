@@ -64,14 +64,14 @@ const props = defineProps({
 })
 
 const user = await(useUser(props.username))
-if (!user.value.stats) // TODO do it in back eithan
+if (!user?.value?.stats) // TODO do it in back eithan
 	user.value = undefined
 
 const newName = ref();
 const imageError = ref();
 const nameError = ref();
 const userAuthenticate = await getRefreshedUserAuthenticate();
-const isFriend = ref(await userAuthenticate.value.isFriend(user.value.username));
+const isFriend = user?.value ? ref(await userAuthenticate.value.isFriend(user.value.username)) : false;
 const status = ref('offline');
 
 if (isFriend.value) {
