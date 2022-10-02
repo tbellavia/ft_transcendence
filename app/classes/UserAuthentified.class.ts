@@ -102,6 +102,14 @@ export class UserAuthentified extends User {
     return await this.fetchingMethod(`/friends/me/request`);
   }
 
+  public async isFriend(username: string) {
+    const friends = await this.getFriends(false);
+    for (let friend of friends) {
+      if (this.extractFriend(friend).username === username)
+        return true;
+    }
+    return false;
+  }
 
   /* BLOCK INTERFACE */
   /* -------------------------------------------------------------- */
