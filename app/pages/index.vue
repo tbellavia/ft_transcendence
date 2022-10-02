@@ -20,10 +20,9 @@ import { UserInfos } from '~~/classes/User.class';
 import { getRefreshedUserAuthenticate } from '~~/composables/useUserAuthentified';
 
 try { // TODO mai-fliend eithan
-  const user = getUserAuthenticate();
-  console.log(user.value)
+  const user = await getRefreshedUserAuthenticate();
   if (user.value) {
-    await redirectIfConnected(`${user.value.username}/profile`, '/');
+    await redirectIfConnected(`/user/${user.value.username}/profile`, '/');
   }
 } catch { } // TODO mai-fliend eithan
 
@@ -37,7 +36,7 @@ $eventBus.$on('connect', async (userInfos: UserInfos) => {
     socket.value.connect();
   if (!double_auth_enabled.value) {
     const user = await getRefreshedUserAuthenticate();
-    await redirectIfConnected(`/${user.value.username}`, '/');
+    await redirectIfConnected(`/user/${user.value.username}`, '/');
   }
 });
 </script>

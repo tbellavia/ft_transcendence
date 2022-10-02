@@ -52,7 +52,7 @@ async function checkValidation(code: string) {
   .then(async () => {
     // Load new user
     const user = await getRefreshedUserAuthenticate();
-    await redirectIfConnected(`/${user.value.username}`, '/');
+    await redirectIfConnected(`/user/${user.value.username}`, '/');
   })
   .catch(error => {
     if (Array.isArray(error.data.messsage))

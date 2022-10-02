@@ -1,5 +1,5 @@
 <template>
-<li class="dropleft" v-if="disconnectButton">
+<li class="dropleft">
   <svgLogoParam />
   <ul>
     <li><button @click="disconnect"> DISCONNECT </button></li>
@@ -10,13 +10,6 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
-
-const disconnectButton = ref(false); // TODO mai-fliend eithan
-try {
-  const user = getUserAuthenticate();
-  if (user.value)
-    disconnectButton.value = true;
-  } catch {  } // TODO mai-fliend eithan
 
 async function disconnect() {
 

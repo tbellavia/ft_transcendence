@@ -22,7 +22,7 @@ async function refreshList() {
 	</Suspense>
 </div>
 <div v-else>
-	<h3>No friend request pending at the moment</h3>
+	<h3 style="max-width: 250px;">No friend request pending at the moment</h3>
 </div>
 </div>
 </template>

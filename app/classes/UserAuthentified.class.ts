@@ -61,8 +61,8 @@ export class UserAuthentified extends User {
       ).then(async () => {
         this.username = newUsername;
         await this.fetchAll()
+        return false
       })
-      return false
     } catch { return true }
   }
 
