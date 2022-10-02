@@ -38,7 +38,7 @@
 			</div>
 
 			<!-- SUGGEST MATCH -->
-			<button v-show="!isBlocked" class="OptionsProfile_sub">  suggest a match </button>
+			<button v-show="!isBlocked" class="OptionsProfile_sub" @click="useAction('suggest-match')">  suggest a match </button>
 
 			<!-- SEE PROFILE PAGE -->
 			<button class="OptionsProfile_sub" @click='navigateTo("/user/" + props.target.username + "/profile" )'> Profile Page </button>
@@ -57,6 +57,7 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
+	
 const props = defineProps({
 	target: Object,
 	isFriend: Boolean,
@@ -87,8 +88,8 @@ async function useAction(action: string) {
 		isBlocked.value = await userAuthenticate.value.isBlockUser(props.target);
 	}
 	else if (action === 'suggest-match') {
-		userAuthenticate.suggestMatch(target.username);
-		navigateTo( `/${userAuthenticate.value.username}/game`)
+		const socketGame = useSocketGame();
+		socketGame.value.emit('suggest-match', props.target.username)
 	}
 	emit('refreshList');
 }

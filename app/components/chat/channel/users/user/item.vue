@@ -11,23 +11,18 @@
 		<!-- Buttons of all options -->
 		<div class="OptionsProfile">
 
-			<!-- SEND MESSAGE
-			<div class="OptionsProfile_sub">
-				<NuxtLink :href="messageLink">message </NuxtLink>
-			</div> -->
-
-			<!-- SUGGEST MATCH -->
-			<button class="OptionsProfile_sub">suggest a match</button>
-
 			<!-- SEE PROFILE PAGE -->
 			<button class="OptionsProfile_sub" @click='navigateTo("/user/" + props.name + "/profile" )'> Profile Page </button>
 
+			<!-- Target is not auth user -->
 			<div v-if="authUser.username != name">
+				<!-- Can suggest a match if user is online and not in a match -->
+				<button class="OptionsProfile_sub" @click="suggestMatch">suggest a match</button>
 
 				<!-- Owner can set other users in channel as moderator or not -->
 				<div v-if="authUserIsOwner && !isBan">
 					<button v-if="!isModerator" @click="setModerator" class="OptionsProfile_sub">Updgrade as moderator</button>
-					<button v-else @click="unsetModerator" class="OptionsProfile_sub">Downgrade as simple user</button>
+					<button v-else @click="unsetModerator" class="OptionsProfile_sub">Downgrade as simple user</button>]
 				</div>
 
 				<!-- Can ban other user that is not owner -->
@@ -68,12 +63,11 @@ const props = defineProps({
 });
 
 const avatarUrl = ref(await getAvatar(props.name));
-
-const socket = useSocketChat();
+const socketChat = useSocketChat();
 const authUser = getUserAuthenticate();
 const authUserIsModerator = ref(false);
 let authUserIsOwner = ref(false);
-socket.value.emit(
+socketChat.value.emit(
 	'is_channel_owner',
 	{
 		name: props.channelName,
@@ -83,7 +77,7 @@ socket.value.emit(
 		authUserIsOwner.value = isChanOwner;
 	});
 
-socket.value.emit(
+socketChat.value.emit(
 	'is_channel_moderator',
 	{
 		name: props.channelName,
@@ -95,10 +89,10 @@ socket.value.emit(
 );
 
 function setModerator() {
-	socket.value.emit('add_channel_moderator', {name: props.channelName, username: props.name});
+	socketChat.value.emit('add_channel_moderator', {name: props.channelName, username: props.name});
 }
 const isModerator = ref(props.isModerator);
-socket.value.on(
+socketChat.value.on(
   'receive_add_channel_moderator',
   ({username, channelName}) => {
     if (channelName == props.channelName && username == props.name)
@@ -106,7 +100,7 @@ socket.value.on(
   }
 );
 
-socket.value.on(
+socketChat.value.on(
   'receive_remove_channel_moderator',
   ({username, channelName}) => {
     if (channelName == props.channelName && username == props.name)
@@ -115,21 +109,37 @@ socket.value.on(
 );
 
 function unsetModerator() {
-	socket.value.emit('remove_channel_moderator', {name: props.channelName, username: props.name});
+	socketChat.value.emit('remove_channel_moderator', {name: props.channelName, username: props.name});
 }
 
 function banUser() {
-	socket.value.emit('ban_channel_user', {name: props.channelName, username: props.name});
+	socketChat.value.emit('ban_channel_user', {name: props.channelName, username: props.name});
 }
 
 function unbanUser() {
-	socket.value.emit('unban_channel_user', {name: props.channelName, username: props.name});
+	socketChat.value.emit('unban_channel_user', {name: props.channelName, username: props.name});
+}
+
+let canSuggestMatch = ref(false);
+const socket = useSocket();
+socket.value.emit(
+	'get_status', 
+	props.name,
+	(status: string) => {
+		console.log(props.name, status);
+		if (status != 'in a game' && status != 'offline')
+			canSuggestMatch.value = true;
+});
+
+function suggestMatch() {
+	const socketGame = useSocketGame();
+	socketGame.value.emit('suggest-match', props.name);
 }
 
 const targetIsOwner = ref(false);
 const isMutedTarget = ref(false);
 if (!props.isBan) {
-	socket.value.emit(
+	socketChat.value.emit(
 		'is_muted_user',
 		{
 			name: props.channelName,
@@ -138,7 +148,7 @@ if (!props.isBan) {
 		(isMuted: boolean) => isMutedTarget.value = isMuted
 	);
 
-socket.value.emit(
+socketChat.value.emit(
 	'is_channel_owner',
 	{
 		name: props.channelName,
@@ -150,7 +160,7 @@ socket.value.emit(
 )
 }
 
-socket.value.on(
+socketChat.value.on(
 	'receive_mute_channel_user',
 	({channelName, username}) => {
 		if (channelName == props.channelName && username == props.name)
@@ -158,7 +168,7 @@ socket.value.on(
 	}
 );
 
-socket.value.on(
+socketChat.value.on(
 	'receive_unmute_channel_user',
 	({channelName, username}) => {
 		if (channelName == props.channelName && username == props.name)

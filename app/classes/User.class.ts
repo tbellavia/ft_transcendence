@@ -7,7 +7,7 @@ export interface UserStats {
 	rank: 'GOLD' | 'SILVER' | 'BRONZE' | 'WOOD';
 };
 
-export interface UserInfos {
+export class UserInfos {
 	username: string;
 	double_auth_enabled: boolean;
 	creation_date: Date;
