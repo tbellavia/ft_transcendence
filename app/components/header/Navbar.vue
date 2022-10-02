@@ -28,6 +28,13 @@ try {
   ]);
   const user =  await getRefreshedUserAuthenticate();
   const username = user.value.username ? user.value.username : 'Default';
+  const inGame = ref(user.value.isInGame)
+
+
+  // async function getNavbarNavigateLink(link) {
+  //   const user =  await getRefreshedUserAuthenticate();
+  //   return user.value.isInGame ? '' : `/${username}/${link}`;
+  // }
 </script>
 
 <style scoped>

@@ -41,6 +41,15 @@ export class StatsService {
         return stat;
     }
 
+    // async findOne(username: string) {
+    //     const user = await this.userService.findOneByName(username);
+
+    //     const stat = await this.statRepository.findOne({ 
+    //         where: {
+    //             user: { username }
+    //         }
+    //     });
+    //     return stat;
     async findOne(username: string) {  // TODO see if necessary eithan
         try {
             const user = await this.userService.findOneByName(username);

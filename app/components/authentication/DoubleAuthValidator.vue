@@ -37,9 +37,7 @@ async function disconnect() {
       $eventBus.$emit('disconnect');
       enableDialog.value = false;
     })
-    .catch(error => {
-      console.warn(error);
-    });
+    .catch(() => {});
 }
 
 let errorMessage = ref('');

@@ -1,4 +1,6 @@
+import { Socket } from "engine.io-client";
 import { $Fetch } from "ohmyfetch";
+import { Match } from "~~/interfaces/match.interface";
 import { User, UserInfos } from "./User.class";
 
 interface FriendRelation {
@@ -18,9 +20,12 @@ export class UserAuthentified extends User {
   public friends: User[] = [];
   public pendingFriends: User[] = [];
   public blockedUsers: User[] = [];
+  public currentMatch: Match;
+  public waitingAcceptingMatch: boolean;
 
   constructor(username: string, fetchingMethod: $Fetch) {
     super(username, fetchingMethod);
+    this.waitingAcceptingMatch = false;
   }
 
   /* Overload method */
@@ -128,14 +133,36 @@ export class UserAuthentified extends User {
     const booleanString = await this.fetchingMethod(`/blocked/me/${this.extractUsername(target)}`);
     return booleanString === 'true';
   }
+  
+  
+  /* GAME */
+  /* -------------------------------------------------------------- */
+  public getCurrentMatch() : Match {
+    return this.currentMatch;
+  }
+
+  public getisInGame() : Boolean {
+    return (this.currentMatch ? true : false)
+  }
+
+  public setMatch(id: number, oponent: string, left: boolean ) {
+    this.currentMatch = {
+      id,
+      oponent,
+      left,
+      leftPoint: 0,
+      rightPoint: 0,
+    }
+    this.isInGame = true;
+  }
+
+  public suggestMatch(username: string) {
+  	this.waitingAcceptingMatch === true;
+    
+  }
 
   /* UTILS */
   /* -------------------------------------------------------------- */
-  // Extract username if User
-  private extractUsername(target: User | string) {
-    return typeof (target) == 'string' ? target : target.username;
-  }
-
   public extractFriend(relation: FriendRelation) {
     return relation.user_2.username !== this.username ? relation.user_2 : relation.user_1;
   }

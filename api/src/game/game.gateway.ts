@@ -1,8 +1,10 @@
 import { ClassSerializerInterceptor, SerializeOptions, UseInterceptors } from "@nestjs/common";
-import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
-import { Socket } from "socket.io";
-import { UserStatus } from "src/socket/enums/userStatus.enum";
+import { ConnectedSocket, MessageBody, OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from "@nestjs/websockets";
+import { Socket, Server } from "socket.io";
+// import { ConnectedSocket, OnGatewayConnection, SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
 import { SocketService } from "src/socket/socket.service";
+import { GameService } from "./game.service";
+import { MatchAskingService } from "./matchAsking/matchasking.service";
 import { MatchmakingService } from "./matchmaking/matchmaking.service";
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -18,12 +20,17 @@ import { MatchmakingService } from "./matchmaking/matchmaking.service";
 		credentials: true
 	}
 })
-export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class GameGateway {
+	@WebSocketServer()
+	server: Server;
+
 	constructor(
 		private socketService: SocketService,
-		private matchmakingService: MatchmakingService
-	) 
-	{ }
+		private gameService: GameService,
+		private matchmakingService: MatchmakingService,
+		private matchAskingService: MatchAskingService
+		) 
+	{}
 
 	async handleConnection(socket: Socket){
 		try {
@@ -47,15 +54,114 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			
 			player_1.socket.emit("matched", {
 				id,
-				username: player_2.user.username, 
+				username: player_2.user.username,
+				left: true 
 			});
 			player_2.socket.emit("matched", {
 				id,
-				username: player_1.user.username
+				username: player_1.user.username,
+				left: false
 			});
-
+			this.gameService.initGame(match);
 			match = await this.matchmakingService.match();
 		}
+	}
+
+	@SubscribeMessage("update-paddle-pos")
+	async updatePaddlePos(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody() y: number
+	) 
+	{
+		this.gameService.updateGamePaddlePos(socket, y);
+	}
+
+	@SubscribeMessage("paddle-move-up")
+	async paddleMoveUp(@ConnectedSocket() socket: Socket) 
+	{
+		console.log("MOVE UP");
+		this.gameService.updateMoveUp(socket);
+	}
+
+	@SubscribeMessage("paddle-move-down")
+	async paddleMoveDown(@ConnectedSocket() socket: Socket) {
+		console.log("MOVE DOWN");
+		this.gameService.updateMoveDown(socket);
+	}
+
+	@SubscribeMessage("suggest-match") 
+	async suggestMatch(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody() opponent: string) {
+		const user = await this.socketService.getUserFromSocket(socket);
+		
+		// Check if opponent is connected
+		const opponentUser = await this.socketService.getUserByName(opponent);
+		const opponentSocket = this.socketService.getSocketsFromUsername(opponent);
+		if (!opponentSocket)
+			socket.emit('asking-match', false);
+			
+			// Ignore if in game-match
+		if (this.gameService.getGameOfUser(user))
+			socket.emit('asking-match', false);
+			
+		// Unsubscribe from matchmaking
+		if (this.matchmakingService.isSubscribed(user))
+			this.matchmakingService.unSubscribe(user, socket);
+
+		// Send notification to targeted user (opponent)
+		await this.matchAskingService.subscribe(user, socket, opponentUser);
+		this.server.to(opponent).emit('asking-match', user.username);
+	}
+	
+	@SubscribeMessage("accept-match") 
+	async acceptMatch(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody() opponent: string) {
+		const user = await this.socketService.getUserFromSocket(socket);
+		
+		// Check if opponent is connected
+		const opponentUser = await this.socketService.getUserByName(opponent);
+		const opponentSocket = this.socketService.getSocketsFromUsername(opponent);
+		if (!opponentSocket)
+			socket.emit('asking-match', false);
+			
+			// Ignore if in game-match
+		if (this.gameService.getGameOfUser(user))
+			socket.emit('asking-match', false);
+			
+		// Unsubscribe from matchmaking
+		if (this.matchmakingService.isSubscribed(user))
+			this.matchmakingService.unSubscribe(user, socket);
+
+		// Create the match!
+		await this.matchAskingService.acceptOrRefuse(opponentUser, user, socket);
+		// this.server.to(opponent).emit('asking-match', user.username);
+	}
+
+	@SubscribeMessage("refuse-match")
+	async refuseMatch(
+		@ConnectedSocket() socket: Socket,
+		@MessageBody() opponent: string) {
+		const user = await this.socketService.getUserFromSocket(socket);
+		
+		// Check if opponent is connected
+		const opponentUser = await this.socketService.getUserByName(opponent);
+		const opponentSocket = this.socketService.getSocketsFromUsername(opponent);
+		if (!opponentSocket)
+			socket.emit('asking-match', false);
+			
+			// Ignore if in game-match
+		if (this.gameService.getGameOfUser(user))
+			socket.emit('asking-match', false);
+			
+		// Unsubscribe from matchmaking
+		if (this.matchmakingService.isSubscribed(user))
+			this.matchmakingService.unSubscribe(user, socket);
+
+		// Create the match!
+		await this.matchAskingService.acceptOrRefuse(opponentUser, user, socket, false);
+		// this.server.to(opponent).emit('asking-match', user.username);
 	}
 }
 

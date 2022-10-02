@@ -60,7 +60,7 @@ body {
 
 /* --------------------------------------------------------------  */
 /* Visual line like old monitor */
-body:after {
+.real-body::after {
   background: repeating-linear-gradient(
     transparent,
     transparent 5px,
@@ -196,12 +196,12 @@ input::placeholder {
 /* --------------------------------------------------------------  */
 
 img {
-  display: block;
-  height: auto;
-  width: 100%;
-  overflow: hidden;
-  object-fit: contain;
-}
+    display: block;
+    height: auto;
+    width: 100%;
+    overflow: hidden;
+    object-fit: contain;
+  }
 /* --------------------------------------------------------------  */
 
 

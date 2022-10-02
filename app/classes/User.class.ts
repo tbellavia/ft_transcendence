@@ -13,22 +13,20 @@ export interface UserInfos {
 	creation_date: Date;
 };
 
-// export interface UserMatchs {
-// 	public: 
-// }
-
 export class User {
 	public username: string;
 	public double_auth_enabled: boolean;
 	public avatar_url: string;
 	public stats: UserStats;
 	public matchs: Object;
+	public isInGame: boolean;
 
 	protected readonly fetchingMethod: $Fetch;
 	private avatar: Blob;
 
 	constructor(username: string, fetchingMethod: $Fetch) {
 		this.username = username;
+		this.isInGame = false;
 		this.fetchingMethod = fetchingMethod.create({
 			baseURL: 'http://localhost:3000/api/v1/users'
 		});
@@ -98,7 +96,7 @@ export class User {
 	  /* UTILS */
   /* -------------------------------------------------------------- */
   // Extract username if User
-  	private extractUsername(target: User | string) {
+  	protected extractUsername(target: User | string) {
     return typeof(target) == 'string' ? target : target.username;
   }
 

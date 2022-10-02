@@ -19,7 +19,7 @@ async function oauth42(code: string) {
       const { $eventBus } = useNuxtApp();
       $eventBus.$emit('connect', userInfos);
     })
-    .catch((error) => console.warn(error));
+    .catch(() => {});
 }
 
 // If code in query string it may be from 42api so we try to authenticate

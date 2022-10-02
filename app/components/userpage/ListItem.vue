@@ -72,7 +72,6 @@ const emit = defineEmits(['refreshList']);
 
 
 async function useAction(action: string) {
-	console.log(action);
 	if (action === 'acceptFriend')
 		await userAuthenticate.value.acceptFriend(props.target);
 	else if (action === 'addFriend')
@@ -86,6 +85,10 @@ async function useAction(action: string) {
 	else if (action === 'unblock') {
 		await userAuthenticate.value.unblockUser(props.target);
 		isBlocked.value = await userAuthenticate.value.isBlockUser(props.target);
+	}
+	else if (action === 'suggest-match') {
+		userAuthenticate.suggestMatch(target.username);
+		navigateTo( `/${userAuthenticate.value.username}/game`)
 	}
 	emit('refreshList');
 }

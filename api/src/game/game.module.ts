@@ -8,10 +8,11 @@ import { UserEntity } from "src/users/entities/user.entity";
 import { UsersService } from "src/users/users.service";
 import { GameGateway } from "./game.gateway";
 import { GameService } from "./game.service";
+import { MatchAskingService } from "./matchAsking/matchasking.service";
 import { MatchmakingService } from "./matchmaking/matchmaking.service";
 
 @Module({
 	imports: [SocketModule, MatchesModule, TypeOrmModule.forFeature([UserEntity, MatchEntity])],
-	providers: [GameGateway, GameService, MatchesService, MatchmakingService, UsersService]
+	providers: [GameGateway, GameService, MatchesService, MatchmakingService, MatchAskingService, UsersService]
 })
 export class GameModule { }
