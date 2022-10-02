@@ -8,6 +8,7 @@ export const PADDLE_VELOCITY: number = 4;
 export const PADDLE_DIMENSION: GameDimension = new GameDimension(4, 45);
 export const PADDLE_WALL_MARGIN: number = 20;
 export const PADDLE_MARGIN: number = 15;
+export const WIN_SCORE: number = 3;
 
 export function getRatio(dimension: GameDimension) : GameVec {
     return new GameVec(
