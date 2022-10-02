@@ -68,6 +68,14 @@ export class Game {
     this.socket.on("ball-pos", ({x, y}) => {
       this.ball.setPos(new GameVec(x, y));
     });
+
+    this.socket.on("score", ({left_score, right_score}) => {
+      console.log(`Left: ${left_score} - Right: ${right_score}`);
+    })
+
+    this.socket.on("game-end", ({left, right}) => {
+      console.log(`Victory : ${left} - ${right}`);
+    })
   }
 
   start() {

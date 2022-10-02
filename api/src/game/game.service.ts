@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Socket } from "socket.io";
 import { UserEntity } from "src/users/entities/user.entity";
+import { MatchesService } from "src/matches/matches.service";
 import { Game } from "./engine/game";
 import { GameDimension } from "./engine/utils/dimension";
 import { GameVec } from "./engine/utils/gameVec";
@@ -14,13 +15,17 @@ interface GameWithMatch {
 @Injectable()
 export class GameService {
     private users: Map<Socket, GameWithMatch>;
-    private games: Game[];
+    private games: Set<Game>;
+    private matches: Map<Game, GameWithMatch>;
 
-	constructor() 
+	constructor(
+        private matchesService: MatchesService
+    ) 
     {
         // Init game loop here ?
         this.users = new Map<Socket, GameWithMatch>();
-        this.games = [];
+        this.games = new Set<Game>();
+        this.matches = new Map<Game, GameWithMatch>();
         this.gameLoop();
     }
 
@@ -38,7 +43,8 @@ export class GameService {
             seconds++;
         }, 1000);
 
-        this.games.push(game);
+        this.games.add(game);
+        this.matches.set(game, { game, match });
         this.users.set(match.player_1.socket, { game, match });
         this.users.set(match.player_2.socket, { game, match });
     }
@@ -61,8 +67,32 @@ export class GameService {
      */
     async update() {
         this.games.forEach((game) => {
-            game.update();
+            if ( !game.isAlive() ){
+                // Game has ended
+                this.endGame(game);
+            } else {
+                game.update();
+            }
         })
+    }
+
+    async endGame(game: Game) {
+        // Store result in DB
+        // Delete match from map
+        // Send event to clients
+        const match = this.matches.get(game);
+        const gameStats = game.getGameStats();
+
+        // Store date
+        this.matchesService.update(match.match.id, gameStats);
+        this.removeGame(game);
+    }
+
+    async removeGame(game: Game) {
+        this.games.delete(game);
+        this.users.delete(game.player_1.socket);
+        this.users.delete(game.player_2.socket);
+        this.matches.delete(game);
     }
 
     /**
@@ -133,20 +163,20 @@ export class GameService {
      * @param socket
      * @param y 
      */
-         async updateGamePaddlePos(socket: Socket, y: number) {
-            const matchWithUser = this.users.get(socket);
-    
-            if ( matchWithUser ) {
-                const { game, match } = matchWithUser;
-    
-                if ( this.isLeftPlayer(socket, match) ){
-                    game.setLeftPaddlePos(y);
-                } else {
-                    game.setRightPaddlePos(y);
-                }
-                this.streamOpponentPaddlePos(socket, match, y);
+    async updateGamePaddlePos(socket: Socket, y: number) {
+        const matchWithUser = this.users.get(socket);
+
+        if ( matchWithUser ) {
+            const { game, match } = matchWithUser;
+
+            if ( this.isLeftPlayer(socket, match) ){
+                game.setLeftPaddlePos(y);
+            } else {
+                game.setRightPaddlePos(y);
             }
+            this.streamOpponentPaddlePos(socket, match, y);
         }
+    }
 
     async streamOpponentPaddlePos(current: Socket, match: GameMatch, y: number) {
         if ( current.id === match.player_1.socket.id ) {

@@ -3,6 +3,7 @@ import { GameVec, radians } from "./utils/gameVec";
 import { map, randomInt } from "./utils/utils";
 import { Paddle } from "./paddle";
 import { BALL_DIMENSION, BALL_VELOCITY } from "./utils/constants";
+import { WallSide } from "./game";
 
 export class Ball {
 	private canva: GameDimension;
@@ -44,8 +45,13 @@ export class Ball {
 	
 	draw() { }
 		
-	isOut() {
-		return this.pos.x <= 0 || (this.pos.x > (this.canva.width - this.dimension.width));
+	isOut() : WallSide {
+		if ( this.pos.x <= 0 ){
+			return WallSide.LEFT;
+		} else if ( this.pos.x > (this.canva.width - this.dimension.width) ) {
+			return WallSide.RIGHT;
+		}
+		return WallSide.NONE;
 	}
 	
 	wallCollide() {
