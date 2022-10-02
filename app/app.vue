@@ -21,10 +21,18 @@
 <script setup lang="ts">
 
 // Try to load user in all app
-try {
-   await getRefreshedUserAuthenticate();
-   await refreshUrl()
-} catch {}
+try { // TODO mai-fliend eithan
+   const route = useRoute();
+   if (route.params.username) {
+      const user = getUserAuthenticate()
+      await refreshUrl();
+   }
+   else {
+      const user = await getRefreshedUserAuthenticate()
+      if (user.value)
+      await refreshUrl();
+   }
+} catch { } // TODO mai-fliend eithan
 
 const { $eventBus } = useNuxtApp();
 

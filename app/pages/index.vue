@@ -19,6 +19,14 @@
 import { UserInfos } from '~~/classes/User.class';
 import { getRefreshedUserAuthenticate } from '~~/composables/useUserAuthentified';
 
+try { // TODO mai-fliend eithan
+  const user = getUserAuthenticate();
+  console.log(user.value)
+  if (user.value) {
+    await redirectIfConnected(`${user.value.username}/profile`, '/');
+  }
+} catch { } // TODO mai-fliend eithan
+
 let double_auth_enabled = ref(false);
 const { $eventBus } = useNuxtApp();
 $eventBus.$on('connect', async (userInfos: UserInfos) => {
