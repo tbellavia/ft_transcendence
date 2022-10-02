@@ -18,13 +18,13 @@ export class Game {
   private playerTurn: boolean;
   private socket: Socket;
   private left: boolean;
-
+  private dpr: number;
   constructor(canva: HTMLCanvasElement, socket: Socket, left: boolean) {
     // ratio for each window
-    var dpr = window.devicePixelRatio || 1;
+    this.dpr = window.devicePixelRatio || 1;
     var rect = canva.getBoundingClientRect();
-    canva.width = rect.width * dpr;
-    canva.height = rect.height * dpr;
+    canva.width = rect.width * this.dpr;
+    canva.height = rect.height * this.dpr;
 
     this.keyPressed = "";
     this.canva = canva;
@@ -76,6 +76,12 @@ export class Game {
 
   }
 
+  scale() {
+    this.ball.scale();
+    this.paddleLeft.scale();
+    this.paddleRight.scale();
+  }
+
   start() {
     this.update();
     this.draw();
@@ -107,8 +113,17 @@ export class Game {
 
   // Draw and clear Canva
   /* -------------------------------------------------------------- */
+  resize() {
+    var dpr = window.devicePixelRatio || 1;
+    if (this.dpr != dpr) {
+      var rect = this.canva.getBoundingClientRect();
+      this.canva.width = rect.width * dpr;
+      this.canva.height = rect.height * dpr;
+    }
+  }
 
   draw() {
+    this.resize();
     this.clear();
     this.drawMoving();
     this.drawCenterLine();

@@ -59,6 +59,11 @@ onMounted (() => {
 	document.addEventListener("keyup", (event) => {
 		game.keyupEvent(event);
 	});
+
+	window.addEventListener("resize", () => {
+		console.log("Resized!");
+		game.scale();
+	})
 	game.start();
 })
 

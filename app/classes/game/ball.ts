@@ -33,6 +33,7 @@ export class Ball {
 	}
 
 	scale() {
+		this.ratio = getCanvasRatio(this.canva);
 		this.scaleSize();
 	}
 

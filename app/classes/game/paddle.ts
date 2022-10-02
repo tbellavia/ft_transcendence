@@ -47,6 +47,7 @@ export class Paddle {
 
 
 	scale() {
+		this.ratio = getCanvasRatio(this.canva);
 		this.scaleSize();
 		this.scaleVelocity();
 		this.scaleMargin();
