@@ -11,7 +11,7 @@
 <!-- -------------------------------------------------------------- -->
 
 <script setup lang="ts">
-const userAuth = await getRefreshedUserAuthenticate();
+const userAuth = getUserAuthenticate();
 const settingslink = `/user/${userAuth.value.username}/settings`;
 async function disconnect() {
 

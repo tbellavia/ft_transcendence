@@ -39,7 +39,7 @@
 const newName = ref();
 const imageError = ref();
 const nameError = ref();
-const user = await getRefreshedUserAuthenticate();
+const user = getUserAuthenticate();
 
 const lettersAndNumbersOnly = (event: any) => {
 	event = (event) ? event : window.event;

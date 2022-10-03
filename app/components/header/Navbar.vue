@@ -26,7 +26,7 @@ try {
     {name: 'CHAT', link: 'chat'},
     {name: 'GAME', link: 'game'}
   ]);
-  const user =  await getRefreshedUserAuthenticate();
+  const user = getUserAuthenticate();
   const username = user.value.username ? user.value.username : 'Default';
   const inGame = ref(user.value.isInGame)
 

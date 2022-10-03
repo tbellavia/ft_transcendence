@@ -1,9 +1,9 @@
 <script setup lang="ts">
-let userAuthenticate = await getRefreshedUserAuthenticate();
+let userAuthenticate = getUserAuthenticate();
 let pendingFriends = ref(await userAuthenticate.value.getFriendsRequest());
 
 async function refreshList() {
-	userAuthenticate = await getRefreshedUserAuthenticate();
+	userAuthenticate = getUserAuthenticate();
 	pendingFriends.value = await userAuthenticate.value.getFriendsRequest();
 }
 </script>

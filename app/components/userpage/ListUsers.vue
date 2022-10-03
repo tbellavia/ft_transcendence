@@ -1,10 +1,10 @@
 <script setup lang="ts">
-let userAuthenticate = await getRefreshedUserAuthenticate();
+let userAuthenticate = getUserAuthenticate();
 let users = ref(await getAllUsers());
 
 async function refreshList() {
 	users.value = await getAllUsers();
-	userAuthenticate = await getRefreshedUserAuthenticate();
+	userAuthenticate = getUserAuthenticate();
 }
 </script>
 

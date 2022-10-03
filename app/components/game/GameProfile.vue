@@ -22,7 +22,7 @@
 
 
 <script setup lang="ts">
-const userAuth = await getRefreshedUserAuthenticate();
+const userAuth = getUserAuthenticate();
 const match = ref(userAuth.value.getCurrentMatch());
 const socket = useSocketGame();
 const oponent = await useUser(match.value.oponent);
@@ -33,7 +33,7 @@ const playerLeft  = ref(match.value.left ? userAuth.value : oponent.value);
 const playerRight = ref(match.value.left ? oponent.value : userAuth.value);
 
 
-socket.value.on("score",  ({player1, player2, left_score, right_score }) => {
+socket.value.on("score",  ({left_score, right_score }) => {
 	leftPoint.value = left_score;
 	rightPoint.value = right_score;
 } )

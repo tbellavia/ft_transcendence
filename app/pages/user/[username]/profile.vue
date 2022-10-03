@@ -1,5 +1,5 @@
 <template>
-	<profileSelfProfile v-if="disconnectButton" :username="user" :isUserAuth="isUserAuth"/>
+	<profileSelfProfile v-if="disconnectButton" :username="username" :isUserAuth="isUserAuth"/>
 	<div v-else class="undefined">
 		<h1>User not found</h1>
 	</div>
@@ -9,20 +9,20 @@
 const route = useRoute(); // TODO mai-fliend eithan
 const disconnectButton = ref(false);
 let isUserAuth = ref(false);
-let user = ref('');
+let username = ref('');
 try {
-	user = await getRefreshedUserAuthenticate();
+	const user = await getRefreshedUserAuthenticate();
 	if (user.value.username === route.params.username) {
 		isUserAuth.value = true
-		user = user.value.username
+		username.value = user.value.username
 		disconnectButton.value = true;
 	}
 	else {
 		isUserAuth.value = false;
-		user = route.params.username;
+		username.value = route.params.username as string;
 		disconnectButton.value = true;
 	}
-} catch { user = route.params.username } // TODO mai-fliend eithan
+} catch { username.value = route.params.username as string } // TODO mai-fliend eithan
 </script>
 
 <style>

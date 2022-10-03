@@ -35,7 +35,7 @@ const props = defineProps({
 
 const user = await(useUser(props.username))
 
-let userAuthenticate = await getRefreshedUserAuthenticate();
+let userAuthenticate = getUserAuthenticate();
 const messageLink = `/user/${userAuthenticate.value.username}/chat/${props.username}`;
 const isBlocked = ref(await userAuthenticate.value.isBlockUser(user.value));
 const isFriend = ref(await userAuthenticate.value.isFriend(user.value.username));
@@ -71,7 +71,7 @@ async function useAction(action: string) {
         }
     }
     catch { }
-    userAuthenticate = await getRefreshedUserAuthenticate();
+    userAuthenticate = getUserAuthenticate();
     isFriend.value = await userAuthenticate.value.isFriend(user.value.username);
     pendingFriends.value = await userAuthenticate.value.getFriendsRequest();
 

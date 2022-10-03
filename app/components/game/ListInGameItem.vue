@@ -21,8 +21,8 @@
 	   player_1: User,
 	   player_2: User,
    })
-    const player_1 = await getRefreshedUserAuthenticate();
-	// const player_2 = await useUser("amelie"); //TODO change and get player2
+    const player_1 = getUserAuthenticate();
+	const player_2 = await useUser("amelie"); //TODO change and get player2
 
    const background = ref("won-match");
    

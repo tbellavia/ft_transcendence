@@ -58,7 +58,7 @@ import ListInGameItem from '~~/components/game/ListInGameItem.vue';
 import GameCanvas1 from '~~/components/game/GameCanvas.vue';
 
 const socket = useSocketGame();
-const user = await getRefreshedUserAuthenticate();
+const user = getUserAuthenticate();
 const view = ref(false);
 const waiting = ref(false);
 // const dpr
@@ -87,6 +87,7 @@ async function unsubscribeMatchmaking() {
 socket.value.on("matched", ({username, id, left}) => {
 	waiting.value = false;
 	user.value.setMatch(id, username, left);
+	console.log(user.value.getCurrentMatch());
 });
 
 

@@ -65,7 +65,7 @@ const props = defineProps({
 	pendingFriend: Boolean,
 })
 
-const userAuthenticate = await getRefreshedUserAuthenticate();
+const userAuthenticate = getUserAuthenticate();
 const targetAvatar = ref(await getAvatar(props.target.username))
 const isBlocked = ref(await userAuthenticate.value.isBlockUser(props.target));
 const messageLink = `/user/${userAuthenticate.value.username}/chat/${props.target.username}`;

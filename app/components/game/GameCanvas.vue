@@ -25,7 +25,7 @@
 
 import { Game } from '~~/classes/game/game';
 
-const user = await getRefreshedUserAuthenticate();
+const user =  getUserAuthenticate();
 const socket = useSocketGame();
 const endGame = ref(false);
 const winnerUser = ref('');
