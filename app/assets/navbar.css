@@ -46,7 +46,7 @@
 	margin-top: -3px;
   }
 
-  .navbar-title, .navbar-left {
+  .navbar-title, .navbar-left, .anim-settings {
 	-webkit-animation: glitch 750ms infinite;
   }
 
@@ -62,7 +62,7 @@
 	  -ms-transform: skewX(1deg);
 	  -webkit-transform: skewX(1deg);
 	  transform: skewX(1deg);
-	  opacity: 0.75;
+	  opacity: 0.9;
 	}
 	10% {
 	  -moz-transform: skewX(0deg);
@@ -72,11 +72,11 @@
 	  opacity: 1;
 	}
 	15% {
-	  -moz-transform: skewX(-3deg);
-	  -ms-transform: skewX(-3deg);
-	  -webkit-transform: skewX(-3deg);
-	  transform: skewX(-3deg);
-	  opacity: 0.75;
+	  -moz-transform: skewX(-2deg);
+	  -ms-transform: skewX(-2deg);
+	  -webkit-transform: skewX(-2deg);
+	  transform: skewX(-2deg);
+	  opacity: 0.9;
 	}
 	20% {
 	  -moz-transform: skewX(0deg);
@@ -90,7 +90,7 @@
 	  -ms-transform: skewX(2deg);
 	  -webkit-transform: skewX(2deg);
 	  transform: skewX(2deg);
-	  opacity: 0.75;
+	  opacity: 0.9;
 	}
 	50% {
 	  -moz-transform: skewX(0deg);
@@ -104,7 +104,7 @@
 	  -ms-transform: skewX(0deg);
 	  -webkit-transform: skewX(0deg);
 	  transform: skewX(0deg);
-	  opacity: 0.75;
+	  opacity: 0.9;
 	}
 	60% {
 	  -moz-transform: skewX(0deg);
@@ -118,19 +118,21 @@
 	  -ms-transform: skewX(1deg);
 	  -webkit-transform: skewX(1deg);
 	  transform: skewX(1deg);
+	  opacity: 0.9;
 	}
 	80% {
 	  -moz-transform: skewX(0deg);
 	  -ms-transform: skewX(0deg);
 	  -webkit-transform: skewX(0deg);
 	  transform: skewX(0deg);
+	  opacity: 1;
 	}
 	85% {
 	  -moz-transform: skewX(-1deg);
 	  -ms-transform: skewX(-1deg);
 	  -webkit-transform: skewX(-1deg);
 	  transform: skewX(-1deg);
-	  opacity: 0.75;
+	  opacity: 0.9;
 	}
 	90% {
 	  -moz-transform: skewX(0deg);
@@ -144,6 +146,7 @@
 	  -ms-transform: skewX(0deg);
 	  -webkit-transform: skewX(0deg);
 	  transform: skewX(0deg);
+	  opacity: 1;
 	}
   }
   @-webkit-keyframes scan {

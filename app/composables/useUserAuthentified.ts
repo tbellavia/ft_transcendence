@@ -2,14 +2,14 @@ import { UserAuthentified } from '~~/classes/UserAuthentified.class'
 import { UserInfos } from '~~/classes/User.class';
 import { Ref } from 'vue';
 
-let userAuthenticate: Ref<UserAuthentified> = undefined;
+let userAuthenticate: Ref<UserAuthentified> = ref(undefined);
 
 // fetch userAuthenticate and return it in class
 export async function useUserAuthentified(): Promise<Ref<UserAuthentified>> {
   const { $apiFetch } = useNuxtApp();
   const { username } = await getUserAuthentifiedInfos();
   
-  userAuthenticate = useState(username, () => new UserAuthentified(username, $apiFetch));
+  userAuthenticate.value = new UserAuthentified(username, $apiFetch);
   await userAuthenticate.value.fetchAll();
   return userAuthenticate;
 }
