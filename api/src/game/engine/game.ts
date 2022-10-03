@@ -83,7 +83,6 @@ export class Game {
 
       const outside = this.ball.isOut();
       if ( this.checkVictory() ) {
-        console.log("Victory!");
         this.end();
       }
       else if ( outside !== WallSide.NONE ) {
@@ -138,23 +137,13 @@ export class Game {
 
     this.player_1.socket.emit("game-end", victory);
     this.player_2.socket.emit("game-end", victory);
-  }
-
-  /**
-   * Emit game end to all spectators.
-   */
-  emitSpectatorGameEnd() {
-    const leftOutcome = this.getLeftPlayerOutcome();
-    const rightOutcome = this.getRightPlayerOutcome();
-    const outcome = {
-      left: leftOutcome,
-      right: rightOutcome
-    };
 
     this.spectators.forEach((spectator) => {
-      spectator.emit("game-end", outcome);
+      spectator.emit("spectator-game-end", victory);
     })
   }
+
+
 
   /**
    * Emit ball position to both player.

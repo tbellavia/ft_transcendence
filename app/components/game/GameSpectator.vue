@@ -38,13 +38,14 @@ socket.value.on("game-start-timer", (remaining) => {
 	timer.value = remaining;
 })
 
-socket.value.on("game-end", (winner) => {
+socket.value.on("spectator-game-end", (winner) => {
      winnerUser.value = winner;
 	 endGame.value = true;
 	 const timer = setInterval(() => {
 		if (timer > 0) {
 			clearInterval(timer);
 			socket.value.emit("spectator-unsubscribe")
+			// user.isSpectator = true;
 		}
 	}, 1000 * 5);
 })

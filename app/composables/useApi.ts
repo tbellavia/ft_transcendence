@@ -5,7 +5,6 @@ export async function useApi(urlEndpoint: string, options?: UseFetchOptions<Data
 
     return await $apiFetch(urlEndpoint, options)
 	  	.then( async (datas) => {
-			console.log('request: ', urlEndpoint);
 			return datas;
 		})
 		.catch( (error) => {

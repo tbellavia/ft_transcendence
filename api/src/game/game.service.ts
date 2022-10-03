@@ -41,7 +41,6 @@ export class GameService {
         
         const timer = setInterval(() => {
             this.emitGameTimer(match, 5 - seconds);
-            console.log("MATCH " + seconds);
             if ( seconds == 5 ){
                 game.start();
                 clearInterval(timer);

@@ -50,7 +50,6 @@ export class MatchmakingService {
 		const index = this.pool.indexOf(new GameUser(user, socket));
 
 		if (index > -1) {
-			// console.log(this.pool[index])
 			this.pool.splice(index, 1);
 		}
 	}

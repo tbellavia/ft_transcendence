@@ -45,15 +45,7 @@ export class SocketService {
       socketArray = [socket];
     this.userSockets.set(user.username, socketArray);
     socket.join(user.username);
-    /*
-    console.log('User', user.username, 'connect');
-    this.connectedUsers.forEach((user, socketId) => {
-      console.log(socketId, ':',user.username)
-    });nestjs   | lperson- connect to a game
 
-    if (user)
-      console.log('User', user.username, 'disconnect');
-    */
     return user;
   }
 

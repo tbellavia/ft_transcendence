@@ -53,7 +53,6 @@ export class GameGateway {
 	async subscribeMatchmaking(@ConnectedSocket() socket: Socket) 
 	{
 		const user = await this.socketService.getUserFromSocket(socket);
-		console.log(`${user.username} subscribed to matchmaking!`);
 
 		this.matchmakingService.subscribe(user, socket);
 		let match = await this.matchmakingService.match();
@@ -79,7 +78,6 @@ export class GameGateway {
 	async unsubscribeMatchmaking(@ConnectedSocket() socket: Socket) 
 	{
 		const user = await this.socketService.getUserFromSocket(socket);
-		console.log(`${user.username} unsubscribed to matchmaking!`);
 
 		// Unsubscribe from matchmaking
 		if (this.matchmakingService.isSubscribed(user))

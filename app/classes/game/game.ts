@@ -72,10 +72,6 @@ export class Game {
       this.ball.setPos(new GameVec(x, y));
     });
 
-    // this.socket.on("score", ({left_score, right_score}) => {
-    //   console.log(`Left: ${left_score} - Right: ${right_score}`);
-    // })
-
 
     this.socket.on("game-state", ({ball_pos, left_paddle_pos, right_paddle_pos}) => {
       this.ball.setPos(new GameVec(
