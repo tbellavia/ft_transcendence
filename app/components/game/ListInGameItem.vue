@@ -22,7 +22,7 @@
 	   player_2: User,
    })
     const player_1 = await getRefreshedUserAuthenticate();
-	const player_2 = await useUser("amelie"); //TODO change and get player2
+	// const player_2 = await useUser("amelie"); //TODO change and get player2
 
    const background = ref("won-match");
    

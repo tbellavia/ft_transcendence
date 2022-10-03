@@ -12,11 +12,11 @@
 		<!-- list match in game -->
 		<div v-show="view" class="profile-match-body">
 			<!-- <div class="list-match" v-for="match in onlineMatch"> -->
-			<div class="list-match" v-for="match in onlineMatch">
+			<!-- <div class="list-match" v-for="match in onlineMatch">
 				<button style="width:100%;" @click="showThisRoom(match)">
 					<ListInGameItem />
 				</button>
-			</div>
+			</div> -->
 		</div>
 
 		<!-- waiting match making result  -->

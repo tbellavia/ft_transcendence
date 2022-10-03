@@ -17,12 +17,8 @@
 				<Suspense>
 					<profileStats :username="props.username" />
 				</Suspense>
-				<!-- Settings link -->
-				<div v-if="props.isUserAuth" class="settings">
-					<NuxtLink class="settings-button" :href="settingslink">Settings</NuxtLink>
-				</div>
 				<!-- Display options linked to friendship -->
-				<Suspense v-else>
+				<Suspense v-if="!props.isUserAuth">
 					<profileFriendsOptions :username="user.username" class="profile-friends-options" />
 				</Suspense>
 			</div>
@@ -52,8 +48,6 @@ const props = defineProps({
 	}
 })
 const userAuth = await getRefreshedUserAuthenticate()
-const settingslink = `/user/${userAuth.value.username}/settings`;
-
 const user = await useUser(props.username)
 if (!user?.value?.stats) // TODO do it in back eithan
 	user.value = undefined
@@ -101,14 +95,6 @@ div.profile-user-parameters {
 	margin-top: 30px;
 	min-width: 200px;
 	max-width: 300px;
-}
-
-div.settings {
-	margin-top: 20px;
-}
-
-.settings-button {
-	text-decoration: none;
 }
 
 .undefined {
