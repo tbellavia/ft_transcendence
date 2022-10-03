@@ -22,7 +22,7 @@
 				<!-- Owner can set other users in channel as moderator or not -->
 				<div v-if="authUserIsOwner && !isBan">
 					<button v-if="!isModerator" @click="setModerator" class="OptionsProfile_sub">Updgrade as moderator</button>
-					<button v-else @click="unsetModerator" class="OptionsProfile_sub">Downgrade as simple user</button>]
+					<button v-else @click="unsetModerator" class="OptionsProfile_sub">Downgrade as simple user</button>
 				</div>
 
 				<!-- Can ban other user that is not owner -->
@@ -120,18 +120,7 @@ function unbanUser() {
 	socketChat.value.emit('unban_channel_user', {name: props.channelName, username: props.name});
 }
 
-let canSuggestMatch = ref(false);
-const socket = useSocket();
-socket.value.emit(
-	'get_status', 
-	props.name,
-	(status: string) => {
-		console.log(props.name, status);
-		if (status != 'in a game' && status != 'offline')
-			canSuggestMatch.value = true;
-		else
-			canSuggestMatch.value = false;
-});
+let canSuggestMatch = ref(!authUser.value.isInGame);
 
 function suggestMatch() {
 	const socketGame = useSocketGame();
