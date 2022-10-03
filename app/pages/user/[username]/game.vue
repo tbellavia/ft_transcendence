@@ -11,7 +11,6 @@
 
 		<!-- list match in game -->
 		<div v-show="view" class="profile-match-body">
-			<!-- <div class="list-match" v-for="match in onlineMatch"> -->
 			<div class="list-match" v-for="match in onlineMatch">
 				<button style="width:100%;" @click="showThisRoom(match)" >
 					<ListInGameItem  :player1="match.player_1" :player2="match.player_2" />
@@ -66,7 +65,7 @@ const socket = useSocketGame();
 const user = getUserAuthenticate();
 const view = ref(false);
 const waiting = ref(false);
-const spectator =ref(false);
+const spectator =ref(user.value.isSpectator);
 const matchSpectator = ref();
 // const dpr
 
@@ -107,6 +106,7 @@ function showThisRoom(match) {
 	spectator.value = true;
 	view.value = false;
 	waiting.value = false;
+	user.value.isSpectator = true;
 	socket.value.emit("spectator-subscribe", match.match_id)
 }
 
@@ -123,7 +123,6 @@ socket.value.on("matched", ({username, id, left}) => {
 
 <style scoped>
 	.in-game {
-		width: 100%;
 		height: 100%;
 		position: relative;
 	}
