@@ -142,10 +142,8 @@ socket.value.on("matched", ({username, id, left}) => {
 		overflow-x: none;
 	}
 .game-container {
-		/* width: 80%; */
-		width: 640px;
-		height: 400px;
-		/* height: 80%;  */
+		width: 620px;
+		height: 410px;
 }
 
 	.friends-buttons {

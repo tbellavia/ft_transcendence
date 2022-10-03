@@ -14,7 +14,7 @@
 
 const disconnectButton = ref(false);
 try {
-  const user = await getRefreshedUserAuthenticate();
+  const user = getUserAuthenticate();
   if (user.value)
     disconnectButton.value = true;
 } catch { }
