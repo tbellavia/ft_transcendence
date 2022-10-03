@@ -61,6 +61,19 @@ async function submitName() {
 		newName.value = ""
 		return
 	}
+	// Reconnect all sockets if connected
+	const sockets = [];
+	sockets.push(useSocket().value);
+	sockets.push(useSocketGame().value);
+	sockets.push(useSocketChat().value);
+	sockets.forEach(socket => {
+		if (socket.connected) {
+			socket.disconnect();
+			socket.connect();
+		}
+	})
+
+	// Redirect if name changed
 	const route = useRoute()
 
 	const path = route.fullPath.replace(String(route.params.username), user.value.username);
