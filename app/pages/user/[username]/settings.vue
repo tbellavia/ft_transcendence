@@ -76,7 +76,7 @@ async function submitName() {
 	// Redirect if name changed
 	const route = useRoute()
 
-	const path = route.fullPath.replace(String(route.params.username), user.value.username);
+	const path = `/user/${user.value.username}/settings`;
 	await redirectIfConnected(path, '/');
 	newName.value = ""
 }
