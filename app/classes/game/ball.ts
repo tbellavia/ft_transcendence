@@ -28,13 +28,6 @@ export class Ball {
 		this.dimension = Ball.BALL_DIMENSION;
 		this.velocity = Ball.BALL_VELOCITY;
 		this.speed = new GameVec(this.velocity, this.velocity);
-
-		this.scale();
-	}
-
-	scale() {
-		this.ratio = getCanvasRatio(this.canva);
-		this.scaleSize();
 	}
 
 	scaleSize() {
