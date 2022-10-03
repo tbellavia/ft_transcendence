@@ -178,8 +178,9 @@ export class Game {
     this.player_1.socket.emit("score", { left_score, right_score });
     this.player_2.socket.emit("score", { left_score, right_score });
 
+
     this.spectators.forEach((spectator) => {
-      spectator.emit("score", { left_score, right_score });
+      spectator.emit("spectator-score", { left_score, right_score });
     });
   }
 
@@ -188,14 +189,14 @@ export class Game {
    */
   emitGameStateToSpectators() {
     const ball_pos = this.ball.getPos();
-    const left_paddle_pos = this.ball.getPos();
-    const right_paddle_pos = this.ball.getPos();
+    const left_paddle_pos = this.paddleLeft.getPos();
+    const right_paddle_pos = this.paddleRight.getPos();
 
     this.spectators.forEach((spectator) => {
       spectator.emit("game-state", {
         ball_pos,
-        left_paddle_pos,
-        right_paddle_pos
+        left_paddle_pos: left_paddle_pos.y,
+        right_paddle_pos: right_paddle_pos.y
       })
     });
   }

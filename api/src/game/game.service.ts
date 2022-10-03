@@ -206,4 +206,19 @@ export class GameService {
         });
         return result;
     }
+
+    getCurrentMatch() {
+        let currentGames:  Object[] = [];
+
+        this.matches.forEach((matches) => {
+            const match = matches.match;
+
+            currentGames.push({
+                match_id: match.id,
+                player_1: match.player_1.user.username,
+                player_2: match.player_2.user.username
+            })
+        })
+        return currentGames;
+    }
 }

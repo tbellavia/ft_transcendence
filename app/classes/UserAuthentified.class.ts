@@ -39,7 +39,7 @@ export class UserAuthentified extends User {
 
   /* USER INTERFACE */
   /* -------------------------------------------------------------- */
-  public async updateAvatar(newAvatar: any) { //TODO png only eithan
+  public async updateAvatar(newAvatar: any) { 
     await this.fetchingMethod(`/avatar/me`,
       {
         method: 'POST',
@@ -156,7 +156,6 @@ export class UserAuthentified extends User {
 
   public suggestMatch(username: string) {
   	this.waitingAcceptingMatch === true;
-    
   }
 
   /* UTILS */

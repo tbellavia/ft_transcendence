@@ -1,12 +1,12 @@
 <template>
 	<div class="match-item"  :id="background">
 	   <div class="match-item-sub">
-		   <div class="match-user-image"> <img :src="player_1.avatar_url"/> </div>
-		   <div class="match-user-name" >	{{ player_1.username }} </div>
+		   <div class="match-user-image"> <img :src="player1.avatar_url"/> </div>
+		   <div class="match-user-name" >	{{ player1.username }} </div>
 		</div>
 		<div class="match-item-sub" >	VS </div>
-	 	<div class="match-item-sub"> <div class="match-user-name" >	{{ player_2.username }} </div>
-		<div class="match-user-image"> <img :src="player_2.avatar_url"/> </div>
+	 	<div class="match-item-sub"> <div class="match-user-name" >	{{ player2.username }} </div>
+		<div class="match-user-image"> <img :src="player2.avatar_url"/> </div>
 		</div>
    </div>
    </template>
@@ -17,12 +17,11 @@
    import { User } from '~~/classes/User.class';
    
    const props = defineProps({
-	   match: Object,
-	   player_1: User,
-	   player_2: User,
+	   player1: String,
+	   player2: String,
    })
-    const player_1 = getUserAuthenticate();
-	const player_2 = await useUser("amelie"); //TODO change and get player2
+    const player1 = await useUser(props.player1);
+	const player2 = await useUser(props.player2); 
 
    const background = ref("won-match");
    

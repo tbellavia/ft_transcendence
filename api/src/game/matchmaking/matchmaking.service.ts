@@ -18,7 +18,6 @@ export class MatchmakingService {
 		this.pool = [];
 	}
 
-	// TODO: Verify if user is already subscribed
 	async subscribe(user: UserEntity, socket: Socket) {
 		if ( !this.isSubscribed(user) )
 			this.pool.push({ user, socket });
@@ -51,7 +50,7 @@ export class MatchmakingService {
 		const index = this.pool.indexOf(new GameUser(user, socket));
 
 		if (index > -1) {
-			console.log(this.pool[index])
+			// console.log(this.pool[index])
 			this.pool.splice(index, 1);
 		}
 	}

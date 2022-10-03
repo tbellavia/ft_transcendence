@@ -10,7 +10,7 @@
   		</v-dialog>
 
 		<!-- CARD: display winner at the end of game -->
-		<v-dialog persistent v-if="endGame" v-model="endGame">
+		<v-dialog persistent v-if="endGame > 0" v-model="endGame">
 			<v-card center class="game-begin-timer">
 				<v-card-title> MATCH VICTORY </v-card-title>
 				<v-card-text>{{ winnerUser }} won ! </v-card-text>
@@ -24,6 +24,7 @@
 <script setup lang="ts">
 
 import { Game } from '~~/classes/game/game';
+import gameVue from '~~/pages/user/[username]/game.vue';
 
 const user =  getUserAuthenticate();
 const socket = useSocketGame();
@@ -43,27 +44,16 @@ socket.value.on("game-end", (winner) => {
 	 const timer = setInterval(() => {
 		if (timer > 0) {
 			clearInterval(timer);
-			user.value.isInGame = false;
+			socket.value.emit("spectator-unsubscribe")
 		}
 	}, 1000 * 5);
 })
 
+
 onMounted (() => {
 	const gameCanvas = document.getElementById("game-canvas") as HTMLCanvasElement | null;
-	const game = new Game(gameCanvas, socket.value, user.value.currentMatch.left);
-	
-	document.addEventListener("keydown", (event) => {
-		game.keypressEvent(event);
-	});
-	
-	document.addEventListener("keyup", (event) => {
-		game.keyupEvent(event);
-	});
+	const game = new Game(gameCanvas, socket.value, true);
 
-	window.addEventListener("resize", () => {
-		console.log("Resized!");
-		game.scale();
-	})
 	game.start();
 })
 

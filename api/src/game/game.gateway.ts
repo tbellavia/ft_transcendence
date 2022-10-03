@@ -99,6 +99,12 @@ export class GameGateway {
 		this.gameService.unsubscribeSpectator(socket);
 	}
 
+	@SubscribeMessage("get-current-match")
+	async getCurrentMatch(@ConnectedSocket() socket: Socket) {
+		let matches = this.gameService.getCurrentMatch();
+		socket.emit("current-matches-list",  matches );
+	}
+
 
 /* PADDLE MOUVEMENT */
 /*-- -------------------------------------------------------------- */
@@ -209,5 +215,3 @@ export class GameGateway {
 		await this.matchAskingService.acceptOrRefuse(opponentUser, user, socket, false);
 	}
 }
-
-// TODO: if MATCH MAKING ET inviter quelqu un a jouer

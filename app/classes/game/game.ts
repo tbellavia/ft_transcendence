@@ -1,6 +1,6 @@
 import { Socket } from "socket.io-client";
 import { Ball } from "./ball";
-import { GAME_CANVA_DIMENSION, getRatio } from "./engine/constants";
+import { GAME_CANVA_DIMENSION, getCanvasRatio, getRatio } from "./engine/constants";
 import { GameDimension } from "./engine/dimension";
 import { GameVec } from "./engine/gameVec";
 import { Paddle } from "./paddle";
@@ -19,6 +19,8 @@ export class Game {
   private socket: Socket;
   private left: boolean;
   private dpr: number;
+  private ratio: GameVec;
+
   constructor(canva: HTMLCanvasElement, socket: Socket, left: boolean) {
     // ratio for each window
     this.dpr = window.devicePixelRatio || 1;
@@ -44,6 +46,7 @@ export class Game {
     this.ball.start(this.playerTurn);
     this.socket = socket;
     this.left = left;
+    this.ratio = getCanvasRatio(this.canva);
 
     this.setSocketListeners();
   }
@@ -69,10 +72,25 @@ export class Game {
       this.ball.setPos(new GameVec(x, y));
     });
 
-    this.socket.on("score", ({left_score, right_score}) => {
-      console.log(`Left: ${left_score} - Right: ${right_score}`);
-    })
+    // this.socket.on("score", ({left_score, right_score}) => {
+    //   console.log(`Left: ${left_score} - Right: ${right_score}`);
+    // })
 
+
+    this.socket.on("game-state", ({ball_pos, left_paddle_pos, right_paddle_pos}) => {
+      this.ball.setPos(new GameVec(
+        ball_pos.x,
+        ball_pos.y,
+      ));
+
+      this.paddleLeft.setPos(
+        left_paddle_pos * this.ratio.y
+      );
+
+      this.paddleRight.setPos(
+        right_paddle_pos * this.ratio.y
+      );
+    })
 
   }
 

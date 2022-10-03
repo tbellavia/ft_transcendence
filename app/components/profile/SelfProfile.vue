@@ -63,7 +63,6 @@ const status = ref('offline');
 
 if (isFriend.value) {
 	const socket = useSocket();
-	console.log()
 	socket.value.emit('get_status', user.value.username, userStatus => status.value = userStatus);
 }
 
