@@ -47,7 +47,12 @@ export class MatchmakingService {
 		return this.pool.filter(({ user }) => user.username === needle.username).length >= 1;
 	}
 
-	async unSubscribe(user: UserEntity, socket: Socket) {
-		this.pool.push({ user, socket });
+	unSubscribe(user: UserEntity, socket: Socket) {
+		const index = this.pool.indexOf(new GameUser(user, socket));
+
+		if (index > -1) {
+			console.log(this.pool[index])
+			this.pool.splice(index, 1);
+		}
 	}
 }

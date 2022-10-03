@@ -19,6 +19,9 @@ import { MatchmakingService } from "./matchmaking/matchmaking.service";
 		credentials: true
 	}
 })
+
+/*-- -------------------------------------------------------------- */
+
 export class GameGateway {
 	@WebSocketServer()
 	server: Server;
@@ -40,6 +43,10 @@ export class GameGateway {
 	async handleDisconnect(socket: Socket) {
 		const user = await this.socketService.disconnectSocketBindedToUser(socket);
 	}
+
+
+/* SUBSCRIBER */
+/*-- -------------------------------------------------------------- */
 
 	@SubscribeMessage("subscribe")
 	async subscribeMatchmaking(@ConnectedSocket() socket: Socket) 
@@ -67,6 +74,17 @@ export class GameGateway {
 		}
 	}
 
+	@SubscribeMessage("unsubscribe")
+	async unsubscribeMatchmaking(@ConnectedSocket() socket: Socket) 
+	{
+		const user = await this.socketService.getUserFromSocket(socket);
+		console.log(`${user.username} unsubscribed to matchmaking!`);
+
+		// Unsubscribe from matchmaking
+		if (this.matchmakingService.isSubscribed(user))
+			this.matchmakingService.unSubscribe(user, socket);;
+	}
+
 	@SubscribeMessage("spectator-subscribe")
 	async subscribeSpectator(
 		@ConnectedSocket() socket: Socket,
@@ -81,6 +99,10 @@ export class GameGateway {
 		this.gameService.unsubscribeSpectator(socket);
 	}
 
+
+/* PADDLE MOUVEMENT */
+/*-- -------------------------------------------------------------- */
+
 	@SubscribeMessage("paddle-move-up")
 	async paddleMoveUp(@ConnectedSocket() socket: Socket) 
 	{
@@ -91,6 +113,9 @@ export class GameGateway {
 	async paddleMoveDown(@ConnectedSocket() socket: Socket) {
 		this.gameService.updateMoveDown(socket);
 	}
+
+/* SUGGEST MATCH */
+/*-- -------------------------------------------------------------- */
 
 	@SubscribeMessage("suggest-match") 
 	async suggestMatch(

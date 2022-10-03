@@ -20,13 +20,18 @@
 		</div>
 
 		<!-- waiting match making result  -->
-		<div v-show="waiting">
-		<v-dialog v-if="waiting" v-model="waiting">
+		<v-dialog persistent v-if="waiting" v-model="waiting">
 			<v-card center class="game-begin-timer">
 			<v-card-title>Waiting Player </v-card-title>
+			<v-card-actions class="cancel-buttons">
+				<v-progress-circular
+					indeterminate
+					color="CurrentColor"
+				></v-progress-circular>
+     		   <v-btn  @click.stop="unsubscribeMatchmaking()">Cancel</v-btn>
+     		 </v-card-actions>
 			</v-card>
 		</v-dialog>
-		</div>
 
 		<!-- waiting accepting match for suggest match -->
 		<div v-show="user.waitingAcceptingMatch">
@@ -69,6 +74,11 @@ async function subscribeMatchmaking() {
 	socket.value.emit("subscribe");
 	view.value = false;
 	waiting.value = true;
+}
+
+async function unsubscribeMatchmaking() {
+	socket.value.emit("unsubscribe");
+	waiting.value = false;
 }
 
 /**
@@ -121,4 +131,9 @@ socket.value.on("matched", ({username, id, left}) => {
 .friends-buttons button:active {
 	border: solid;
 }
+
+.cancel-buttons {
+  display: flex;
+  justify-content: space-evenly;
+ }
 </style>
