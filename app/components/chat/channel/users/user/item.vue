@@ -31,6 +31,8 @@
 					<button v-else @click="unbanUser">Unban User</button>
 
 					<ChatChannelUsersUserMutePopup v-if="!isMutedTarget && !isBan" :name="name" :channel-name="channelName" />
+					<button v-else-if="!isBan && isMutedTarget" @click="unmuteUser">Unmute user</button>
+					<!-- TODO: unmute button -->
 				</div>
 			</div>
 
@@ -49,8 +51,6 @@
 
 
 <script setup lang="ts">
-import { f } from 'ohmyfetch/dist/error-d4c70d05';
-
 const props = defineProps({
   name: {
     required: true,
@@ -174,7 +174,11 @@ socketChat.value.on(
 		if (channelName == props.channelName && username == props.name)
 			isMutedTarget.value = false;
 	}
-)
+);
+
+function unmuteUser() {
+	socketChat.value.emit('unmute_channel_user', {name: props.channelName, username: props.name});
+}
 
 </script>
 

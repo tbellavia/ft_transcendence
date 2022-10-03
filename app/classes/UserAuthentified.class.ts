@@ -29,7 +29,10 @@ export class UserAuthentified extends User {
   }
 
   /* Overload method */
-  public async fetchAll() {
+  public async fetchAll(newUsername: string = '') {
+    if (newUsername)
+      this.username = newUsername;
+
     await super.fetchAll();
     this.pendingFriends.forEach(friend => friend.fetchAll());
     this.friends.forEach(friend => friend.fetchAll());
