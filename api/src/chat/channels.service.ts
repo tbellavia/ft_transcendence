@@ -37,6 +37,7 @@ import { MuteUserOnChannelDTO } from "./dto/muteUserOnChannel.dto";
 import { WsMuteHimselfException } from "./exceptions/channel/wsMuteHimself.exception";
 import { MuteService } from "./mute.service";
 import { WsUserIsAlreadyMutedOnChannelException } from "./exceptions/channel/wsUserIsAlreadyMutedOnChannel.exception";
+import { WsUserIsNotMuteOnChannelException } from "./exceptions/channel/wsUserIsNotMuteOnChannel.excpetion";
 
 @Injectable()
 export class ChannelsService {
@@ -313,6 +314,8 @@ export class ChannelsService {
       throw new WsUserHasNotModPermissionsException(user.username, channel.name);
 
     const target = await this.socketService.getUserByName(unmuteUser.username);
+    if (!(await this.muteService.isUserMutedOnChannel(target, channel)))
+      throw new WsUserIsNotMuteOnChannelException(target.username, channel.name);
     await this.muteService.unmuteUserOnChannel(target, channel);
   }
 

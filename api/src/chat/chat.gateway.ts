@@ -288,6 +288,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       );
   }
 
+  private mutedUsersTimeouts = new Map<string, NodeJS.Timeout>();
+
   @SubscribeMessage('mute_channel_user')
   async muteChannelUser(
     @ConnectedSocket() socket: Socket,
@@ -298,8 +300,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
     // Send back unmute notif when time has passed
-    setTimeout(async () => 
-    {
+    let mutedTimeout = this.mutedUsersTimeouts.get(muteUser.username);
+    if (mutedTimeout)
+      clearTimeout(mutedTimeout);
+    mutedTimeout = setTimeout(async () => {
       await this.channelService.unmuteChannelUser(user, {...muteUser});
 
       this.server.emit(
@@ -307,12 +311,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         {
           channelName: muteUser.name,
           username: muteUser.username
-        }
-      );
-    },
+        });
+        this.mutedUsersTimeouts.delete(muteUser.username);
+      },
       muteUser.durationMs
     );
-
+    this.mutedUsersTimeouts.set(muteUser.username, mutedTimeout);
 
     this.server.to(muteUser.name)
       .emit(
@@ -320,6 +324,29 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         {
           channelName: muteUser.name,
           username: muteUser.username
+        }
+      );
+  }
+
+  @SubscribeMessage('unmute_channel_user')
+  async unmuteChannelUser(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() unmuteUser: ChannelUserTargetDTO
+  ) {
+    const author = await this.socketService.getUserFromSocket(socket);
+
+    await this.channelService.unmuteChannelUser(author, unmuteUser);
+    const mutedTimeout = this.mutedUsersTimeouts.get(unmuteUser.username);
+    if (mutedTimeout)
+      clearTimeout(mutedTimeout);
+    this.mutedUsersTimeouts.delete(unmuteUser.username);
+
+    this.server.to(unmuteUser.name)
+      .emit(
+        'receive_unmute_channel_user',
+        {
+          channelName: unmuteUser.name,
+          username: unmuteUser.username
         }
       );
   }
