@@ -49,6 +49,8 @@
 
 
 <script setup lang="ts">
+import { f } from 'ohmyfetch/dist/error-d4c70d05';
+
 const props = defineProps({
   name: {
     required: true,
@@ -95,17 +97,24 @@ const isModerator = ref(props.isModerator);
 socketChat.value.on(
   'receive_add_channel_moderator',
   ({username, channelName}) => {
-    if (channelName == props.channelName && username == props.name)
-			isModerator.value = true;
-  }
+		if (channelName == props.channelName) {
+			if (username == props.name)
+				isModerator.value = true;
+			else if (authUser && authUser.value && authUser.value.username == username)
+				authUserIsModerator.value = true;
+		}
+	}
 );
-
 socketChat.value.on(
   'receive_remove_channel_moderator',
   ({username, channelName}) => {
-    if (channelName == props.channelName && username == props.name)
-			isModerator.value = false;
-  }
+		if (channelName == props.channelName) {
+			if (username == props.name)
+				isModerator.value = false;
+			else if (authUser && authUser.value && authUser.value.username == username)
+				authUserIsModerator.value = false;
+		}
+	}
 );
 
 function unsetModerator() {

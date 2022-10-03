@@ -53,6 +53,21 @@ socket.value.emit('is_channel_moderator', {
   (isChanModerator: boolean) => {
   isModerator.value = isChanModerator;
 });
+socket.value.on(
+  'receive_add_channel_moderator',
+  ({channelName, username}) => {
+    if (channelName == props.channelName && authUser && authUser.value && authUser.value.username == username)
+      isModerator.value = true;
+  }
+);
+socket.value.on(
+  'receive_remove_channel_moderator',
+  ({channelName, username}) => {
+    if (channelName == props.channelName && authUser && authUser.value && authUser.value.username == username)
+      isModerator.value = false;
+  }
+);
+
 socket.value.emit(
   'is_channel_owner',
   {
