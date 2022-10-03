@@ -36,8 +36,6 @@ export class Paddle {
 		this.velocity = PADDLE_VELOCITY;
 		this.ratio = getCanvasRatio(canva);
 		
-		this.scale();
-
 		if ( left ) {
 			this.pos.x = this.margin;
 		} else {

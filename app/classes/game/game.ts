@@ -90,12 +90,6 @@ export class Game {
 
   }
 
-  scale() {
-    this.ball.scale();
-    this.paddleLeft.scale();
-    this.paddleRight.scale();
-  }
-
   start() {
     this.update();
     this.draw();

@@ -17,7 +17,7 @@
 			</v-card>
 		</v-dialog>
 
-		<canvas  id="game-canvas" ></canvas>
+		<canvas  id="game-canvas" width="620" height="410" ></canvas>
 	</div>
 </template>
 
