@@ -44,6 +44,7 @@ export class GameGateway {
 		const user = await this.socketService.disconnectSocketBindedToUser(socket);
 	}
 
+	// TODO: add user status in a game
 
 /* SUBSCRIBER */
 /*-- -------------------------------------------------------------- */

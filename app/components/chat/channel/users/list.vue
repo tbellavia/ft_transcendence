@@ -101,7 +101,9 @@ socket.value.on(
   ({username, channelName}) => {
     if (user.value && user.value.username != username && channelName == props.channelName) {
       bannedUsers.value.push(username);
-      users.value.splice(users.value.findIndex(chanUser => chanUser.username == username), 1);
+      const index = users.value.findIndex(chanUser => chanUser.username == username);
+      if (index != -1)
+        users.value.splice(index, 1);
     }
   }
 );
