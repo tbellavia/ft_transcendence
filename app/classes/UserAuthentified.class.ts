@@ -22,10 +22,12 @@ export class UserAuthentified extends User {
   public blockedUsers: User[] = [];
   public currentMatch: Match;
   public waitingAcceptingMatch: boolean;
+  public isSpectator: boolean;
 
   constructor(username: string, fetchingMethod: $Fetch) {
     super(username, fetchingMethod);
     this.waitingAcceptingMatch = false;
+    this.isSpectator = false;
   }
 
   /* Overload method */

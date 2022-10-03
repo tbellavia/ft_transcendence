@@ -1,16 +1,9 @@
 <template>
 	<div class="game-div">
 
-		<!-- CARD: timer before begining Game -->
-		<v-dialog persistent v-if="timer" v-model="timer">
-			<v-card center class="game-begin-timer">
-				<v-card-title> MATCH BEGIN </v-card-title>
-				<v-card-text>{{ timer }}</v-card-text>
-			</v-card>
-  		</v-dialog>
 
 		<!-- CARD: display winner at the end of game -->
-		<v-dialog persistent v-if="endGame > 0" v-model="endGame">
+		<v-dialog persistent v-model="endGame">
 			<v-card center class="game-begin-timer">
 				<v-card-title> MATCH VICTORY </v-card-title>
 				<v-card-text>{{ winnerUser }} won ! </v-card-text>
@@ -30,13 +23,11 @@ const user =  getUserAuthenticate();
 const socket = useSocketGame();
 const endGame = ref(false);
 const winnerUser = ref('');
-const timer = ref();
+
 // intervalle :
 
 
-socket.value.on("game-start-timer", (remaining) => {
-	timer.value = remaining;
-})
+
 
 socket.value.on("spectator-game-end", (winner) => {
      winnerUser.value = winner;
@@ -45,7 +36,8 @@ socket.value.on("spectator-game-end", (winner) => {
 		if (timer > 0) {
 			clearInterval(timer);
 			socket.value.emit("spectator-unsubscribe")
-			// user.isSpectator = true;
+			user.value.isSpectator = false;
+			navigateTo(`/user/${user.value.username}/profile`)
 		}
 	}, 1000 * 5);
 })
@@ -87,7 +79,5 @@ onMounted (() => {
 	text-align: center;
 }
 
-v-dialog {
 
-}
 </style>
