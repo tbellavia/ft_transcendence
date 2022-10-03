@@ -1,6 +1,5 @@
 <template>
   <nav class="navbar">
-    <!-- TODO User name  -->
   <div class="link">
     <NuxtLink class="navbar-left" v-if="disconnectButton" v-for="(link, index) in links" :key="`${link.name}${index}`" :to="`/user/${username}/${link.link}`">{{ link.name }}</NuxtLink>
   </div>
@@ -13,12 +12,12 @@
 
 <script setup lang="ts">
 
-const disconnectButton = ref(false);// TODO mai-fliend eithan
+const disconnectButton = ref(false);
 try {
   const user = await getRefreshedUserAuthenticate();
   if (user.value)
     disconnectButton.value = true;
-} catch { } // TODO mai-fliend eithan
+} catch { }
 
   const links = ref([
     {name: 'PROFILE', link: 'profile'},

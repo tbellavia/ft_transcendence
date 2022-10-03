@@ -10,12 +10,12 @@
 </template>
 
 <script setup lang="ts">
-const disconnectButton = ref(false);// TODO mai-fliend eithan
+const disconnectButton = ref(false);
 try {
   const user = await getRefreshedUserAuthenticate();
   if (user.value)
     disconnectButton.value = true;
-} catch { } // TODO mai-fliend eithan
+} catch { }
 </script>
 
 <style scoped>

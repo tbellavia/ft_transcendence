@@ -65,7 +65,7 @@ export class User {
 			game_won: 0,
 			rank: 'WOOD',
 		}
-		const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`); // TODO remove and change to do in back eithan
+		const stats: UserStats = await this.fetchingMethod(`${this.username}/stats`);
 		this.stats = stats;
 		if (!this.stats)
 		{

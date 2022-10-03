@@ -72,7 +72,7 @@ export class StatsService {
     //         }
     //     });
     //     return stat;
-    async findOne(username: string) {  // TODO see if necessary eithan
+    async findOne(username: string) {
         try {
             const user = await this.userService.findOneByName(username);
             const stat = await this.statRepository.findOne({

@@ -1,6 +1,6 @@
 <template>
 <div class="game-page">
-
+<!--  -->
 	<!-- HEADER: Button option -->
 	<div v-if="user.isInGame === false && spectator === false" >
 	<!-- //  || user.waitingAcceptingMatch === false"> -->

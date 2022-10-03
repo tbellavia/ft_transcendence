@@ -47,12 +47,10 @@ const props = defineProps({
 		required: true
 	}
 })
-// const userAuth = await getRefreshedUserAuthenticate()
 const userAuth = getUserAuthenticate()
-// const settingslink = `/user/${userAuth.value.username}/settings`;
 
 const user = await useUser(props.username)
-if (!user?.value?.stats) // TODO do it in back eithan
+if (!user?.value?.stats)
 	user.value = undefined
 
 const isFriend = ref()

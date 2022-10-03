@@ -22,11 +22,11 @@
 <script setup lang="ts">
 
 // Try to load user in all app
-try { // TODO mai-fliend eithan
+try {
    const route = useRoute();
    if (route.params.username)
       await refreshUrl();
-} catch { } // TODO mai-fliend eithan
+} catch { }
 
 const { $eventBus } = useNuxtApp();
 

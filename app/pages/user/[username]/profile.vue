@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-const route = useRoute(); // TODO mai-fliend eithan
+const route = useRoute();
 const disconnectButton = ref(false);
 let isUserAuth = ref(false);
 let username = ref('');
@@ -22,7 +22,7 @@ try {
 		username.value = route.params.username as string;
 		disconnectButton.value = true;
 	}
-} catch { username.value = route.params.username as string } // TODO mai-fliend eithan
+} catch { username.value = route.params.username as string }
 </script>
 
 <style>

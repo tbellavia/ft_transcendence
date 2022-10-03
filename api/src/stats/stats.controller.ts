@@ -13,7 +13,7 @@ export class StatsController {
   }
 
   @Get('/stats/me')
-  async findOne(@Req() request: RequestWithUser) { // TODO see if necessary eithan
+  async findOne(@Req() request: RequestWithUser) {
     try {
       return this.statsService.findOne(request.user.username);
     }
@@ -24,7 +24,7 @@ export class StatsController {
 
   // route for getting stats of other users
   @Get('/:target/stats')
-  async GetTargetStats(@Param('target') target: string) {  // TODO see if necessary eithan
+  async GetTargetStats(@Param('target') target: string) {
     try {
       return this.statsService.findOne(target);
     }

@@ -201,7 +201,7 @@ export class UsersService {
     return user !== null;
   }
 
-  async isValidUsername(username: string) { // TODO voir avec tony eithan
+  async isValidUsername(username: string) {
     if (! /^[a-zA-Z0-9_-]+$/.test(username) || username.length > 16 || username.length <= 0) {
       return false
     } else {
