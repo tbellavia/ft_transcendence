@@ -13,15 +13,19 @@
 		<div v-show="view" class="profile-match-body">
 			<!-- <div class="list-match" v-for="match in onlineMatch"> -->
 			<div class="list-match" v-for="match in onlineMatch">
-				<!-- <button style="width:100%;" @click="showThisRoom(match)">
+				<button style="width:100%;" @click="showThisRoom(match)">
 					<ListInGameItem />
-				</button> -->
+				</button>
 			</div>
 		</div>
 
 		<!-- waiting match making result  -->
 		<div v-show="waiting">
-			RESEARCH A PLAYER
+		<v-dialog v-if="waiting" v-model="waiting">
+			<v-card center class="game-begin-timer">
+			<v-card-title>Waiting Player </v-card-title>
+			</v-card>
+		</v-dialog>
 		</div>
 
 		<!-- waiting accepting match for suggest match -->
@@ -52,6 +56,7 @@ const socket = useSocketGame();
 const user = await getRefreshedUserAuthenticate();
 const view = ref(false);
 const waiting = ref(false);
+// const dpr
 
 // const onlineMatch = await getOnlineMatch();
 const onlineMatch = 2;
