@@ -2,7 +2,7 @@
 	<div class="game-div">
 
 		<!-- CARD: timer before begining Game -->
-		<v-dialog persistent v-if="timer" v-model="timer">
+		<v-dialog persistent v-model="isTimer">
 			<v-card center class="game-begin-timer">
 				<v-card-title> MATCH BEGIN </v-card-title>
 				<v-card-text>{{ timer }}</v-card-text>
@@ -10,7 +10,7 @@
   		</v-dialog>
 
 		<!-- CARD: display winner at the end of game -->
-		<v-dialog persistent v-if="endGame" v-model="endGame">
+		<v-dialog persistent v-model="endGame">
 			<v-card center class="game-begin-timer">
 				<v-card-title> MATCH VICTORY </v-card-title>
 				<v-card-text>{{ winnerUser }} won ! </v-card-text>
@@ -30,11 +30,14 @@ const socket = useSocketGame();
 const endGame = ref(false);
 const winnerUser = ref('');
 const timer = ref();
+const isTimer = ref(true);
 // intervalle :
 
 
 socket.value.on("game-start-timer", (remaining) => {
 	timer.value = remaining;
+	if (timer.value <= 0)
+		isTimer.value = false;
 })
 
 socket.value.on("game-end", (winner) => {
@@ -92,7 +95,4 @@ onMounted (() => {
 	text-align: center;
 }
 
-v-dialog {
-
-}
 </style>
