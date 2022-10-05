@@ -27,7 +27,7 @@ build:
 		@echo "\n\033[36;1m\033[4;5mDOCKER BUILD : DONE\033[0m\n"
 
 up:
-	$(DOCKER_COMPOSE) up
+	$(DOCKER_COMPOSE) up -d
 
 down:	
 	$(DOCKER_COMPOSE) down
